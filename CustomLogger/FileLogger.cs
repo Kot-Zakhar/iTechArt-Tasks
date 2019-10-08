@@ -8,12 +8,6 @@ namespace CustomLogger
         protected StreamWriter fileStream;
         private static string defaultFileName = "log.txt";
 
-        protected void Init(string fileName, bool append, string loggerName)
-        {
-            fileStream = new StreamWriter(fileName, append, System.Text.Encoding.Unicode);
-            Name = loggerName;
-        }
-
         public FileLogger(bool append = true)
         {
             Init(Path.Combine(Directory.GetCurrentDirectory(), defaultFileName), append, null);
@@ -29,6 +23,20 @@ namespace CustomLogger
             Init(fileName, append, loggerName);
         }
 
+        protected void Init(string fileName, bool append, string loggerName)
+        {
+            fileStream = new StreamWriter(fileName, append, System.Text.Encoding.Unicode);
+            SetEveryStreamTo(fileStream);
+            Name = loggerName;
+        }
+
+        protected override void WriteToStream(messageType streamType, string message, bool showHeader = true, bool showNameIfExists = true)
+        {
+            if (streams[(int)streamType] != null)
+                base.WriteToStream(streamType, message, showHeader, showNameIfExists);
+            else
+                throw new IOException("Stream has been closed or never been created.");
+        }
         public void Dispose()
         {
             fileStream.Flush();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using CustomLogger;
 
 namespace CustomLoggerUsageExample
@@ -7,11 +8,27 @@ namespace CustomLoggerUsageExample
     {
         static void Main(string[] args)
         {
-            Logger namedLogger = new Logger(Console.Out, "NamedLogger");
-            ConsoleLogger log = new ConsoleLogger("My Console");
+            using (var fileLogger = new FileLogger())
+            {
+                fileLogger.Error(new Exception("hello"));
+                fileLogger.Info("some info message");
+            }
 
+            using (
+                var namedFileLogger = new FileLogger(
+                    Path.Combine(Directory.GetCurrentDirectory(), "anotherLogFile.txt"), 
+                    "Another Logger", 
+                    false
+                )
+            ){
+                namedFileLogger.Warning("some warning, i don't know");
+                namedFileLogger.Error("omg!!!");
+            }
+
+            Logger namedLogger = new Logger(Console.Out, "NamedLogger");
+            Logger unnamedLogger = new ConsoleLogger();
             namedLogger.Error("some error to the namedLogger");
-            log.Info("some info");
+            unnamedLogger.Info("some info");
 
 
             Console.WriteLine("Press F to pay respect..");

@@ -21,15 +21,6 @@ namespace CustomLogger
 
         public string Name { get; protected set; }
 
-        protected void Init(TextWriter defaultStream, string loggerName)
-        {
-            Name = loggerName;
-            for (var i = 0; i < Enum.GetValues(typeof(messageType)).Length; i++)
-            {
-                streams[i] = defaultStream;
-            }
-        }
-
         public Logger()
         {
             Init(Console.Out, null);
@@ -50,6 +41,12 @@ namespace CustomLogger
             Init(defaultOutputStream, loggerName);
         }
 
+        protected void Init(TextWriter defaultStream, string loggerName)
+        {
+            Name = loggerName;
+            SetEveryStreamTo(defaultStream);
+        }
+
         public TextWriter SetStream(messageType streamType, TextWriter stream)
         {
             TextWriter oldStream = streams[(int)streamType];
@@ -57,33 +54,46 @@ namespace CustomLogger
             return oldStream;
         }
 
-        protected void WriteToStream(messageType streamType, string message, bool showHeader = true, bool showNameIfExists = true)
+        public void SetEveryStreamTo(TextWriter stream)
         {
-            string finalMessage = (showHeader && headers[(int)streamType] != null) ? $"{headers[(int)streamType]} {message}" : message;
+            for (var i = 0; i < Enum.GetValues(typeof(messageType)).Length; i++)
+            {
+                streams[i] = stream;
+            }
+        }
+
+        protected virtual void WriteToStream(messageType streamType, string message, bool showHeader = true, bool showNameIfExists = true)
+        {
+            string finalMessage;
+            if (showHeader)
+                finalMessage = $"{headers[(int)streamType]} {message}";
+            else
+                finalMessage = message;
+
             if (showNameIfExists && Name != null)
                 streams[(int)streamType].WriteLine(String.Format("{0}: {1}", this.Name, finalMessage));
             else
-                streams[(int)streamType].WriteLine(message);
+                streams[(int)streamType].WriteLine(finalMessage);
         }
 
-        public void Error(string message)
+        public virtual void Error(string message)
         {
             if (streams[(int)messageType.Error] != null)
                 WriteToStream(messageType.Error, message);
         }
 
-        public void Error(Exception ex)
+        public virtual void Error(Exception ex)
         {
             Error(ex.Message);
         }
 
-        public void Info(string message)
+        public virtual void Info(string message)
         {
             if (streams[(int)messageType.Info] != null)
                 WriteToStream(messageType.Info, message);
         }
 
-        public void Warning(string message)
+        public virtual void Warning(string message)
         {
             if (streams[(int)messageType.Warning] != null)
                 WriteToStream(messageType.Warning, message);
