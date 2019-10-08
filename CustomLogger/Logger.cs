@@ -12,14 +12,14 @@ namespace CustomLogger
 
     public delegate void WriteToDelegate(string message);
 
-    public class Logger: ILogger
+    public class Logger : ILogger
     {
         protected WriteToDelegate outputDelegate;
         // const or readonly
         protected const string ErrorHeader = "Error: ";
         protected const string InfoHeader = "Info: ";
         protected const string WarningHeader = "Warning: ";
-        
+
         public string Name { get; set; }
 
         protected void Init(WriteToDelegate outputDelegate, string name)
