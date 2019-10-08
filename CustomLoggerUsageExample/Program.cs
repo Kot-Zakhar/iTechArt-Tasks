@@ -7,14 +7,11 @@ namespace CustomLoggerUsageExample
     {
         static void Main(string[] args)
         {
-            Logger namedLogger = new Logger(Console.WriteLine, "NamedLogger");
-            Logger unnamedLogger = new Logger(line => Console.WriteLine("prefix " + line + " postfix"));
-            Logger noParamsLogger = new Logger();
-
+            Logger namedLogger = new Logger(Console.Out, "NamedLogger");
+            ConsoleLogger log = new ConsoleLogger("My Console");
 
             namedLogger.Error("some error to the namedLogger");
-            unnamedLogger.Warning("some warning to unnamedLogger");
-            noParamsLogger.Info("some info with no params");
+            log.Info("some info");
 
 
             Console.WriteLine("Press F to pay respect..");

@@ -1,74 +1,93 @@
 ﻿using System;
+using System.IO;
 
 namespace CustomLogger
 {
-    public interface ILogger
-    {
-        void Error(string message);
-        void Error(Exception ex);
-        void Warning(string message);
-        void Info(string message);
-    }
 
     public delegate void WriteToDelegate(string message);
 
+    public enum messageType
+    {
+        Error,
+        Warning,
+        Info
+    }
+
     public class Logger : ILogger
     {
-        protected WriteToDelegate outputDelegate;
-        // const or readonly
-        protected const string ErrorHeader = "Error: ";
-        protected const string InfoHeader = "Info: ";
-        protected const string WarningHeader = "Warning: ";
+        protected readonly string[] headers = { "Error:", "Warning:", "Info:" };
 
-        public string Name { get; set; }
+        protected TextWriter[] streams = new TextWriter[Enum.GetValues(typeof(messageType)).Length];
 
-        protected void Init(WriteToDelegate outputDelegate, string name)
+        public string Name { get; protected set; }
+
+        protected void Init(TextWriter defaultStream, string loggerName)
         {
-            this.Name = name;
-            this.outputDelegate = outputDelegate;
+            Name = loggerName;
+            for (var i = 0; i < Enum.GetValues(typeof(messageType)).Length; i++)
+            {
+                streams[i] = defaultStream;
+            }
         }
 
         public Logger()
         {
-            Init(Console.WriteLine, null);
+            Init(Console.Out, null);
         }
 
-        public Logger(WriteToDelegate outputDelegate)
+        public Logger(TextWriter defaultOutputStream)
         {
-            Init(outputDelegate, null);
+            Init(defaultOutputStream, null);
         }
 
-        public Logger(WriteToDelegate outputDelegate, string name)
+        public Logger(string loggerName)
         {
-            Init(outputDelegate, name);
+            Init(Console.Out, loggerName);
         }
 
-        protected void Write(string message)
+        public Logger(TextWriter defaultOutputStream, string loggerName)
         {
-            if (Name != null)
-                outputDelegate(String.Format("{0}: {1}", this.Name, message));
+            Init(defaultOutputStream, loggerName);
+        }
+
+        public TextWriter SetStream(messageType streamType, TextWriter stream)
+        {
+            TextWriter oldStream = streams[(int)streamType];
+            streams[(int)streamType] = stream;
+            return oldStream;
+        }
+
+        protected void WriteToStream(messageType streamType, string message, bool showHeader = true, bool showNameIfExists = true)
+        {
+            string finalMessage = (showHeader && headers[(int)streamType] != null) ? $"{headers[(int)streamType]} {message}" : message;
+            if (showNameIfExists && Name != null)
+                streams[(int)streamType].WriteLine(String.Format("{0}: {1}", this.Name, finalMessage));
             else
-                outputDelegate(message);
+                streams[(int)streamType].WriteLine(message);
         }
 
         public void Error(string message)
         {
-            this.Write(ErrorHeader + message);
+            if (streams[(int)messageType.Error] != null)
+                WriteToStream(messageType.Error, message);
         }
 
         public void Error(Exception ex)
         {
-            this.Error(ex.Message);
+            Error(ex.Message);
         }
 
         public void Info(string message)
         {
-            this.Write(InfoHeader + message);
+            if (streams[(int)messageType.Info] != null)
+                WriteToStream(messageType.Info, message);
         }
 
         public void Warning(string message)
         {
-            this.Write(WarningHeader + message);
+            if (streams[(int)messageType.Warning] != null)
+                WriteToStream(messageType.Warning, message);
         }
+
     }
 }
