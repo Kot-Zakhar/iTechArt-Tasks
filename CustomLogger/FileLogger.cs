@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Text;
 using System.IO;
 
 namespace CustomLogger
 {
     public class FileLogger : Logger, IDisposable
     {
-        protected StreamWriter fileStream;
+
+        protected FileStream fileStream;
+        protected StreamWriter streamWriter;
         private static string defaultFileName = "log.txt";
 
         public FileLogger(bool append = true)
@@ -13,34 +16,31 @@ namespace CustomLogger
             Init(Path.Combine(Directory.GetCurrentDirectory(), defaultFileName), append, null);
         }
 
-        public FileLogger(string fileName, bool append = true)
+        public FileLogger(string fullPath, bool append = true)
         {
-            Init(fileName, append, null);
+            Init(fullPath, append, null);
         }
 
-        public FileLogger(string fileName, string loggerName, bool append = true)
+        public FileLogger(string fullPath, string loggerName, bool append = true)
         {
-            Init(fileName, append, loggerName);
+            Init(fullPath, append, loggerName);
         }
 
-        protected void Init(string fileName, bool append, string loggerName)
+        protected void Init(string fullPath, bool append, string loggerName)
         {
-            fileStream = new StreamWriter(fileName, append, System.Text.Encoding.Unicode);
-            SetEveryStreamTo(fileStream);
+            // question: can i create fileStream with FileAccess.Write and FileShare.ReadWrite?
+            fileStream = new FileStream(fullPath, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
+
+            streamWriter = new StreamWriter(fileStream, Encoding.Unicode);
+
+            SetEveryStreamTo(streamWriter);
             Name = loggerName;
         }
 
-        protected override void WriteToStream(messageType streamType, string message, bool showHeader = true, bool showNameIfExists = true)
-        {
-            if (streams[(int)streamType] != null)
-                base.WriteToStream(streamType, message, showHeader, showNameIfExists);
-            else
-                throw new IOException("Stream has been closed or never been created.");
-        }
         public void Dispose()
         {
-            fileStream.Flush();
-            fileStream.Close();
+            streamWriter.Dispose();
+            streamWriter = null;
             fileStream.Dispose();
             fileStream = null;
         }

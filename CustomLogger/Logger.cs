@@ -57,29 +57,26 @@ namespace CustomLogger
         public void SetEveryStreamTo(TextWriter stream)
         {
             for (var i = 0; i < Enum.GetValues(typeof(messageType)).Length; i++)
-            {
                 streams[i] = stream;
-            }
         }
 
         protected virtual void WriteToStream(messageType streamType, string message, bool showHeader = true, bool showNameIfExists = true)
         {
+            if (streams[(int)messageType.Error] == null)
+                throw new IOException("Stream is unreachable.");
+
             string finalMessage;
             if (showHeader)
                 finalMessage = $"{headers[(int)streamType]} {message}";
             else
                 finalMessage = message;
 
+            TextWriter currentStream = streams[(int)streamType];
             if (showNameIfExists && Name != null)
-                streams[(int)streamType].WriteLine(String.Format("{0}: {1}", this.Name, finalMessage));
+                currentStream.WriteLine(String.Format("{0}: {1}", this.Name, finalMessage));
             else
-                streams[(int)streamType].WriteLine(finalMessage);
-        }
-
-        public virtual void Error(string message)
-        {
-            if (streams[(int)messageType.Error] != null)
-                WriteToStream(messageType.Error, message);
+                currentStream.WriteLine(finalMessage);
+            currentStream.Flush();
         }
 
         public virtual void Error(Exception ex)
@@ -87,16 +84,19 @@ namespace CustomLogger
             Error(ex.Message);
         }
 
+        public virtual void Error(string message)
+        {
+            WriteToStream(messageType.Error, message);
+        }
+
         public virtual void Info(string message)
         {
-            if (streams[(int)messageType.Info] != null)
-                WriteToStream(messageType.Info, message);
+            WriteToStream(messageType.Info, message);
         }
 
         public virtual void Warning(string message)
         {
-            if (streams[(int)messageType.Warning] != null)
-                WriteToStream(messageType.Warning, message);
+            WriteToStream(messageType.Warning, message);
         }
 
     }
