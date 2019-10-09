@@ -10,6 +10,7 @@ namespace CustomLogger
         void AddErrorStream(TextWriter errorStream);
         void AddWarningStream(TextWriter warningStream);
         void AddInfoStream(TextWriter infoStream);
+        void 
         Logger GetResult();
     }
     public class LoggerBuilder : ILoggerBuilder

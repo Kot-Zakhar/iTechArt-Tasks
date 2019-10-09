@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace CustomLogger
@@ -17,7 +18,7 @@ namespace CustomLogger
     {
         protected readonly string[] headers = { "Error:", "Warning:", "Info:" };
 
-        protected TextWriter[] streams = new TextWriter[Enum.GetValues(typeof(messageType)).Length];
+        protected List<TextWriter>[] streams = { new List<TextWriter>(), new List<TextWriter>(), new List<TextWriter>() };
 
         public string Name { get; protected set; }
 
@@ -47,9 +48,9 @@ namespace CustomLogger
             SetEveryStreamTo(defaultStream);
         }
 
-        public TextWriter SetStream(messageType streamType, TextWriter stream)
+        public TextWriter AddStream(messageType streamType, TextWriter stream)
         {
-            TextWriter oldStream = streams[(int)streamType];
+            streams[(int)streamType].Add(;
             streams[(int)streamType] = stream;
             return oldStream;
         }
