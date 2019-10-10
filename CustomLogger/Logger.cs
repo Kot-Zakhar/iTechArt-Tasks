@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace CustomLogger
 {
@@ -8,9 +9,31 @@ namespace CustomLogger
 
     public class Logger : ILogger
     {
-        protected readonly string[] headers = { "Error:", "Warning:", "Info:" };
-        
-        public string Name;
+        private string name = null;
+        public string Name
+        {
+            get
+            {
+                return name == null ? "" : name;
+            }
+            set
+            {
+                name = value;
+            }
+        }
+        private string timestampFormat = null;
+        public string TimestampFormat
+        {
+            get
+            {
+                return timestampFormat == null ? Thread.CurrentThread.CurrentCulture.DateTimeFormat.FullDateTimePattern : timestampFormat;
+            }
+            set
+            {
+                timestampFormat = value;
+            }
+        }
+        public string Delimiter = " --- ";
         public bool[] ShowHeader;
         public bool[] ShowName;
         public bool[] ShowTimestamp;
@@ -23,21 +46,52 @@ namespace CustomLogger
             ShowName = new bool[levelAmount];
             ShowTimestamp = new bool[levelAmount];
             OutputProviders = new List<ILoggerOutputProvider>[levelAmount];
+            for (int i = 0; i < levelAmount; i++)
+            {
+                OutputProviders[i] = new List<ILoggerOutputProvider>();
+            }
+        }
+
+        protected virtual string[] GetHeaders()
+        {
+            return Enum.GetNames(typeof(LogMessageLevel));
+        }
+        
+        protected virtual LogMessage ConstructLogMessage(LogMessageLevel messageLevel, string message)
+        {
+            LogMessage result;
+            result.timestamp = ShowTimestamp[(int)messageLevel] || ShowTimestamp[(int)LogMessageLevel.All] ? DateTime.Now.ToString(TimestampFormat) : null;
+            result.header = ShowHeader[(int)messageLevel] || ShowHeader[(int)LogMessageLevel.All] ? GetHeaders()[(int)messageLevel] : null;
+            result.name = ShowName[(int)messageLevel] || ShowName[(int)LogMessageLevel.All] ? Name : null;
+            result.message = message;
+            return result;
         }
 
         public virtual void Log(LogMessageLevel messageLevel, string message)
         {
-            //if (OutputProviders[(int)messageLevel].Count != 0)
-            //{
-            //    foreach(ILoggerOutputProvider output in OutputProviders[(int)messageLevel])
-            //    {
-            //        output.Output()
-            //    }
-            //} 
-            //else
-            //{
+            List<ILoggerOutputProvider> outputProviders;
+            LogMessage finalMessage;
 
-            //}
+            switch (messageLevel)
+            {
+                case LogMessageLevel.Error:
+                case LogMessageLevel.Warning:
+                case LogMessageLevel.Info:
+                    if (OutputProviders[(int)messageLevel].Count != 0)
+                        outputProviders = OutputProviders[(int)messageLevel];
+                    else
+                        outputProviders = OutputProviders[(int)LogMessageLevel.All];
+                    finalMessage = ConstructLogMessage(messageLevel, message);
+                    break;
+                case LogMessageLevel.All:
+                default:
+                    outputProviders = OutputProviders[(int)LogMessageLevel.All];
+                    finalMessage = ConstructLogMessage(LogMessageLevel.All, message);
+                    break;
+            }
+
+            foreach (ILoggerOutputProvider outputProvider in outputProviders)
+                outputProvider.Output(finalMessage);
         }
 
         public virtual void Error(Exception ex)

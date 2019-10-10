@@ -3,7 +3,7 @@ using System.IO;
 
 namespace CustomLogger
 {
-    public class LoggerBuilder : ILoggerBuilder
+    public class LoggerBuilder
     {
         private Logger currentLogger;
         public LoggerBuilder()
@@ -14,36 +14,44 @@ namespace CustomLogger
         {
             currentLogger = loggerToRebuild;
         }
-        public ILoggerBuilder AddOutputProvider(ILoggerOutputProvider outputProvider, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public LoggerBuilder AddOutputProvider(ILoggerOutputProvider outputProvider, LogMessageLevel messageLevel = LogMessageLevel.All)
         {
             currentLogger.OutputProviders[(int)messageLevel].Add(outputProvider);
             return this;
         }
 
-        public ILoggerBuilder SetName(string name)
+        public LoggerBuilder SetName(string name)
         {
             currentLogger.Name = name;
+            ShowName();
             return this;
         }
 
-        public ILoggerBuilder ShowName(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public LoggerBuilder ShowName(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
         {
             currentLogger.ShowName[(int)messageLevel] = show;
             return this;
         }
 
-        public ILoggerBuilder ShowTimestamp(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public LoggerBuilder SetTimestampFormat(string format)
+        {
+            currentLogger.TimestampFormat = format;
+            ShowTimestamp();
+            return this;
+        }
+
+        public LoggerBuilder ShowTimestamp(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
         {
             currentLogger.ShowTimestamp[(int)messageLevel] = show;
             return this;
         }
-        public ILoggerBuilder ShowHeader(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public LoggerBuilder ShowHeader(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
         {
             currentLogger.ShowHeader[(int)messageLevel] = show;
             return this;
         }
 
-        public ILoggerBuilder Reset()
+        public LoggerBuilder Reset()
         {
             currentLogger = new Logger();
             return this;
