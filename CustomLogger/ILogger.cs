@@ -6,6 +6,7 @@ namespace CustomLogger
 {
     public enum LogMessageLevel
     {
+        All,
         Error,
         Warning,
         Info

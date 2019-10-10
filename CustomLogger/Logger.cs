@@ -1,24 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace CustomLogger
 {
 
     public delegate void WriteToDelegate(string message);
 
-    public abstract class Logger : ILogger
+    public class Logger : ILogger
     {
         protected readonly string[] headers = { "Error:", "Warning:", "Info:" };
         
-        // showHeader and showName should be configurable for each logLevel
-        protected bool ShowHeader = true;
-        protected bool ShowName = true;
-        public string Name { get; protected set; }
+        public string Name;
+        public bool[] ShowHeader;
+        public bool[] ShowName;
+        public bool[] ShowTimestamp;
+        public List<ILoggerOutputProvider>[] OutputProviders;
 
-        public Logger(ILoggerOutputProvider provider) { }
+        public Logger()
+        {
+            int levelAmount = Enum.GetValues(typeof(LogMessageLevel)).Length;
+            ShowHeader = new bool[levelAmount];
+            ShowName = new bool[levelAmount];
+            ShowTimestamp = new bool[levelAmount];
+            OutputProviders = new List<ILoggerOutputProvider>[levelAmount];
+        }
 
-        public abstract void Log(LogMessageLevel messageLevel, string message);
+        public virtual void Log(LogMessageLevel messageLevel, string message)
+        {
+            //if (OutputProviders[(int)messageLevel].Count != 0)
+            //{
+            //    foreach(ILoggerOutputProvider output in OutputProviders[(int)messageLevel])
+            //    {
+            //        output.Output()
+            //    }
+            //} 
+            //else
+            //{
+
+            //}
+        }
 
         public virtual void Error(Exception ex)
         {
