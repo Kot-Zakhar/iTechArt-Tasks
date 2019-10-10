@@ -11,7 +11,7 @@ namespace CustomLogger
         Warning,
         Info
     }
-    public interface ILogger
+    public interface ILogger: IDisposable
     {
         void Log(LogMessageLevel messageLevel, string message);
         void Error(string message);

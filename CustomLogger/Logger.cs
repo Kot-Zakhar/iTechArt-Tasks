@@ -7,9 +7,10 @@ namespace CustomLogger
 
     public delegate void WriteToDelegate(string message);
 
-    public class Logger : ILogger
+    public class CustomLogger : ILogger
     {
-        private string name = null;
+        protected bool disposed = false;
+        protected string name = null;
         public string Name
         {
             get
@@ -21,7 +22,7 @@ namespace CustomLogger
                 name = value;
             }
         }
-        private string timestampFormat = null;
+        protected string timestampFormat = null;
         public string TimestampFormat
         {
             get
@@ -39,7 +40,7 @@ namespace CustomLogger
         public bool[] ShowTimestamp;
         public List<ILoggerOutputProvider>[] OutputProviders;
 
-        public Logger()
+        public CustomLogger()
         {
             int levelAmount = Enum.GetValues(typeof(LogMessageLevel)).Length;
             ShowHeader = new bool[levelAmount];
@@ -111,5 +112,26 @@ namespace CustomLogger
             Log(LogMessageLevel.Warning, message);
         }
 
+        public virtual void Dispose()
+        {
+            if (!disposed)
+            {
+                disposed = true;
+                int levelAmount = Enum.GetValues(typeof(LogMessageLevel)).Length;
+                ShowHeader = null;
+                ShowName = null;
+                ShowTimestamp = null;
+                for (int i = 0; i < levelAmount; i++)
+                {
+                    OutputProviders[i].ForEach(provider =>
+                    {
+                        if (provider is IDisposable)
+                            (provider as IDisposable).Dispose();
+                    });
+                    OutputProviders[i] = null;
+                }
+
+            }
+        }
     }
 }

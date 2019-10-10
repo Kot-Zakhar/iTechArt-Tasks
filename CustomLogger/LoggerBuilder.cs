@@ -1,16 +1,13 @@
-﻿using System;
-using System.IO;
-
-namespace CustomLogger
+﻿namespace CustomLogger
 {
     public class LoggerBuilder
     {
-        private Logger currentLogger;
+        private CustomLogger currentLogger;
         public LoggerBuilder()
         {
-            currentLogger = new Logger();
+            currentLogger = new CustomLogger();
         }
-        public LoggerBuilder(Logger loggerToRebuild)
+        public LoggerBuilder(CustomLogger loggerToRebuild)
         {
             currentLogger = loggerToRebuild;
         }
@@ -51,13 +48,13 @@ namespace CustomLogger
 
         public LoggerBuilder Reset()
         {
-            currentLogger = new Logger();
+            currentLogger = new CustomLogger();
             return this;
         }
         public ILogger GetResult()
         {
-            Logger loggerToReturn = currentLogger;
-            currentLogger = new Logger();
+            CustomLogger loggerToReturn = currentLogger;
+            currentLogger = new CustomLogger();
             return loggerToReturn;
         }
     }

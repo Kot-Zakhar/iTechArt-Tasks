@@ -13,6 +13,7 @@ namespace CustomLogger.FileProvider
     }
     public class LoggerOutputFileProvider : ILoggerOutputProvider, IDisposable
     {
+        protected bool disposed = false;
         protected static string defaultFileName = "log.txt";
         protected static string defaultDirectory = Directory.GetCurrentDirectory();
         protected StreamWriter fileWriter;
@@ -53,8 +54,12 @@ namespace CustomLogger.FileProvider
 
         public void Dispose()
         {
-            fileWriter.Dispose();
-            fileWriter = null;
+            if (!disposed)
+            {
+                fileWriter.Dispose();
+                fileWriter = null;
+                disposed = true;
+            }
         }
     }
 }
