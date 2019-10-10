@@ -1,5 +1,4 @@
 ﻿using System;
-using CustomLogger;
 
 namespace CustomLogger.ConsoleProvider
 {

@@ -23,11 +23,10 @@ namespace CustomLogger
         public LoggerBuilder SetName(string name)
         {
             currentLogger.Name = name;
-            ShowName();
             return this;
         }
 
-        public LoggerBuilder ShowName(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public LoggerBuilder ShowName(LogMessageLevel messageLevel = LogMessageLevel.All, bool show = true)
         {
             currentLogger.ShowName[(int)messageLevel] = show;
             return this;
@@ -36,16 +35,15 @@ namespace CustomLogger
         public LoggerBuilder SetTimestampFormat(string format)
         {
             currentLogger.TimestampFormat = format;
-            ShowTimestamp();
             return this;
         }
 
-        public LoggerBuilder ShowTimestamp(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public LoggerBuilder ShowTimestamp(LogMessageLevel messageLevel = LogMessageLevel.All, bool show = true)
         {
             currentLogger.ShowTimestamp[(int)messageLevel] = show;
             return this;
         }
-        public LoggerBuilder ShowHeader(bool show = true, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public LoggerBuilder ShowHeader(LogMessageLevel messageLevel = LogMessageLevel.All, bool show = true)
         {
             currentLogger.ShowHeader[(int)messageLevel] = show;
             return this;

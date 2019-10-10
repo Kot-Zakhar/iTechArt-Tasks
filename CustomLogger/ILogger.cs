@@ -13,7 +13,7 @@ namespace CustomLogger
     }
     public interface ILogger
     {
-        void Log(LogMessageLevel messageLeve, string message);
+        void Log(LogMessageLevel messageLevel, string message);
         void Error(string message);
         void Error(Exception ex);
         void Warning(string message);

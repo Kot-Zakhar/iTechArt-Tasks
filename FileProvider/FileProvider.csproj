@@ -1,14 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleProvider\ConsoleProvider.csproj" />
     <ProjectReference Include="..\CustomLogger\CustomLogger.csproj" />
-    <ProjectReference Include="..\FileProvider\FileProvider.csproj" />
   </ItemGroup>
 
 </Project>
