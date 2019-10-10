@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace CustomLogger
-{    public interface ILogger
+{
+    public enum LogMessageLevel
     {
+        Error,
+        Warning,
+        Info
+    }
+    public interface ILogger
+    {
+        void Log(LogMessageLevel messageLeve, string message);
         void Error(string message);
         void Error(Exception ex);
         void Warning(string message);

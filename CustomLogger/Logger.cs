@@ -7,78 +7,18 @@ namespace CustomLogger
 
     public delegate void WriteToDelegate(string message);
 
-    public enum messageType
-    {
-        Error,
-        Warning,
-        Info
-    }
-
-    public class Logger : ILogger
+    public abstract class Logger : ILogger
     {
         protected readonly string[] headers = { "Error:", "Warning:", "Info:" };
-
-        protected List<TextWriter>[] streams = { new List<TextWriter>(), new List<TextWriter>(), new List<TextWriter>() };
-
+        
+        // showHeader and showName should be configurable for each logLevel
+        protected bool ShowHeader = true;
+        protected bool ShowName = true;
         public string Name { get; protected set; }
 
-        public Logger()
-        {
-            Init(Console.Out, null);
-        }
+        public Logger(ILoggerOutputProvider provider) { }
 
-        public Logger(TextWriter defaultOutputStream)
-        {
-            Init(defaultOutputStream, null);
-        }
-
-        public Logger(string loggerName)
-        {
-            Init(Console.Out, loggerName);
-        }
-
-        public Logger(TextWriter defaultOutputStream, string loggerName)
-        {
-            Init(defaultOutputStream, loggerName);
-        }
-
-        protected void Init(TextWriter defaultStream, string loggerName)
-        {
-            Name = loggerName;
-            SetEveryStreamTo(defaultStream);
-        }
-
-        public TextWriter AddStream(messageType streamType, TextWriter stream)
-        {
-            streams[(int)streamType].Add(;
-            streams[(int)streamType] = stream;
-            return oldStream;
-        }
-
-        public void SetEveryStreamTo(TextWriter stream)
-        {
-            for (var i = 0; i < Enum.GetValues(typeof(messageType)).Length; i++)
-                streams[i] = stream;
-        }
-
-        protected virtual void WriteToStream(messageType streamType, string message, bool showHeader = true, bool showNameIfExists = true)
-        {
-            if (streams[(int)messageType.Error] == null)
-                throw new IOException("Stream is unreachable.");
-
-            string finalMessage;
-            if (showHeader)
-                finalMessage = $"{headers[(int)streamType]} {message}";
-            else
-                finalMessage = message;
-
-            TextWriter currentStream = streams[(int)streamType];
-            if (showNameIfExists && Name != null)
-                currentStream.WriteLine(String.Format("{0}: {1}", this.Name, finalMessage));
-            else
-                currentStream.WriteLine(finalMessage);
-            currentStream.Flush();
-        }
+        public abstract void Log(LogMessageLevel messageLevel, string message);
 
         public virtual void Error(Exception ex)
         {
@@ -87,17 +27,17 @@ namespace CustomLogger
 
         public virtual void Error(string message)
         {
-            WriteToStream(messageType.Error, message);
+            Log(LogMessageLevel.Error, message);
         }
 
         public virtual void Info(string message)
         {
-            WriteToStream(messageType.Info, message);
+            Log(LogMessageLevel.Info, message);
         }
 
         public virtual void Warning(string message)
         {
-            WriteToStream(messageType.Warning, message);
+            Log(LogMessageLevel.Warning, message);
         }
 
     }
