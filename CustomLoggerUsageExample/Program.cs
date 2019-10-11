@@ -1,6 +1,7 @@
 ﻿using System;
-using System.IO;
 using CustomLogger;
+using CustomLogger.ConsoleProvider;
+using CustomLogger.FileProvider;
 
 namespace CustomLoggerUsageExample
 {
@@ -8,30 +9,26 @@ namespace CustomLoggerUsageExample
     {
         static void Main(string[] args)
         {
-            using (var fileLogger = new FileLogger())
-            {
-                fileLogger.Error(new Exception("hello"));
-                fileLogger.Info("some info message");
-            }
+            ILogger log = new LoggerBuilder()
+                .AddConsoleProvider(LogMessageLevel.Info)
+                .AddConsoleProvider(LogMessageLevel.Error)
+                .AddFileProvider(LogMessageLevel.Warning, ".\\Warnings.txt")
+                .AddFileProvider()
+                .ShowHeader()
+                .SetName("Zakhar")
+                .ShowName(LogMessageLevel.Warning)
+                .SetTimestampFormat("G")
+                .ShowTimestamp(LogMessageLevel.Error)
+                .GetResult();
 
-            using (
-                var namedFileLogger = new FileLogger(
-                    Path.Combine(Directory.GetCurrentDirectory(), "anotherLogFile.txt"), 
-                    "Another Logger", 
-                    false
-                )
-            ){
-                namedFileLogger.Warning("some warning, i don't know");
-                namedFileLogger.Error("omg!!!");
-            }
+            log.Info("Every message has a header.");
+            log.Info("Only Error messages have timestamps.");
+            log.Info("This is info message, wich is printed both console and file.");
+            log.Error("This is an error with timestamp, wich is printed both in console and file.");
+            log.Warning("this is a warning with name, wich is printed in file only.");
 
-            Logger namedLogger = new Logger(Console.Out, "NamedLogger");
-            Logger unnamedLogger = new ConsoleLogger();
-            namedLogger.Error("some error to the namedLogger");
-            unnamedLogger.Info("some info");
-
-
-            Console.WriteLine("Press F to pay respect..");
+            log.Dispose();
+            Console.WriteLine("Press F to pay respect for the great work...");
             Console.ReadKey();
         }
     }

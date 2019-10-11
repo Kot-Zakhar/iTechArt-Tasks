@@ -1,85 +1,95 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace CustomLogger
 {
 
     public delegate void WriteToDelegate(string message);
 
-    public enum messageType
+    public class CustomLogger : ILogger
     {
-        Error,
-        Warning,
-        Info
-    }
-
-    public class Logger : ILogger
-    {
-        protected readonly string[] headers = { "Error:", "Warning:", "Info:" };
-
-        protected TextWriter[] streams = new TextWriter[Enum.GetValues(typeof(messageType)).Length];
-
-        public string Name { get; protected set; }
-
-        public Logger()
+        protected bool disposed = false;
+        protected string name = null;
+        public string Name
         {
-            Init(Console.Out, null);
-        }
-
-        public Logger(TextWriter defaultOutputStream)
-        {
-            Init(defaultOutputStream, null);
-        }
-
-        public Logger(string loggerName)
-        {
-            Init(Console.Out, loggerName);
-        }
-
-        public Logger(TextWriter defaultOutputStream, string loggerName)
-        {
-            Init(defaultOutputStream, loggerName);
-        }
-
-        protected void Init(TextWriter defaultStream, string loggerName)
-        {
-            Name = loggerName;
-            SetEveryStreamTo(defaultStream);
-        }
-
-        public TextWriter SetStream(messageType streamType, TextWriter stream)
-        {
-            TextWriter oldStream = streams[(int)streamType];
-            streams[(int)streamType] = stream;
-            return oldStream;
-        }
-
-        public void SetEveryStreamTo(TextWriter stream)
-        {
-            for (var i = 0; i < Enum.GetValues(typeof(messageType)).Length; i++)
+            get
             {
-                streams[i] = stream;
+                return name == null ? "" : name;
+            }
+            set
+            {
+                name = value;
+            }
+        }
+        protected string timestampFormat = null;
+        public string TimestampFormat
+        {
+            get
+            {
+                return timestampFormat == null ? Thread.CurrentThread.CurrentCulture.DateTimeFormat.FullDateTimePattern : timestampFormat;
+            }
+            set
+            {
+                timestampFormat = value;
+            }
+        }
+        public string Delimiter = " --- ";
+        public bool[] ShowHeader;
+        public bool[] ShowName;
+        public bool[] ShowTimestamp;
+        public List<ILoggerOutputProvider>[] OutputProviders;
+
+        public CustomLogger()
+        {
+            int levelAmount = Enum.GetValues(typeof(LogMessageLevel)).Length;
+            ShowHeader = new bool[levelAmount];
+            ShowName = new bool[levelAmount];
+            ShowTimestamp = new bool[levelAmount];
+            OutputProviders = new List<ILoggerOutputProvider>[levelAmount];
+            for (int i = 0; i < levelAmount; i++)
+            {
+                OutputProviders[i] = new List<ILoggerOutputProvider>();
             }
         }
 
-        protected virtual void WriteToStream(messageType streamType, string message, bool showHeader = true, bool showNameIfExists = true)
+        protected virtual string[] GetHeaders()
         {
-            string finalMessage;
-            if (showHeader)
-                finalMessage = $"{headers[(int)streamType]} {message}";
-            else
-                finalMessage = message;
-
-            if (showNameIfExists && Name != null)
-                streams[(int)streamType].WriteLine(String.Format("{0}: {1}", this.Name, finalMessage));
-            else
-                streams[(int)streamType].WriteLine(finalMessage);
+            return Enum.GetNames(typeof(LogMessageLevel));
+        }
+        
+        protected virtual LogMessage ConstructLogMessage(LogMessageLevel messageLevel, string message)
+        {
+            LogMessage result;
+            result.timestamp = ShowTimestamp[(int)messageLevel] || ShowTimestamp[(int)LogMessageLevel.All] ? DateTime.Now.ToString(TimestampFormat) : null;
+            result.header = ShowHeader[(int)messageLevel] || ShowHeader[(int)LogMessageLevel.All] ? GetHeaders()[(int)messageLevel] : null;
+            result.name = ShowName[(int)messageLevel] || ShowName[(int)LogMessageLevel.All] ? Name : null;
+            result.message = message;
+            return result;
         }
 
-        public virtual void Error(string message)
+        public virtual void Log(LogMessageLevel messageLevel, string message)
         {
-            if (streams[(int)messageType.Error] != null)
-                WriteToStream(messageType.Error, message);
+            List<ILoggerOutputProvider> outputProviders = new List<ILoggerOutputProvider>(OutputProviders[(int)LogMessageLevel.All]);
+            LogMessage finalMessage;
+
+            switch (messageLevel)
+            {
+                case LogMessageLevel.Error:
+                case LogMessageLevel.Warning:
+                case LogMessageLevel.Info:
+                    if (OutputProviders[(int)messageLevel].Count != 0)
+                        outputProviders.AddRange(OutputProviders[(int)messageLevel]);
+                    finalMessage = ConstructLogMessage(messageLevel, message);
+                    break;
+                case LogMessageLevel.All:
+                default:
+                    finalMessage = ConstructLogMessage(LogMessageLevel.All, message);
+                    break;
+            }
+
+            foreach (ILoggerOutputProvider outputProvider in outputProviders)
+                outputProvider.Output(finalMessage);
         }
 
         public virtual void Error(Exception ex)
@@ -87,17 +97,41 @@ namespace CustomLogger
             Error(ex.Message);
         }
 
+        public virtual void Error(string message)
+        {
+            Log(LogMessageLevel.Error, message);
+        }
+
         public virtual void Info(string message)
         {
-            if (streams[(int)messageType.Info] != null)
-                WriteToStream(messageType.Info, message);
+            Log(LogMessageLevel.Info, message);
         }
 
         public virtual void Warning(string message)
         {
-            if (streams[(int)messageType.Warning] != null)
-                WriteToStream(messageType.Warning, message);
+            Log(LogMessageLevel.Warning, message);
         }
 
+        public virtual void Dispose()
+        {
+            if (!disposed)
+            {
+                disposed = true;
+                int levelAmount = Enum.GetValues(typeof(LogMessageLevel)).Length;
+                ShowHeader = null;
+                ShowName = null;
+                ShowTimestamp = null;
+                for (int i = 0; i < levelAmount; i++)
+                {
+                    OutputProviders[i].ForEach(provider =>
+                    {
+                        if (provider is IDisposable)
+                            (provider as IDisposable).Dispose();
+                    });
+                    OutputProviders[i] = null;
+                }
+
+            }
+        }
     }
 }
