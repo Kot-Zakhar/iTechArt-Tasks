@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger", "CustomLogger\CustomLogger.csproj", "{0DA22DC7-BD04-49AA-8991-C66483814F62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleProvider", "ConsoleProvider\ConsoleProvider.csproj", "{24FAD676-5AAF-44A8-9DB6-2CEA1F0A84BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.ConsoleProvider", "ConsoleProvider\CustomLogger.ConsoleProvider.csproj", "{24FAD676-5AAF-44A8-9DB6-2CEA1F0A84BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLoggerUsageExample", "CustomLoggerUsageExample\CustomLoggerUsageExample.csproj", "{641D3A28-3042-48B5-AC7E-15B917CC4161}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.UsageExample", "CustomLoggerUsageExample\CustomLogger.UsageExample.csproj", "{641D3A28-3042-48B5-AC7E-15B917CC4161}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileProvider", "FileProvider\FileProvider.csproj", "{05FB1B97-5DBB-408E-A54D-6C496C1D3410}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.FileProvider", "FileProvider\CustomLogger.FileProvider.csproj", "{05FB1B97-5DBB-408E-A54D-6C496C1D3410}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
