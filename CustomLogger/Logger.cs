@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 
+// restricting access to the file while writing a log
+// deleting file while programm in process
+
 namespace CustomLogger
 {
 
