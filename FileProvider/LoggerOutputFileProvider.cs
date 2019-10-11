@@ -5,8 +5,9 @@ namespace CustomLogger.FileProvider
 {
     public static class LoggerBuilderFileExtention
     {
-        public static LoggerBuilder AddFileProvider(this LoggerBuilder builder, LoggerOutputFileProvider fileProvider, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public static LoggerBuilder AddFileProvider(this LoggerBuilder builder, LogMessageLevel messageLevel = LogMessageLevel.All, string path = null, bool append = true)
         {
+            LoggerOutputFileProvider fileProvider = new LoggerOutputFileProvider(path, append, messageLevel);
             builder.AddOutputProvider(fileProvider, messageLevel);
             return builder;
         }
@@ -14,14 +15,14 @@ namespace CustomLogger.FileProvider
     public class LoggerOutputFileProvider : ILoggerOutputProvider, IDisposable
     {
         protected bool disposed = false;
-        protected static string defaultFileName = "log.txt";
+        protected static string defaultFileName = "Logs.txt";
         protected static string defaultDirectory = Directory.GetCurrentDirectory();
         protected StreamWriter fileWriter;
 
-        public LoggerOutputFileProvider(string path = null, bool append = true)
+        public LoggerOutputFileProvider(string path = null, bool append = true, LogMessageLevel messageLevel = LogMessageLevel.All)
         {
             var fileStream = new FileStream(
-                path == null ? Path.Combine(defaultDirectory, defaultFileName) : Path.GetFullPath(path),
+                path == null ? Path.Combine(defaultDirectory, Enum.GetName(typeof(LogMessageLevel), messageLevel) + defaultFileName) : Path.GetFullPath(path),
                 append ? FileMode.Append : FileMode.Create, 
                 FileAccess.Write, 
                 FileShare.ReadWrite);
