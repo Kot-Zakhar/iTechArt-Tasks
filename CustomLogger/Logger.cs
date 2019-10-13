@@ -18,7 +18,7 @@ namespace CustomLogger
         {
             get
             {
-                return name == null ? "" : name;
+                return name ?? "";
             }
             set
             {
@@ -30,7 +30,7 @@ namespace CustomLogger
         {
             get
             {
-                return timestampFormat == null ? Thread.CurrentThread.CurrentCulture.DateTimeFormat.FullDateTimePattern : timestampFormat;
+                return timestampFormat ?? Thread.CurrentThread.CurrentCulture.DateTimeFormat.FullDateTimePattern;
             }
             set
             {
