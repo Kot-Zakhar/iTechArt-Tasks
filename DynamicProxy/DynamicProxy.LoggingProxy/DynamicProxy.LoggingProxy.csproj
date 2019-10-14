@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\CustomLogger\CustomLogger.ConsoleProvider\CustomLogger.ConsoleProvider.csproj" />
     <ProjectReference Include="..\..\CustomLogger\CustomLogger\CustomLogger.csproj" />
     <ProjectReference Include="..\DynamicProxy\DynamicProxy.csproj" />
   </ItemGroup>

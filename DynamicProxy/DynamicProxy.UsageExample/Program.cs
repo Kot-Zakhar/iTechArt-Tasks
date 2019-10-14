@@ -20,7 +20,7 @@ namespace DynamicProxy.UsageExample
                 .ShowName()
                 .Build();
 
-            ILogger wrappedLogger = LoggingProxy<ILogger>.CreateInstance(consoleLogger, consoleLogger);
+            ILogger wrappedLogger = LoggingProxy<ILogger>.CreateInstance(consoleLogger);
 
             wrappedLogger.Info("Test info message");
             wrappedLogger.Warning("Text warning");

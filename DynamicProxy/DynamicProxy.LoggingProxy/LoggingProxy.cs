@@ -5,26 +5,25 @@ using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using CustomLogger;
+using CustomLogger.ConsoleProvider;
 
 namespace DynamicProxy.Logging
 {
     public class LoggingProxy<T> : DynamicProxy<T>
     {
         protected ILogger logger;
-        private static TypeEqualityComparer typeComparer = new TypeEqualityComparer();
-
-        public LoggingProxy(ILogger logger)
+        
+        public LoggingProxy()
         {
-            this.logger = logger;
+            this.logger = new LoggerBuilder().AddConsoleProvider().ShowHeader().ShowTimestamp().Build();
         }
 
-        public static T CreateInstance(T obj, ILogger logger)
+        public static T CreateInstance(T obj, ILogger logger = null)
         {
-            // bug is here:
-            // The base type 'DynamicProxy.Logging.LoggingProxy`1[[CustomLogger.ILogger, CustomLogger, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]' must have a public parameterless constructor. (Parameter 'TProxy')
             object proxy = Create<T, LoggingProxy<T>>();
             (proxy as LoggingProxy<T>).decorated = obj;
-            (proxy as LoggingProxy<T>).logger = logger;
+            if (logger != null)
+                (proxy as LoggingProxy<T>).logger = logger;
             return (T)proxy;
         }
 
@@ -37,18 +36,16 @@ namespace DynamicProxy.Logging
 
         protected StringBuilder AddArgsInfo(StringBuilder builder, MethodInfo targetMethod, object[] args)
         {
-            return builder
-                .Append("(")
-                .AppendJoin(", ",
-                    args.Join(
-                       targetMethod.GetParameters(),
-                       (object arg) => arg.GetType(),
-                       (ParameterInfo param) => param.GetType(),
-                       (object arg, ParameterInfo param) => $"{param.Name}: ({arg.GetType().Name}){arg.ToString()}",
-                       typeComparer
-                    )
-                )
-                .Append(")");
+            builder.Append("(");
+            var parameters = targetMethod.GetParameters();
+            for (var i = 0; i < parameters.Length; i++)
+            {
+                if (i != 0)
+                    builder.Append(", ");
+                builder.Append($"{parameters[i].Name}: ({args[i].GetType().Name}) {args[i].ToString()}");
+            }
+            builder.Append(")");
+            return builder;
         }
 
         protected override void LogBefore(MethodInfo targetMethod, object[] args)
@@ -66,7 +63,7 @@ namespace DynamicProxy.Logging
             AddArgsInfo(afterMessageBuilder, targetMethod, args)
                 .Append(" Finishing execution")
                 .Append($" in {processingTime.TotalMilliseconds} ms")
-                .Append($" with result: ({result.GetType().Name}){result}");
+                .Append($" with result: ({result?.GetType().Name}){result}");
 
             logger.Info(afterMessageBuilder.ToString());
         }
@@ -78,25 +75,6 @@ namespace DynamicProxy.Logging
                 .Append($": '{ex.Message}'");
 
             logger.Error(exceptionMessageBuilder.ToString());
-        }
-    }
-
-
-    class TypeEqualityComparer : IEqualityComparer<Type>
-    {
-        public bool Equals([AllowNull] Type x, [AllowNull] Type y)
-        {
-            if ((x == null) && (y == null))
-                return true;
-            else if ((x == null) || (y == null))
-                return false;
-            else
-                return x == y || x.IsSubclassOf(y) || y.IsSubclassOf(x);            
-        }
-
-        public int GetHashCode([DisallowNull] Type obj)
-        {
-            return obj.GetHashCode();
         }
     }
 }
