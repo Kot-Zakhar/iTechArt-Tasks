@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace LoggingProxy
+namespace DynamicProxy
 {
     public abstract class DynamicProxy<T> : DispatchProxy
     {
         protected T decorated;
-        public static T CreateInstance(T obj)
+        //protected static T CreateInstance(T obj)
+        //{
+        //    object proxy = DispatchProxy.Create<T, DynamicProxy<T>>();
+        //    (proxy as DynamicProxy<T>).decorated = obj;
+        //    return (T)proxy;
+        //}
+
+        // should i try to hide static method of base class?
+        private static new T Create<T, TProxy>() where TProxy : DynamicProxy<T>
         {
-            object proxy = Create<T, DynamicProxy<T>>();
-            (proxy as DynamicProxy<T>).decorated = obj;
-            return (T)proxy;
+            return DispatchProxy.Create<T, TProxy>();
         }
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)

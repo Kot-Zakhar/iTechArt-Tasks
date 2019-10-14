@@ -3,10 +3,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Collections.Generic;
-using CustomLogger;
 using System.Diagnostics.CodeAnalysis;
+using CustomLogger;
 
-namespace LoggingProxy
+namespace DynamicProxy.Logging
 {
     public class LoggingProxy<T> : DynamicProxy<T>
     {
@@ -16,6 +16,16 @@ namespace LoggingProxy
         public LoggingProxy(ILogger logger)
         {
             this.logger = logger;
+        }
+
+        public static T CreateInstance(T obj, ILogger logger)
+        {
+            // bug is here:
+            // The base type 'DynamicProxy.Logging.LoggingProxy`1[[CustomLogger.ILogger, CustomLogger, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]' must have a public parameterless constructor. (Parameter 'TProxy')
+            object proxy = Create<T, LoggingProxy<T>>();
+            (proxy as LoggingProxy<T>).decorated = obj;
+            (proxy as LoggingProxy<T>).logger = logger;
+            return (T)proxy;
         }
 
         protected StringBuilder BuildInfo(MethodInfo targetMethod)

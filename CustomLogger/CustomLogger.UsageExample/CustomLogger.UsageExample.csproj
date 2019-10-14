@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleProvider\CustomLogger.ConsoleProvider.csproj" />
+    <ProjectReference Include="..\CustomLogger.ConsoleProvider\CustomLogger.ConsoleProvider.csproj" />
+    <ProjectReference Include="..\CustomLogger.FileProvider\CustomLogger.FileProvider.csproj" />
     <ProjectReference Include="..\CustomLogger\CustomLogger.csproj" />
-    <ProjectReference Include="..\FileProvider\CustomLogger.FileProvider.csproj" />
   </ItemGroup>
 
 </Project>

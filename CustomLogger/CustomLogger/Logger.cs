@@ -73,7 +73,7 @@ namespace CustomLogger
 
         public virtual void Log(LogMessageLevel messageLevel, string message)
         {
-            List<ILoggerOutputProvider> outputProviders = new List<ILoggerOutputProvider>(OutputProviders[(int)LogMessageLevel.All]);
+            List<ILoggerOutputProvider> outputProviders = null;
             LogMessage finalMessage;
 
             switch (messageLevel)
@@ -82,7 +82,7 @@ namespace CustomLogger
                 case LogMessageLevel.Warning:
                 case LogMessageLevel.Info:
                     if (OutputProviders[(int)messageLevel].Count != 0)
-                        outputProviders.AddRange(OutputProviders[(int)messageLevel]);
+                        outputProviders = OutputProviders[(int)messageLevel];
                     finalMessage = ConstructLogMessage(messageLevel, message);
                     break;
                 case LogMessageLevel.All:
@@ -91,8 +91,11 @@ namespace CustomLogger
                     break;
             }
 
-            foreach (ILoggerOutputProvider outputProvider in outputProviders)
+            foreach (ILoggerOutputProvider outputProvider in OutputProviders[(int)LogMessageLevel.All])
                 outputProvider.Output(finalMessage);
+            if (outputProviders != null)
+                foreach (ILoggerOutputProvider outputProvider in outputProviders)
+                    outputProvider.Output(finalMessage);
         }
 
         public virtual void Error(Exception ex)

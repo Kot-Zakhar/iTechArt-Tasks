@@ -51,7 +51,7 @@
             currentLogger = new CustomLogger();
             return this;
         }
-        public ILogger GetResult()
+        public ILogger Build()
         {
             CustomLogger loggerToReturn = currentLogger;
             currentLogger = new CustomLogger();

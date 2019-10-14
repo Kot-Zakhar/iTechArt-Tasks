@@ -19,14 +19,14 @@ namespace CustomLoggerUsageExample
                 .ShowName(LogMessageLevel.Warning)
                 //.SetTimestampFormat("G")
                 //.ShowTimestamp(LogMessageLevel.Error)
-                .GetResult();
+                .Build();
 
             ILogger log2 = new LoggerBuilder()
                 .AddFileProvider(LogMessageLevel.Warning, ".\\Warnings.txt")
                 .ShowHeader()
                 .SetName("LOG2")
                 .ShowName()
-                .GetResult();
+                .Build();
 
             Thread thread1 = new Thread(PrintingLog);
             thread1.Start(log);
