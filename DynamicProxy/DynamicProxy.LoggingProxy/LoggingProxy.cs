@@ -9,7 +9,7 @@ using CustomLogger.ConsoleProvider;
 
 namespace DynamicProxy.Logging
 {
-    public class LoggingProxy<T> : DynamicProxy<T>
+    public class LoggingProxy : DynamicProxy
     {
         protected ILogger logger;
         
@@ -18,12 +18,12 @@ namespace DynamicProxy.Logging
             this.logger = new LoggerBuilder().AddConsoleProvider().ShowHeader().ShowTimestamp().Build();
         }
 
-        public static T CreateInstance(T obj, ILogger logger = null)
+        public static T Create<T>(T obj, ILogger logger = null)
         {
-            object proxy = Create<T, LoggingProxy<T>>();
-            (proxy as LoggingProxy<T>).decorated = obj;
+            object proxy = Create<T, LoggingProxy>();
+            (proxy as LoggingProxy).decorated = obj;
             if (logger != null)
-                (proxy as LoggingProxy<T>).logger = logger;
+                (proxy as LoggingProxy).logger = logger;
             return (T)proxy;
         }
 
@@ -48,7 +48,7 @@ namespace DynamicProxy.Logging
             return builder;
         }
 
-        protected override void LogBefore(MethodInfo targetMethod, object[] args)
+        protected override void BeforeInvokeNotify(MethodInfo targetMethod, object[] args)
         {
             var beforeMessageBuilder = BuildInfo(targetMethod);
             AddArgsInfo(beforeMessageBuilder, targetMethod, args)
@@ -57,7 +57,7 @@ namespace DynamicProxy.Logging
             logger.Info(beforeMessageBuilder.ToString());
         }
 
-        protected override void LogAfter(MethodInfo targetMethod, object[] args, object result, TimeSpan processingTime)
+        protected override void AfterInvokeNotify(MethodInfo targetMethod, object[] args, object result, TimeSpan processingTime)
         {
             var afterMessageBuilder = BuildInfo(targetMethod);
             AddArgsInfo(afterMessageBuilder, targetMethod, args)
@@ -68,7 +68,7 @@ namespace DynamicProxy.Logging
             logger.Info(afterMessageBuilder.ToString());
         }
 
-        protected override void LogException(Exception ex, MethodInfo targetMethod = null)
+        protected override void ExceptionNotify(Exception ex, MethodInfo targetMethod = null)
         {
             var exceptionMessageBuilder = BuildInfo(targetMethod)
                 .Append(" Throwing exception")

@@ -1,29 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace DynamicProxy
 {
-    public abstract class DynamicProxy<T> : DispatchProxy
+    public abstract class DynamicProxy : DispatchProxy
     {
-        protected T decorated;
+        protected object decorated;
         
-        protected static T CreateInstance(T obj)
+        protected static T Create<T>(T obj)
         {
-            object proxy = DispatchProxy.Create<T, DynamicProxy<T>>();
-            (proxy as DynamicProxy<T>).decorated = obj;
+            object proxy = DispatchProxy.Create<T, DynamicProxy>();
+            (proxy as DynamicProxy).decorated = obj;
             return (T)proxy;
         }
 
-        // should i try to hide static method of base class?
-        private static new Type Create<Type, TProxy>() where TProxy : DynamicProxy<T>
+        private static new T Create<T, TProxy>() where TProxy : DynamicProxy
         {
-            return DispatchProxy.Create<Type, TProxy>();
+            return DispatchProxy.Create<T, TProxy>();
         }
 
         protected override object Invoke(MethodInfo targetMethod, object[] args)
         {
-            // can targetMethod be null?
             try
             {
                 BeforeInvokeProcessing(targetMethod, args);
@@ -44,7 +41,7 @@ namespace DynamicProxy
         {
             try
             {
-                LogBefore(targetMethod, args);
+                BeforeInvokeNotify(targetMethod, args);
             }
             catch (Exception ex)
             {
@@ -56,7 +53,7 @@ namespace DynamicProxy
         {
             try
             {
-                LogAfter(targetMethod, args, result, processingTime);
+                AfterInvokeNotify(targetMethod, args, result, processingTime);
             }
             catch (Exception ex)
             {
@@ -68,7 +65,7 @@ namespace DynamicProxy
         {
             try
             {
-                LogException(ex, targetMethod);
+                ExceptionNotify(ex, targetMethod);
             }
             catch (Exception)
             {
@@ -76,8 +73,8 @@ namespace DynamicProxy
             }
         }
 
-        protected abstract void LogBefore(MethodInfo targetMethod, object[] args);
-        protected abstract void LogAfter(MethodInfo targetMethod, object[] args, object result, TimeSpan processingTime);
-        protected abstract void LogException(Exception ex, MethodInfo targetMethod = null);
+        protected abstract void BeforeInvokeNotify(MethodInfo targetMethod, object[] args);
+        protected abstract void AfterInvokeNotify(MethodInfo targetMethod, object[] args, object result, TimeSpan processingTime);
+        protected abstract void ExceptionNotify(Exception ex, MethodInfo targetMethod = null);
     }
 }
