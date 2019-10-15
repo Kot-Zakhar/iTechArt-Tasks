@@ -13,9 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.FileProvider",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicProxy.LoggingProxy", "DynamicProxy\DynamicProxy.LoggingProxy\DynamicProxy.LoggingProxy.csproj", "{2943AA39-48EC-4277-B0E1-F23D04D64CD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicProxy", "DynamicProxy\DynamicProxy\DynamicProxy.csproj", "{B9060021-B001-40FC-A4D0-F47750F12FC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicProxy", "DynamicProxy\DynamicProxy\DynamicProxy.csproj", "{B9060021-B001-40FC-A4D0-F47750F12FC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicProxy.UsageExample", "DynamicProxy\DynamicProxy.UsageExample\DynamicProxy.UsageExample.csproj", "{352C9196-B4C0-4A13-9C63-8C580185A03F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicProxy.UsageExample", "DynamicProxy\DynamicProxy.UsageExample\DynamicProxy.UsageExample.csproj", "{352C9196-B4C0-4A13-9C63-8C580185A03F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvEnumerable", "Csv\CsvEnumerable\CsvEnumerable.csproj", "{16ED5E7F-FD28-4573-9367-EAEC984797FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvExample", "Csv\CsvExample\CsvExample.csproj", "{A9B5107A-39B8-4DDB-86C4-1CAA5E07DDDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{352C9196-B4C0-4A13-9C63-8C580185A03F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{352C9196-B4C0-4A13-9C63-8C580185A03F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{352C9196-B4C0-4A13-9C63-8C580185A03F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16ED5E7F-FD28-4573-9367-EAEC984797FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16ED5E7F-FD28-4573-9367-EAEC984797FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16ED5E7F-FD28-4573-9367-EAEC984797FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16ED5E7F-FD28-4573-9367-EAEC984797FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9B5107A-39B8-4DDB-86C4-1CAA5E07DDDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9B5107A-39B8-4DDB-86C4-1CAA5E07DDDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9B5107A-39B8-4DDB-86C4-1CAA5E07DDDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9B5107A-39B8-4DDB-86C4-1CAA5E07DDDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
