@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Reflection;
+using System.Linq;
 
 namespace DynamicProxy
 {
@@ -26,8 +28,7 @@ namespace DynamicProxy
                 BeforeInvokeProcessing(targetMethod, args);
                 DateTime startTime = DateTime.Now;
                 object result = targetMethod?.Invoke(decorated, args);
-                TimeSpan processingTime = DateTime.Now - startTime;
-                AfterInvokeProcessing(targetMethod, args, result, processingTime);
+                AfterInvokeProcessing(targetMethod, args, result, startTime);
                 return result;
             }
             catch (Exception ex)
@@ -49,15 +50,43 @@ namespace DynamicProxy
             }
         }
 
-        protected virtual void AfterInvokeProcessing(MethodInfo targetMethod, object[] args, object result, TimeSpan processingTime)
+        protected virtual void AfterInvokeProcessing(MethodInfo targetMethod, object[] args, object result, DateTime startTime)
         {
-            try
+            var resultTask = result as Task;
+            if (resultTask != null)
             {
-                AfterInvokeNotify(targetMethod, args, result, processingTime);
+                resultTask.ContinueWith(task =>
+                {
+                    if (task.Exception != null)
+                    {
+                        ExceptionNotify(task.Exception, targetMethod);
+                    }
+                    else
+                    {
+                        object result = null;
+                        if (task.GetType().IsGenericType)
+                        {
+                            var property = task.GetType().GetTypeInfo().GetProperties()
+                                .FirstOrDefault(p => p.Name == "Result");
+                            if (property != null)
+                            {
+                                result = property.GetValue(task);
+                            }
+                        }
+                        AfterInvokeNotify(targetMethod, args, result, DateTime.Now - startTime);
+                    }
+                });
             }
-            catch (Exception ex)
+            else
             {
-                ExceptionProcessing(ex);
+                try
+                {
+                    AfterInvokeNotify(targetMethod, args, result, DateTime.Now - startTime);
+                }
+                catch (Exception ex)
+                {
+                    ExceptionProcessing(ex);
+                }
             }
         }
 

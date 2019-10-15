@@ -36,15 +36,18 @@ namespace DynamicProxy.Logging
 
         protected StringBuilder AddArgsInfo(StringBuilder builder, MethodInfo targetMethod, object[] args)
         {
-            builder.Append("(");
             var parameters = targetMethod.GetParameters();
-            for (var i = 0; i < parameters.Length; i++)
+            if (parameters.Length > 0)
             {
-                if (i != 0)
-                    builder.Append(", ");
-                builder.Append($"{parameters[i].Name}: ({args[i].GetType().Name}) {args[i].ToString()}");
+                builder.Append("(");
+                for (var i = 0; i < parameters.Length; i++)
+                {
+                    if (i != 0)
+                        builder.Append(", ");
+                    builder.Append($"{parameters[i].Name}: ({args[i].GetType().Name}) {args[i].ToString()}");
+                }
+                builder.Append(")");
             }
-            builder.Append(")");
             return builder;
         }
 
@@ -63,7 +66,7 @@ namespace DynamicProxy.Logging
             AddArgsInfo(afterMessageBuilder, targetMethod, args)
                 .Append(" Finishing execution")
                 .Append($" in {processingTime.TotalMilliseconds} ms")
-                .Append($" with result: ({result?.GetType().Name}){result}");
+                .Append(result != null ? $" with result: ({result?.GetType().Name}){result}" : "");
 
             logger.Info(afterMessageBuilder.ToString());
         }

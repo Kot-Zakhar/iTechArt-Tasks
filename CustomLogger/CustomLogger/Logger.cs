@@ -92,10 +92,16 @@ namespace CustomLogger
             }
 
             foreach (ILoggerOutputProvider outputProvider in OutputProviders[(int)LogMessageLevel.All])
-                outputProvider.Output(finalMessage);
+                lock (outputProvider)
+                {
+                    outputProvider.Output(finalMessage);
+                }
             if (outputProviders != null)
                 foreach (ILoggerOutputProvider outputProvider in outputProviders)
-                    outputProvider.Output(finalMessage);
+                    lock (outputProvider)
+                    {
+                        outputProvider.Output(finalMessage);
+                    }
         }
 
         public virtual void Error(Exception ex)

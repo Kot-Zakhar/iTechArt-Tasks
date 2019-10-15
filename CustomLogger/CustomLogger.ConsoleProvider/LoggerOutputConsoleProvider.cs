@@ -4,14 +4,19 @@ namespace CustomLogger.ConsoleProvider
 {
     public static class LoggerBuilderConsoleExtention
     {
-        public static LoggerBuilder AddConsoleProvider(this LoggerBuilder builder, LogMessageLevel messageLevel = LogMessageLevel.All)
+        public static LoggerBuilder AddConsoleProvider(this LoggerBuilder builder, LogMessageLevel messageLevel = LogMessageLevel.All, ConsoleColor color = ConsoleColor.Gray)
         {
-            builder.AddOutputProvider(new LoggerOutputConsoleProvider(), messageLevel);
+            builder.AddOutputProvider(new LoggerOutputConsoleProvider(color), messageLevel);
             return builder;
         }
     }
     public class LoggerOutputConsoleProvider : ILoggerOutputProvider
     {
+        private ConsoleColor color;
+        public LoggerOutputConsoleProvider(ConsoleColor color)
+        {
+            this.color = color;
+        }
         protected virtual string ProcessField(string field, string left = "", string right = "", string ifNull = "")
         {
             return field != null ? left + field + right : ifNull;
@@ -25,7 +30,26 @@ namespace CustomLogger.ConsoleProvider
         }
         public void Output(LogMessage message)
         {
-            Console.WriteLine(CreateLine(message));
+            lock (Console.Out)
+            {
+                Console.ForegroundColor = this.color;
+                Console.Write(ProcessField(message.timestamp, "[", "]\t"));
+                Console.ResetColor();
+
+                Console.BackgroundColor = this.color;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write(
+                    ProcessField(message.header, "", "\t") +
+                    ProcessField(message.name, "\"", "\"\t")
+                );
+                Console.ResetColor();
+
+                Console.ForegroundColor = this.color;
+                Console.Write(ProcessField(message.message));
+                Console.ResetColor();
+
+                Console.WriteLine();
+            }
         }
     }
 }
