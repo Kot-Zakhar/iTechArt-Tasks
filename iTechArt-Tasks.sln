@@ -3,13 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger", "CustomLogger\CustomLogger.csproj", "{0DA22DC7-BD04-49AA-8991-C66483814F62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger", "CustomLogger\CustomLogger\CustomLogger.csproj", "{0DA22DC7-BD04-49AA-8991-C66483814F62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.ConsoleProvider", "ConsoleProvider\CustomLogger.ConsoleProvider.csproj", "{24FAD676-5AAF-44A8-9DB6-2CEA1F0A84BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.ConsoleProvider", "CustomLogger\CustomLogger.ConsoleProvider\CustomLogger.ConsoleProvider.csproj", "{24FAD676-5AAF-44A8-9DB6-2CEA1F0A84BB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.UsageExample", "CustomLoggerUsageExample\CustomLogger.UsageExample.csproj", "{641D3A28-3042-48B5-AC7E-15B917CC4161}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.UsageExample", "CustomLogger\CustomLogger.UsageExample\CustomLogger.UsageExample.csproj", "{641D3A28-3042-48B5-AC7E-15B917CC4161}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.FileProvider", "FileProvider\CustomLogger.FileProvider.csproj", "{05FB1B97-5DBB-408E-A54D-6C496C1D3410}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomLogger.FileProvider", "CustomLogger\CustomLogger.FileProvider\CustomLogger.FileProvider.csproj", "{05FB1B97-5DBB-408E-A54D-6C496C1D3410}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicProxy.LoggingProxy", "DynamicProxy\DynamicProxy.LoggingProxy\DynamicProxy.LoggingProxy.csproj", "{2943AA39-48EC-4277-B0E1-F23D04D64CD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicProxy", "DynamicProxy\DynamicProxy\DynamicProxy.csproj", "{B9060021-B001-40FC-A4D0-F47750F12FC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicProxy.UsageExample", "DynamicProxy\DynamicProxy.UsageExample\DynamicProxy.UsageExample.csproj", "{352C9196-B4C0-4A13-9C63-8C580185A03F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,18 @@ Global
 		{05FB1B97-5DBB-408E-A54D-6C496C1D3410}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05FB1B97-5DBB-408E-A54D-6C496C1D3410}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05FB1B97-5DBB-408E-A54D-6C496C1D3410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2943AA39-48EC-4277-B0E1-F23D04D64CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2943AA39-48EC-4277-B0E1-F23D04D64CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2943AA39-48EC-4277-B0E1-F23D04D64CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2943AA39-48EC-4277-B0E1-F23D04D64CD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9060021-B001-40FC-A4D0-F47750F12FC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9060021-B001-40FC-A4D0-F47750F12FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9060021-B001-40FC-A4D0-F47750F12FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9060021-B001-40FC-A4D0-F47750F12FC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{352C9196-B4C0-4A13-9C63-8C580185A03F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{352C9196-B4C0-4A13-9C63-8C580185A03F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{352C9196-B4C0-4A13-9C63-8C580185A03F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{352C9196-B4C0-4A13-9C63-8C580185A03F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

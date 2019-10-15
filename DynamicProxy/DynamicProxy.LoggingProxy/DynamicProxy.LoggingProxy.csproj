@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\CustomLogger\CustomLogger.ConsoleProvider\CustomLogger.ConsoleProvider.csproj" />
+    <ProjectReference Include="..\..\CustomLogger\CustomLogger\CustomLogger.csproj" />
+    <ProjectReference Include="..\DynamicProxy\DynamicProxy.csproj" />
+  </ItemGroup>
+
+</Project>

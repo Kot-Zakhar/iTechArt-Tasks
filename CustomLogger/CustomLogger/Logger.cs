@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 
+// restricting access to the file while writing a log
+// deleting file while programm in process
+
 namespace CustomLogger
 {
 
@@ -15,7 +18,7 @@ namespace CustomLogger
         {
             get
             {
-                return name == null ? "" : name;
+                return name ?? "";
             }
             set
             {
@@ -27,7 +30,7 @@ namespace CustomLogger
         {
             get
             {
-                return timestampFormat == null ? Thread.CurrentThread.CurrentCulture.DateTimeFormat.FullDateTimePattern : timestampFormat;
+                return timestampFormat ?? Thread.CurrentThread.CurrentCulture.DateTimeFormat.FullDateTimePattern;
             }
             set
             {
@@ -70,7 +73,7 @@ namespace CustomLogger
 
         public virtual void Log(LogMessageLevel messageLevel, string message)
         {
-            List<ILoggerOutputProvider> outputProviders = new List<ILoggerOutputProvider>(OutputProviders[(int)LogMessageLevel.All]);
+            List<ILoggerOutputProvider> outputProviders = null;
             LogMessage finalMessage;
 
             switch (messageLevel)
@@ -79,7 +82,7 @@ namespace CustomLogger
                 case LogMessageLevel.Warning:
                 case LogMessageLevel.Info:
                     if (OutputProviders[(int)messageLevel].Count != 0)
-                        outputProviders.AddRange(OutputProviders[(int)messageLevel]);
+                        outputProviders = OutputProviders[(int)messageLevel];
                     finalMessage = ConstructLogMessage(messageLevel, message);
                     break;
                 case LogMessageLevel.All:
@@ -88,8 +91,17 @@ namespace CustomLogger
                     break;
             }
 
-            foreach (ILoggerOutputProvider outputProvider in outputProviders)
-                outputProvider.Output(finalMessage);
+            foreach (ILoggerOutputProvider outputProvider in OutputProviders[(int)LogMessageLevel.All])
+                lock (outputProvider)
+                {
+                    outputProvider.Output(finalMessage);
+                }
+            if (outputProviders != null)
+                foreach (ILoggerOutputProvider outputProvider in outputProviders)
+                    lock (outputProvider)
+                    {
+                        outputProvider.Output(finalMessage);
+                    }
         }
 
         public virtual void Error(Exception ex)
