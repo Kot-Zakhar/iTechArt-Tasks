@@ -10,7 +10,7 @@ namespace CsvExample
     class SomeClass
     {
         public int Foo { get; set; }
-        public int Bar { get; set; } = 10;
+        public int Bar { get; set; }
     }
     class Program
     {

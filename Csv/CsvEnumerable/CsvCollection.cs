@@ -8,13 +8,12 @@ namespace CsvEnumerable
 {
     public class CsvCollection<T> : IEnumerable<T>
     {
-        protected CsvReader reader;
-        protected bool leaveReader;
+        //public CsvReader reader { get; private set; }
+        public Stream fileStream { get; private set; }
         private bool disposed = false;
-        public CsvCollection(TextReader reader, bool leaveReaderOpen = false)
+        public CsvCollection(string path)
         {
-            this.reader = new CsvReader(reader);
-            this.leaveReader = leaveReaderOpen;
+            this.fileStream = new FileStream(Path.GetFullPath(path), FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
         public void Dispose()
@@ -30,7 +29,10 @@ namespace CsvEnumerable
 
         public IEnumerator<T> GetEnumerator()
         {
-            return new CsvEnumerator<T>();
+            fileStream.Seek(0, SeekOrigin.Begin);
+            return new CsvEnumerator()
+            //reader.
+            //return new CsvEnumerator<T>(new CsvReader(reader, true));
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -44,9 +46,14 @@ namespace CsvEnumerable
     {
         protected CsvCollection<T> currentCollection;
         protected T current;
-        private bool a = true;
+        private bool headerIsValid = true;
         private bool disposed = false;
 
+        public CsvEnumerator(CsvCollection<T> collection)
+        {
+            currentCollection = collection;
+        }
+        
         object IEnumerator.Current
         {
             get => current;
@@ -68,14 +75,22 @@ namespace CsvEnumerable
 
         bool IEnumerator.MoveNext()
         {
-            bool result = a;
-            a = !a;
-            return result;
+            if (!headerIsValid)
+                return false;
+
+            
         }
 
         void IEnumerator.Reset()
         {
-            a = true;
+
+            try
+            {
+            }
+            catch (ValidationException)
+            {
+                headerIsValid = false;
+            }
         }
     }
 }
