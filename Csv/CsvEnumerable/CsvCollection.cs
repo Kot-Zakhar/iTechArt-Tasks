@@ -8,84 +8,85 @@ namespace CsvEnumerable
 {
     public class CsvCollection<T> : IEnumerable<T>
     {
-        //public CsvReader reader { get; private set; }
-        public Stream fileStream { get; private set; }
+        public string csvPath { get; private set; }
         private bool disposed = false;
         public CsvCollection(string path)
         {
-            this.fileStream = new FileStream(Path.GetFullPath(path), FileMode.Open, FileAccess.Read, FileShare.Read);
+            csvPath = path;
         }
 
         public void Dispose()
         {
             if (!disposed)
             {
-                if (!leaveReader)
-                    reader.Dispose();
-                reader = null;
+                csvPath = null;
                 disposed = true;
             }
         }
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            fileStream.Seek(0, SeekOrigin.Begin);
-            return new CsvEnumerator()
-            //reader.
-            //return new CsvEnumerator<T>(new CsvReader(reader, true));
-        }
+        public IEnumerator<T> GetEnumerator() => new CsvEnumerator<T>(csvPath);
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     }
 
     internal class CsvEnumerator<T>: IEnumerator<T>
     {
-        protected CsvCollection<T> currentCollection;
-        protected T current;
+        protected CsvReader csvReader = null;
+        protected string csvPath;
         private bool headerIsValid = true;
         private bool disposed = false;
 
-        public CsvEnumerator(CsvCollection<T> collection)
+        public CsvEnumerator(string path)
         {
-            currentCollection = collection;
+            csvPath = path;
+            Reset();
         }
         
         object IEnumerator.Current
         {
-            get => current;
+            get => csvReader.GetRecord<T>();
         }
 
         T IEnumerator<T>.Current
         {
-            get => current;
+            get => csvReader.GetRecord<T>();
         }
 
         public void Dispose()
         {
             if (!disposed)
             {
-
                 disposed = true;
+                csvReader?.Dispose();
+                csvReader = null;
             }
         }
 
-        bool IEnumerator.MoveNext()
-        {
-            if (!headerIsValid)
-                return false;
+        public bool MoveNext() => headerIsValid && csvReader.Read();
 
-            
-        }
-
-        void IEnumerator.Reset()
+        public void Reset()
         {
+            csvReader?.Dispose();
+            csvReader = new CsvReader(
+                new StreamReader(
+                    new FileStream(
+                        csvPath, 
+                        FileMode.Open, 
+                        FileAccess.Read, 
+                        FileShare.ReadWrite), 
+                    System.Text.Encoding.Unicode)
+            );
 
             try
             {
+                if (csvReader.Read())
+                {
+                    csvReader.ReadHeader();
+                    csvReader.ValidateHeader<T>();
+                }
+                else
+                    headerIsValid = false;
             }
             catch (ValidationException)
             {
