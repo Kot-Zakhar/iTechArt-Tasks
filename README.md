@@ -49,3 +49,6 @@ Create custom implementation of IEnumerable which is able to iterate through rec
 - To read csv file use library CsvHelper
 ### Advanced Requirements ###
 - [ ] Don't use CsvHelper to read records from csv file. Implement reading csv file using class StreamReader
+
+## 4: Money manager ##
+Description is provided in MoneyManager folder.
