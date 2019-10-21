@@ -10,7 +10,8 @@ In this task, you will need to perform a series of commands and queries to the d
 - .NET ORM
 - Entity Framework Core
 ## Requirements ##
-- Consider the database diagram in attachment.
+- Consider the database diagram:
+![diagram](/diagram.jpg)
 - Create entity models using code first approach.
 - Create a class that will generate data to insert into database tables. The system should run the code from this class for the first time when the database is empty or not exist. After filling the data, the user table should contain more than 10 records, asset table – more than 20 records, category (including several subcategories) – more than 10 records, transaction table – more than 1000 records. Please, wrap the logic of filling the database into a single transaction. If an exception occurs during the transaction execution, perform the rollback.
 - Create a data layer to get access to the database with ORM technology using commands and queries:
