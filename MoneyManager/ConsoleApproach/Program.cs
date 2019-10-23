@@ -11,10 +11,14 @@ namespace ConsoleApproach
             {
                 var generator = new MoneyManager.RandomGenerator.MoneyManagerFaker();
                 generator.Generate();
-
+                Console.WriteLine("Generated.");
+                Console.WriteLine("Adding users to db...");
                 context.Users.AddRange(generator.users);
+                Console.WriteLine("Adding assets to db...");
                 context.Assets.AddRange(generator.assets);
+                Console.WriteLine("Adding categories to db...");
                 context.Categories.AddRange(generator.categories);
+                Console.WriteLine("Adding transactions to db...");
                 context.Transactions.AddRange(generator.transactions);
 
                 context.SaveChanges();
