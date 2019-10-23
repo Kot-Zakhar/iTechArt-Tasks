@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MoneyManager
+namespace MoneyManager.Entity
 {
     public enum CategoryType
     {
