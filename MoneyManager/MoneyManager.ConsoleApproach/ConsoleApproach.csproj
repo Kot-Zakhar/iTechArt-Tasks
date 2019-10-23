@@ -1,16 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Faker.NETCore" Version="1.0.1" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\MoneyManager.DB\MoneyManager.DB.csproj" />
     <ProjectReference Include="..\MoneyManager.Entity\MoneyManager.Entity.csproj" />
+    <ProjectReference Include="..\MoneyManager.RandomGenerator\MoneyManager.RandomGenerator.csproj" />
   </ItemGroup>
 
 </Project>

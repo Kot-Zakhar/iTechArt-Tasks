@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.Entity;
+﻿using System.Data.Entity;
+using MoneyManager.Entity;
 
-namespace MoneyManager
+namespace MoneyManager.DB
 {
     public class MoneyManagerContext : DbContext
     {
-        public MoneyManagerContext()
+        public MoneyManagerContext(): base("MoneyManagerDB")
         {
-
+            Database.SetInitializer(new MoneyManagerDBInitializer());
         }
 
         public DbSet<Category> Categories { get; set; }
