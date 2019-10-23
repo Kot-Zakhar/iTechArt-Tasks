@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MoneyManager.DB\MoneyManager.DB.csproj" />
+    <ProjectReference Include="..\MoneyManager.Entity\MoneyManager.Entity.csproj" />
+    <ProjectReference Include="..\MoneyManager.RandomGenerator\MoneyManager.RandomGenerator.csproj" />
+  </ItemGroup>
+
+</Project>
