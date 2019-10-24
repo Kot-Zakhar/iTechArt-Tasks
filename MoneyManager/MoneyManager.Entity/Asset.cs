@@ -4,17 +4,10 @@ using System.Text;
 
 namespace MoneyManager.Entity
 {
-    public class Asset
+    public class Asset : Entity
     {
-        public Asset()
-        {
-            Id = Guid.NewGuid();
-        }
-        public Asset(Guid Id)
-        {
-            this.Id = Id;
-        }
-        public Guid Id { get; set; }
+        public Asset() : base() { }
+        public Asset(Guid Id) : base(Id) { }
         public string Name { get; set; }
         public User User { get; set; }
     }
