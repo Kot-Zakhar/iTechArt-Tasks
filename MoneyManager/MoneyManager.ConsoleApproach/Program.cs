@@ -2,6 +2,7 @@
 using MoneyManager.Entity;
 using MoneyManager.DB;
 using MoneyManager.RandomGenerator;
+using MoneyManager.Repository;
 
 namespace ConsoleApproach
 {
@@ -9,12 +10,12 @@ namespace ConsoleApproach
     {
         static void Main(string[] args)
         {
-            using (var context = new MoneyManagerContext())
+            using (IRepository<User> userRepo = new MSSQLLocalDBRepository<User>(new MoneyManagerContext()))
             {
                 User user = UserFaker.CreateUser();
+                user = userRepo.Create(user);
                 Console.WriteLine($"Adding a user: {user.Id}\n{user.Name}\n{user.Email}\n");
-                context.Users.Add(user);
-                context.SaveChanges();
+                userRepo.Save();
             }
             Console.WriteLine("hello");
             Console.ReadKey();
