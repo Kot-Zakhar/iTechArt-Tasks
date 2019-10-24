@@ -8,4 +8,8 @@
     <PackageReference Include="EntityFramework" Version="6.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MoneyManager.Entity\MoneyManager.Entity.csproj" />
+  </ItemGroup>
+
 </Project>

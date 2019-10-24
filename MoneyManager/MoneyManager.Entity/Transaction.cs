@@ -4,17 +4,10 @@ using System.Text;
 
 namespace MoneyManager.Entity
 {
-    public class Transaction
+    public class Transaction : Entity
     {
-        public Transaction()
-        {
-            Id = Guid.NewGuid();
-        }
-        public Transaction(Guid Id)
-        {
-            this.Id = Id;
-        }
-        public Guid Id { get; protected set; }
+        public Transaction() : base() { }
+        public Transaction(Guid Id) : base(Id) { }
         public Category Category { get;  set; }
         public double Amount { get; set; }
         public DateTime Date { get;  set; }
