@@ -9,17 +9,10 @@ namespace MoneyManager.Entity
         Income,
         Expense
     }
-    public class Category
+    public class Category : Entity
     {
-        public Category()
-        {
-            Id = Guid.NewGuid();
-        }
-        public Category(Guid Id)
-        {
-            this.Id = Id;
-        }
-        public Guid Id { get; protected set; }
+        public Category() : base() { }
+        public Category(Guid Id) : base(Id) { }
         public string Name { get;  set; }
         public CategoryType Type { get;  set; }
         public Category ParentCategory { get;  set; }
