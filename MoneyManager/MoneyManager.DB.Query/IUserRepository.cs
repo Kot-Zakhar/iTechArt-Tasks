@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using MoneyManager.Entity;
 
 namespace MoneyManager.Repository
 {
@@ -9,6 +9,13 @@ namespace MoneyManager.Repository
         public Guid Id;
         public string Name;
         public string Email;
+
+        public UserInfo(User user)
+        {
+            Id = user.Id;
+            Name = user.Name;
+            Email = user.Email;
+        }
     }
     public struct UserBalance
     {
@@ -17,11 +24,22 @@ namespace MoneyManager.Repository
     }
     public interface IUserRepository : IRepository<Entity.User>
     {
+        /// <summary>
+        /// Task: "Write a request to return the user by email"
+        /// </summary>
         public Entity.User GetByEmail(string email);
 
+        /// <summary>
+        /// Used by GetInfosSortedByName();
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<UserInfo> GetInfos();
-        public IEnumerable<UserInfo> GetInfosSorted(IComparer<UserInfo> comparer);
+
+        /// <summary>
+        /// Task: "Write a query to return the user list sorted by the user’s name."
+        /// uses GetInfos()
+        /// </summary>
         public IEnumerable<UserInfo> GetInfosSortedByName();
-        public UserBalance GetBalanceById(Guid Id);
+
     }
 }

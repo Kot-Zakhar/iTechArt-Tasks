@@ -7,8 +7,8 @@ namespace MoneyManager.MSSQLLocalDBRepository
 {
     public class Repository<T> : IRepository<T> where T: Entity.Entity
     {
-        private DbContext context;
-        private DbSet<T> typeSet;
+        protected DbContext context;
+        protected DbSet<T> typeSet;
 
         public Repository(DbContext context)
         {
