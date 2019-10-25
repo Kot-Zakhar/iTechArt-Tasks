@@ -1,28 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using MoneyManager.Entity;
 
 namespace MoneyManager.Repository
 {
     public struct TransactionInfo
     {
+        public Guid Id;
         public AssetInfo AssetInfo;
         public CategoryInfo CategoryInfo;
         public double Amount;
         public DateTime Date;
         public string Comment;
+
+        public TransactionInfo(Transaction transaction)
+        {
+            AssetInfo = new AssetInfo(transaction.Asset);
+            CategoryInfo = new CategoryInfo(transaction.Category);
+            Id = transaction.Id;
+            Amount = transaction.Amount;
+            Date = transaction.Date;
+            Comment = transaction.Comment;
+        }
     }
+
     public interface ITransactionRepository : IRepository<Entity.Transaction>
     {
-        public int DeleteByUserIdInCurrentMonth(Guid userId);
-        public int DeleteByUserId(Guid userId, DateTime from, DateTime to);
-
-        public IEnumerable<TransactionInfo> GetInfoByUserId(Guid userId);
-        public IEnumerable<TransactionInfo> GetInfoByUserIdSorted(Guid userId, IComparer<TransactionInfo> comparer);
+        public int DeleteByAssetIdInCurrentMonth(Guid assetId);
+        public int DeleteByAssetId(Guid assetId, DateTime startDate, DateTime endDate);
 
         /// <summary>
-        /// Ordering descending by Transaction.Date, then ascending by Asset.Name and then ascending by Category.Name.
+        /// Ordering descending by Transaction.Date.
         /// </summary>
-        public IEnumerable<TransactionInfo> GetInfoByUserIdSorted(Guid userId);
+        public IEnumerable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime EndDate);
+
     }
 }
