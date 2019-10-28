@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using MoneyManager.Entity;
 
 namespace MoneyManager.Repository
@@ -32,7 +32,7 @@ namespace MoneyManager.Repository
         /// <summary>
         /// Ordering descending by Transaction.Date.
         /// </summary>
-        public IEnumerable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime EndDate);
+        public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime EndDate);
 
     }
 }

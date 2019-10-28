@@ -16,9 +16,13 @@ namespace MoneyManager.Repository
             ParentName = category.ParentCategory.Name;
         }
     }
-    public interface ICategoryRepository : IRepository<Entity.Category>
+    public struct CategoryAmountInfo
     {
-        //public IEnumerable<CategoryInfo> GetCategoryInfosByType();
-
+        public CategoryInfo Category;
+        public double Amount;
+    }
+    public interface ICategoryRepository : IRepository<Category>
+    {
+        public IEquatable<CategoryInfo> GetParentCategories(CategoryType categoryType);
     }
 }

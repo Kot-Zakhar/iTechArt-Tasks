@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace MoneyManager.Repository
 {
@@ -10,7 +9,7 @@ namespace MoneyManager.Repository
     /// </summary>
     public interface IRepository<T> : IDisposable where T : class
     {
-        IEnumerable<T> GetAll();
+        IQueryable<T> GetAll();
         T GetById(Guid id);
         T Create(T item);
         void Update(T item);
