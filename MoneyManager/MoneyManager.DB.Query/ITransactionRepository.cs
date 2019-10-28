@@ -24,7 +24,7 @@ namespace MoneyManager.Repository
         }
     }
 
-    public interface ITransactionRepository : IRepository<Entity.Transaction>
+    public interface ITransactionRepository : IRepository<Transaction>
     {
         public int DeleteByAssetIdInCurrentMonth(Guid assetId);
         public int DeleteByAssetId(Guid assetId, DateTime startDate, DateTime endDate);
@@ -33,6 +33,8 @@ namespace MoneyManager.Repository
         /// Ordering descending by Transaction.Date.
         /// </summary>
         public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime endDate);
+
+        public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId);
 
     }
 }
