@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using MoneyManager.Entity;
 
 namespace MoneyManager.Repository
@@ -29,20 +29,18 @@ namespace MoneyManager.Repository
         public int Year;
     }
 
-    public interface IAssetRepository : IRepository<Entity.Asset>
+    public interface IAssetRepository : IRepository<Asset>
     {
-        public AssetInfo GetAssetInfoById(Guid assetId);
-
-        public IEnumerable<AssetInfo> GetInfosByUserId(Guid userId);
+        public AssetInfo GetAssetBalanceInfoById(Guid assetId);
 
         /// <summary>
         /// Write a query that will return the asset list for the selected user (userId) ordered by the asset’s name.
         /// </summary>
-        public IEnumerable<AssetInfo> GetInfosByUserIdSortedByAssetName(Guid userId);
+        public IQueryable<AssetBalanceInfo> GetUserAssetsBalanceInfos(Guid userId);
 
         /// <summary>
         /// Ordered by Transaction.Date and grouped by month.
         /// </summary>
-        public IEnumerable<AssetIncomeAndExpensesInfo> GetAssetIncomeAndExpensesInfos(Guid assetId, DateTime from, DateTime to);
+        public IQueryable<AssetIncomeAndExpensesInfo> GetAssetIncomeAndExpensesInfos(Guid assetId, DateTime from, DateTime to);
     }
 }

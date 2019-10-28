@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using MoneyManager.Entity;
 
 namespace MoneyManager.Repository
@@ -33,13 +33,13 @@ namespace MoneyManager.Repository
         /// Used by GetInfosSortedByName();
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<UserInfo> GetInfos();
+        public IQueryable<UserInfo> GetInfos();
 
         /// <summary>
         /// Task: "Write a query to return the user list sorted by the user’s name."
         /// uses GetInfos()
         /// </summary>
-        public IEnumerable<UserInfo> GetInfosSortedByName();
+        public IQueryable<UserInfo> GetInfosSortedByName();
 
     }
 }
