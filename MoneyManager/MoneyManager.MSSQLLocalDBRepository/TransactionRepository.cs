@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using MoneyManager.Entity;
 using MoneyManager.Repository;
@@ -10,12 +8,13 @@ namespace MoneyManager.MSSQLLocalDBRepository
 {
     public class TransactionRepository : Repository<Transaction>, ITransactionRepository
     {
+        protected DbSet<Transaction> TransactionSet { get => typeSet; }
         public TransactionRepository(DbContext context) : base(context) {}
 
         public int DeleteByAssetId(Guid assetId, DateTime startDate, DateTime endDate)
         {
-            return base.typeSet.RemoveRange(
-                from transaction in base.typeSet
+            return TransactionSet.RemoveRange(
+                from transaction in TransactionSet
                 where transaction.Asset.Id == assetId && transaction.Date > startDate && transaction.Date < endDate
                 select transaction
             ).Count();
@@ -28,13 +27,12 @@ namespace MoneyManager.MSSQLLocalDBRepository
             var to = from.AddDays(DateTime.DaysInMonth(now.Year, now.Month));
             return DeleteByAssetId(assetId, from, to);
         }
-
-        public IEnumerable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime endDate)
+        
+        public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime endDate)
         {
-            return (from transaction in base.typeSet
+            return (from transaction in TransactionSet
                     where transaction.Asset.Id == assetId && transaction.Date > startDate && transaction.Date < endDate
                     select transaction).Select(transaction => new TransactionInfo(transaction));
         }
-
     }
 }

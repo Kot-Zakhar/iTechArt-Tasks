@@ -32,7 +32,7 @@ namespace MoneyManager.Repository
         /// <summary>
         /// Ordering descending by Transaction.Date.
         /// </summary>
-        public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime EndDate);
+        public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime endDate);
 
     }
 }

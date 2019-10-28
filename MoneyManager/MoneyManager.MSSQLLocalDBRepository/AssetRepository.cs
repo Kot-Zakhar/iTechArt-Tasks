@@ -9,50 +9,15 @@ namespace MoneyManager.MSSQLLocalDBRepository
 {
     public class AssetRepository : Repository<Asset>, IAssetRepository
     {
+        protected DbSet<Asset> AssetSet { get => typeSet; }
         public AssetRepository(DbContext context) : base(context) {}
 
-        public IEnumerable<AssetIncomeAndExpensesInfo> GetAssetIncomeAndExpensesInfos(Guid assetId, DateTime from, DateTime to)
+        public IQueryable<AssetInfo> GetUserAssetInfos(Guid userId)
         {
-            throw new NotImplementedException();
-        }
-
-        public AssetInfo GetAssetInfoById(Guid assetId)
-        {
-            return (from asset in base.typeSet
-                    where asset.Id == assetId
-                    select asset)
-                    .Select(asset => 
-                        new AssetInfo()
-                        {
-                            Id = asset.Id,
-                            Name = asset.Name
-                        }
-                    )
-                    .FirstOrDefault();
-        }
-
-        public IEnumerable<AssetInfo> GetInfosByUserId(Guid userId)
-        {
-            return (from asset in base.typeSet
+            return (from asset in AssetSet
                     where asset.User.Id == userId
                     select asset)
-                    .Select(asset =>
-                        new AssetInfo()
-                        {
-                            Id = asset.Id,
-                            Name = asset.Name
-                        }
-                    );
-        }
-
-        public IEnumerable<AssetInfo> GetInfosByUserIdSorted(Guid userId, IComparer<AssetInfo> comparer)
-        {
-            return GetInfosByUserId(userId).OrderBy(asset => asset, comparer);
-        }
-
-        public IEnumerable<AssetInfo> GetInfosByUserIdSortedByAssetName(Guid userId)
-        {
-            return GetInfosByUserId(userId).OrderBy(asset => asset.Name);
+                    .Select(a => new AssetInfo(a));
         }
     }
 }
