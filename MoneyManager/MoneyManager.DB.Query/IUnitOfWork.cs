@@ -39,12 +39,17 @@ namespace MoneyManager.Repository
         /// Write a query that will return the total value of income and expenses for the selected period (parameters userId, startDate, endDate)
         /// Ordered by date and grouped by month.
         /// </summary>
-        public IQueryable<UserMonthIncomeAndExpensesInfo> GetUserMonthIncomeAndExpensesInfos(Guid userId, DateTime from, DateTime to);
+        public IQueryable<UserMonthIncomeAndExpensesInfo> GetUserMonthIncomeAndExpensesInfos(Guid userId, DateTime startDate, DateTime endDate);
 
         /// <summary>
         /// "Active category" - category that have transactions in the current month.
         /// </summary>
-        public IQueryable<CategoryInfo> GetActiveCategoryInfosByType(CategoryType type);
+        public IQueryable<CategoryInfo> GetUserActiveCategoryInfos(Guid userId, CategoryType type);
+
+        /// <summary>
+        /// "Active category" - category that have transactions in the current month.
+        /// </summary>
+        public IQueryable<CategoryInfo> GetUserActiveCategoryInfos(Guid userId);
 
         /// <summary>
         /// Task: "Write a query that will return the current balance for the user."
@@ -68,5 +73,18 @@ namespace MoneyManager.Repository
         /// In addition, you should order results descending by Transaction.Amount and then ordered them by Category.Name.
         /// </summary>
         public IQueryable<CategoryAmountInfo> GetUserCategoryAmountInfosInCurrentMonth(Guid userId, CategoryType categoryType);
+
+        public AssetBalance GetAssetBalanceById(Guid assetId);
+
+        /// <summary>
+        /// Ordered by Transaction.Date and grouped by month.
+        /// </summary>
+        public IQueryable<AssetIncomeAndExpensesInfo> GetAssetIncomeAndExpensesInfos(Guid assetId, DateTime startDate, DateTime endDate);
+
+        /// <summary>
+        /// Write a query that will return the asset list for the selected user (userId) ordered by the asset’s name.
+        /// </summary>
+        public IQueryable<AssetBalance> GetUserAssetsBalances(Guid userId);
+
     }
 }
