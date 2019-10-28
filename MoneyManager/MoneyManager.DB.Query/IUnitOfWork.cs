@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using MoneyManager.Entity;
 
 namespace MoneyManager.Repository
 {
-    public struct UserIncomeAndExpensesInfo
+    public struct UserMonthIncomeAndExpensesInfo
     {
         public UserInfo UserInfo;
         public double Income;
@@ -29,16 +29,22 @@ namespace MoneyManager.Repository
         /// </summary>
         void RejectChanges();
 
+        /// <summary>
+        /// Write a query to return the transaction list for the selected user (userId)
+        /// ordered descending by Transaction.Date, then ordered ascending by Asset.Name and then ordered ascending by Category.Name.
+        /// </summary>
+        public IQueryable<TransactionInfo> GetUserTransactionInfos(Guid userId);
 
         /// <summary>
+        /// Write a query that will return the total value of income and expenses for the selected period (parameters userId, startDate, endDate)
         /// Ordered by date and grouped by month.
         /// </summary>
-        public IEnumerable<UserIncomeAndExpensesInfo> GetUserIncomeAndExpensesInfos(Guid userId, DateTime from, DateTime to);
+        public IQueryable<UserMonthIncomeAndExpensesInfo> GetUserMonthIncomeAndExpensesInfos(Guid userId, DateTime from, DateTime to);
 
         /// <summary>
         /// "Active category" - category that have transactions in the current month.
         /// </summary>
-        public IEnumerable<CategoryInfo> GetActiveCategoryInfosByType(CategoryType type);
+        public IQueryable<CategoryInfo> GetActiveCategoryInfosByType(CategoryType type);
 
         /// <summary>
         /// Task: "Write a query that will return the current balance for the user."
@@ -56,7 +62,11 @@ namespace MoneyManager.Repository
         /// </summary>
         public int DeleteUserTransactionsInCurrentMonth(Guid userId);
 
-        public IEnumerable<TransactionInfo> GetUserTransactions(Guid userId);
-
+        /// <summary>
+        /// Write a query that will return the total amount of all parent categories for the selected type of operation (Income or Expenses).
+        /// The result should include only categories that have transactions in the current month. 
+        /// In addition, you should order results descending by Transaction.Amount and then ordered them by Category.Name.
+        /// </summary>
+        public IQueryable<CategoryAmountInfo> GetUserCategoryAmountInfosInCurrentMonth(Guid userId, CategoryType categoryType);
     }
 }
