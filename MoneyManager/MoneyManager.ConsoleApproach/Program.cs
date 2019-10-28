@@ -1,6 +1,6 @@
 ﻿using System;
 using MoneyManager.Entity;
-using MoneyManager.DB;
+using MoneyManager.MSSQLLocalDBRepository;
 using MoneyManager.RandomGenerator;
 using MoneyManager.Repository;
 
@@ -10,12 +10,12 @@ namespace ConsoleApproach
     {
         static void Main(string[] args)
         {
-            using (IRepository<User> userRepo = new MSSQLLocalDBRepository<User>(new MoneyManagerContext()))
+            using (IUnitOfWork unitOfWork = new UnitOfWork())
             {
                 User user = UserFaker.CreateUser();
-                user = userRepo.Create(user);
+                user = unitOfWork.UserRepository.Create(user);
                 Console.WriteLine($"Adding a user: {user.Id}\n{user.Name}\n{user.Email}\n");
-                userRepo.Save();
+                unitOfWork.Commit();
             }
             Console.WriteLine("hello");
             Console.ReadKey();

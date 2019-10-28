@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MoneyManager.Entity;
 
 namespace MoneyManager.Repository
@@ -8,12 +9,14 @@ namespace MoneyManager.Repository
         public Guid Id;
         public string Name;
         public string ParentName;
+        public CategoryType Type;
 
         public CategoryInfo(Category category)
         {
             Id = category.Id;
             Name = category.Name;
             ParentName = category.ParentCategory.Name;
+            Type = category.Type;
         }
     }
     public struct CategoryAmountInfo
@@ -23,6 +26,6 @@ namespace MoneyManager.Repository
     }
     public interface ICategoryRepository : IRepository<Category>
     {
-        public IEquatable<CategoryInfo> GetParentCategories(CategoryType categoryType);
+        public IQueryable<CategoryInfo> GetParentCategories(CategoryType categoryType);
     }
 }

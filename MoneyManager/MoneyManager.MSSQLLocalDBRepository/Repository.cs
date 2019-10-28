@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Data.Entity;
 using MoneyManager.Repository;
 
@@ -12,7 +12,7 @@ namespace MoneyManager.MSSQLLocalDBRepository
 
         public Repository(DbContext context)
         {
-            this.context = context;
+            this.context = context ?? throw new ArgumentNullException(typeof(DbContext).FullName);
             typeSet = context.Set<T>();
         }
 
@@ -21,12 +21,12 @@ namespace MoneyManager.MSSQLLocalDBRepository
             return typeSet.Add(entity);
         }
 
-        public T GetById(Guid id)
+        public T GetById(Guid? id)
         {
-            return typeSet.Find(id);
+            return typeSet.Find(id.GetValueOrDefault(Guid.Empty));
         }
 
-        public IEnumerable<T> GetAll()
+        public IQueryable<T> GetAll()
         {
             return typeSet;
         }
@@ -38,12 +38,12 @@ namespace MoneyManager.MSSQLLocalDBRepository
 
         public bool Delete(T entity)
         {
-            return DeleteById(entity.Id);
+            return DeleteById(entity?.Id);
         }
 
-        public bool DeleteById(Guid id)
+        public bool DeleteById(Guid? id)
         {
-            T entity = GetById(id);
+            T entity = GetById(id.GetValueOrDefault(Guid.Empty));
             if (entity != null)
                 typeSet.Remove(entity);
             return entity != null;
@@ -57,7 +57,12 @@ namespace MoneyManager.MSSQLLocalDBRepository
 
         private bool disposed = false;
 
-        protected void Dispose(bool disposing)
+        ~Repository()
+        {
+            Dispose(false);
+        }
+
+        protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
                 if (disposing)
