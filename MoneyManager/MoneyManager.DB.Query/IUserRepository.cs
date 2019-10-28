@@ -22,24 +22,16 @@ namespace MoneyManager.Repository
         public UserInfo UserInfo;
         public double Balance;
     }
-    public interface IUserRepository : IRepository<Entity.User>
+    public interface IUserRepository : IRepository<User>
     {
         /// <summary>
         /// Task: "Write a request to return the user by email"
         /// </summary>
-        public Entity.User GetByEmail(string email);
-
-        /// <summary>
-        /// Used by GetInfosSortedByName();
-        /// </summary>
-        /// <returns></returns>
-        public IQueryable<UserInfo> GetInfos();
+        public User GetByEmail(string email);
 
         /// <summary>
         /// Task: "Write a query to return the user list sorted by the user’s name."
-        /// uses GetInfos()
         /// </summary>
-        public IQueryable<UserInfo> GetInfosSortedByName();
-
+        public IQueryable<UserInfo> GetInfos();
     }
 }
