@@ -30,9 +30,14 @@ namespace MoneyManager.MSSQLLocalDBRepository
         
         public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime endDate)
         {
+            return GetInfoByAssetId(assetId).Where(t => t.Date > startDate && t.Date < endDate);
+        }
+
+        public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId)
+        {
             return (from transaction in TransactionSet
-                    where transaction.Asset.Id == assetId && transaction.Date > startDate && transaction.Date < endDate
-                    select transaction).Select(transaction => new TransactionInfo(transaction));
+                   where transaction.Asset.Id == assetId
+                   select transaction).Select(transaction => new TransactionInfo(transaction));
         }
     }
 }
