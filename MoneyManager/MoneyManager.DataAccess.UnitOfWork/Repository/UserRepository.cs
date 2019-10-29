@@ -1,13 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Data.Entity;
-using MoneyManager.Entity;
-using MoneyManager.Repository;
+﻿using System.Linq;
+using MoneyManager.DataAccess.Entity;
+using Microsoft.EntityFrameworkCore;
 
-namespace MoneyManager.MSSQLLocalDBRepository
+namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class UserRepository : Repository<User>
     {
         protected DbSet<User> UserSet { get => typeSet; }
         public UserRepository(DbContext context) : base(context) {}
@@ -15,8 +12,6 @@ namespace MoneyManager.MSSQLLocalDBRepository
         /// <summary>
         /// Task: "Write a request to return the user by email"
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
         public User GetByEmail(string email)
         {
             return (from user in UserSet
@@ -27,7 +22,6 @@ namespace MoneyManager.MSSQLLocalDBRepository
         /// <summary>
         /// Task: "Write a query to return the user list sorted by the user’s name."
         /// </summary>
-        /// <returns></returns>
         public IQueryable<UserInfo> GetInfos()
         {
             return (from user in UserSet

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace MoneyManager.Repository
+namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
     /// <summary>
     /// Task: "For each entity write creating, updating and deleting commands."

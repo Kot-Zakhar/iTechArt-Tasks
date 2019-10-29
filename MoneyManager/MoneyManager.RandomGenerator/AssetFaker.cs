@@ -1,4 +1,4 @@
-﻿using MoneyManager.Entity;
+﻿using MoneyManager.DataAccess.Entity;
 
 namespace MoneyManager.RandomGenerator
 {

@@ -1,13 +1,13 @@
-﻿using System.Data.Entity;
-using MoneyManager.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using MoneyManager.DataAccess.Entity;
 
-namespace MoneyManager.DB
+namespace MoneyManager.DataAccess.Context
 {
     public class MoneyManagerContext : DbContext
     {
-        public MoneyManagerContext(): base("MoneyManagerDB")
+        public MoneyManagerContext()
         {
-            Database.SetInitializer(new MoneyManagerDBInitializer());
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<MoneyManagerContext, Migrations.Configuration>());
         }
 
         public DbSet<Category> Categories { get; set; }

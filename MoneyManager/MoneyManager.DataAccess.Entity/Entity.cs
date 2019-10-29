@@ -1,8 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace MoneyManager.Entity
+namespace MoneyManager.DataAccess.Entity
 {
-    public abstract class Entity
+    public class Entity
     {
         public Entity()
         {
@@ -12,6 +13,9 @@ namespace MoneyManager.Entity
         {
             this.Id = Id;
         }
+
+        [Required]
+        [Key]
         public Guid Id { get; set; }
     }
 }
