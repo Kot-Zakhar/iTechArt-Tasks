@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyManager.DataAccess.Uni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyManager.Service", "MoneyManager.Service\MoneyManager.Service.csproj", "{ACE2483B-26E4-4608-BB4D-49364BADD964}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoneyManager.ConsoleApp", "MoneyManager.ConsoleApp\MoneyManager.ConsoleApp.csproj", "{BD84F283-D24C-4B17-A9BD-AFD5A13D65C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{ACE2483B-26E4-4608-BB4D-49364BADD964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACE2483B-26E4-4608-BB4D-49364BADD964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACE2483B-26E4-4608-BB4D-49364BADD964}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD84F283-D24C-4B17-A9BD-AFD5A13D65C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD84F283-D24C-4B17-A9BD-AFD5A13D65C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD84F283-D24C-4B17-A9BD-AFD5A13D65C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD84F283-D24C-4B17-A9BD-AFD5A13D65C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

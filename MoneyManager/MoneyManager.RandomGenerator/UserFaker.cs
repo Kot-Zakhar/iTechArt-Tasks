@@ -2,6 +2,7 @@
 using System.Text;
 using System.Security.Cryptography;
 using MoneyManager.DataAccess.Entity;
+using System.Collections.Generic;
 
 namespace MoneyManager.RandomGenerator
 {
@@ -28,9 +29,21 @@ namespace MoneyManager.RandomGenerator
                 Email = Faker.Internet.Email(name),
                 Name = name,
                 Salt = salt,
-                Hash = hash
+                Hash = hash,
+                Assets = new List<Asset>()
             };
         }
 
+        public static object ToPlainObject(User user)
+        {
+            return new
+            {
+                user.Id,
+                user.Email,
+                user.Name,
+                user.Salt,
+                user.Hash,
+            };
+        }
     }
 }

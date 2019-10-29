@@ -17,6 +17,6 @@ namespace MoneyManager.DataAccess.Entity
         [ForeignKey("UserId")]
         public User User { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; }
+        public IList<Transaction> Transactions { get; set; }
     }
 }

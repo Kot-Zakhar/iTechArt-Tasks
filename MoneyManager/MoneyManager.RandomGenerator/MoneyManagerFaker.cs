@@ -54,7 +54,7 @@ namespace MoneyManager.RandomGenerator
                     )
                 );
         }
-        public void GenerateTransactionsForEachAsset()
+        public void GenerateTransactionsForEachAssetAndRandomCategory()
         {
             assets.ForEach(asset =>
             {
@@ -73,7 +73,7 @@ namespace MoneyManager.RandomGenerator
             GenerateUsers();
             GenerateAssetsForEachUsers();
             GenerateCategories();
-            GenerateTransactionsForEachAsset();
+            GenerateTransactionsForEachAssetAndRandomCategory();
         }
     }
 }

@@ -12,13 +12,29 @@ namespace MoneyManager.RandomGenerator
         public static int MaxAmount { get; set; } = 10000000;
         public static Transaction CreateTransaction(Asset asset, Category category)
         {
-            return new Transaction()
+            var transaction = new Transaction()
             {
                 Category = category,
                 Asset = asset,
                 Amount = random.Next(MaxAmount) / 1000.0,
                 Date = start.AddDays(random.Next(range)),
                 Comment = Faker.Lorem.Sentence(5)
+            };
+            asset.Transactions.Add(transaction);
+            category.Transactions.Add(transaction);
+            return transaction;
+        }
+
+        public static object ToPlainObject(Transaction transaction)
+        {
+            return new
+            {
+                transaction.Id,
+                transaction.Amount,
+                transaction.Date,
+                transaction.Comment,
+                CategoryId = transaction.Category.Id,
+                AssetId = transaction.Asset.Id
             };
         }
     }

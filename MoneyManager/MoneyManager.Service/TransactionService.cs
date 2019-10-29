@@ -71,7 +71,7 @@ namespace MoneyManager.Service
         /// </summary>
         public IQueryable<TransactionInfo> GetUserTransactionInfos(Guid userId)
         {
-            var result = unitOfWork.AssetRepository.GetUserAssets(userId)
+            return unitOfWork.AssetRepository.GetUserAssets(userId)
                 .OrderBy(a => a.Name)
                 .Join(
                     unitOfWork.TransactionRepository.GetAll(),
@@ -79,7 +79,8 @@ namespace MoneyManager.Service
                     t => t.Asset.Id,
                     (a, t) => t
                 ).OrderByDescending(t => t.Date)
-                .OrderBy(t => t.Category.Name);
+                .OrderBy(t => t.Category.Name)
+                .Select(t => new TransactionInfo(t));
         }
 
     }

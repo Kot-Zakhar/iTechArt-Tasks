@@ -8,8 +8,6 @@ namespace MoneyManager.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IDisposable
     {
-        private static UnitOfWork instance = null;
-
         protected DbContext dbContext;
         public UserRepository UserRepository { get; protected set; }
 
@@ -19,7 +17,7 @@ namespace MoneyManager.DataAccess.UnitOfWork
 
         public TransactionRepository TransactionRepository { get; protected set; }
 
-        private UnitOfWork()
+        public UnitOfWork()
         {
             dbContext = new MoneyManagerContext();
             UserRepository = new UserRepository(dbContext);
@@ -28,12 +26,6 @@ namespace MoneyManager.DataAccess.UnitOfWork
             TransactionRepository = new TransactionRepository(dbContext);
         }
 
-        public static UnitOfWork GetInstance()
-        {
-            if (instance != null)
-                instance = new UnitOfWork();
-            return instance;
-        }
 
         /// <summary>
         /// Commits all changes

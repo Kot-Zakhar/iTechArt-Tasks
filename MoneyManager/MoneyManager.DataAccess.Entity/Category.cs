@@ -24,8 +24,8 @@ namespace MoneyManager.DataAccess.Entity
         [ForeignKey("ParentId")]
         public Category ParentCategory { get; set; }
 
-        public ICollection<Category> ChildCategories { get; set; }
+        public IList<Category> ChildCategories { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; }
+        public IList<Transaction> Transactions { get; set; }
     }
 }
