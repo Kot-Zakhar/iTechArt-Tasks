@@ -21,6 +21,6 @@ namespace MoneyManager.DataAccess.Entity
         [Required]
         public string Salt { get; set; }
 
-        public ICollection<Asset> Assets { get;  set; }
+        public IList<Asset> Assets { get;  set; }
     }
 }
