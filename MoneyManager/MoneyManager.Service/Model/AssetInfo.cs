@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MoneyManager.DataAccess.Entity;
+using System;
 
 namespace MoneyManager.Service.Model
 {

@@ -1,6 +1,6 @@
 ﻿namespace MoneyManager.Service.Model
 {
-    class UserMonthIncomeAndExpensesInfo
+    public class UserMonthIncomeAndExpensesInfo
     {
         public UserInfo UserInfo { get; set; }
         public double Income { get; set; }

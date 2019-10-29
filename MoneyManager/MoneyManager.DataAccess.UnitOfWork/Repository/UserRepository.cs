@@ -20,14 +20,11 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
         }
 
         /// <summary>
-        /// Task: "Write a query to return the user list sorted by the user’s name."
+        /// Sorting by user name
         /// </summary>
-        public IQueryable<UserInfo> GetInfos()
+        public IQueryable<User> GetUsersSorted()
         {
-            return (from user in UserSet
-                    select user)
-                    .Select(user => new UserInfo(user))
-                    .OrderBy(userInfo => userInfo.Name);
+            return UserSet.OrderBy(user => user.Name);
         }
     }
 }
