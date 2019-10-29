@@ -15,7 +15,6 @@ namespace MoneyManager.DataAccess.Entity
         }
 
         [Required]
-        [Key]
         public Guid Id { get; set; }
     }
 }
