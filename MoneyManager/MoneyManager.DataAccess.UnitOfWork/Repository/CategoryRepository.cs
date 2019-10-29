@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Linq;
-using MoneyManager.Entity;
-using MoneyManager.Repository;
+using Microsoft.EntityFrameworkCore;
+using MoneyManager.DataAccess.Entity;
 
-namespace MoneyManager.MSSQLLocalDBRepository
+namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
-    public class CategoryRepository : Repository<Category>, ICategoryRepository
+    public class CategoryRepository : Repository<Category>
     {
         protected DbSet<Category> CategorySet { get => typeSet; }
 

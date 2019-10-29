@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Security.Cryptography;
-using MoneyManager.Entity;
+using MoneyManager.DataAccess.Entity;
 
 namespace MoneyManager.RandomGenerator
 {

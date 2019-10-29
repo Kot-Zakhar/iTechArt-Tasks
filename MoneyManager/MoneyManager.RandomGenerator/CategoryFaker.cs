@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using MoneyManager.Entity;
+using MoneyManager.DataAccess.Entity;
 
 namespace MoneyManager.RandomGenerator
 {
@@ -19,7 +19,7 @@ namespace MoneyManager.RandomGenerator
             var category = CreateCategory();
             category.Name = $"{parentCategory.Name}.{category.Name}";
             category.Type = parentCategory.Type;
-            category.ParentCategory = parentCategory;
+            //category.ParentCategory = parentCategory;
             return category;
         }
 
