@@ -5,13 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Faker.NETCore" Version="1.0.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\MoneyManager.DataAccess.Context\MoneyManager.DataAccess.Context.csproj" />
     <ProjectReference Include="..\MoneyManager.DataAccess.Entity\MoneyManager.DataAccess.Entity.csproj" />
+    <ProjectReference Include="..\MoneyManager.DataAccess.UnitOfWork\MoneyManager.DataAccess.UnitOfWork.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,24 +1,25 @@
 ﻿using System;
 using System.Linq;
-using System.Data.Entity;
-using MoneyManager.DB;
-using MoneyManager.Entity;
-using MoneyManager.Repository;
+using Microsoft.EntityFrameworkCore;
+using MoneyManager.DataAccess.Context;
+using MoneyManager.DataAccess.UnitOfWork.Repository;
 
-namespace MoneyManager.MSSQLLocalDBRepository
+namespace MoneyManager.DataAccess.UnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork
     {
+        private static UnitOfWork instance = null;
+
         protected DbContext dbContext;
-        public IUserRepository UserRepository { get; protected set; }
+        public UserRepository UserRepository { get; protected set; }
 
-        public ICategoryRepository CategoryRepository { get; protected set; }
+        public CategoryRepository CategoryRepository { get; protected set; }
 
-        public IAssetRepository AssetRepository { get; protected set; }
+        public AssetRepository AssetRepository { get; protected set; }
 
-        public ITransactionRepository TransactionRepository { get; protected set; }
+        public TransactionRepository TransactionRepository { get; protected set; }
 
-        public UnitOfWork()
+        private UnitOfWork()
         {
             dbContext = new MoneyManagerContext();
             UserRepository = new UserRepository(dbContext);
@@ -27,11 +28,24 @@ namespace MoneyManager.MSSQLLocalDBRepository
             TransactionRepository = new TransactionRepository(dbContext);
         }
 
+        public static UnitOfWork GetInstance()
+        {
+            if (instance != null)
+                instance = new UnitOfWork();
+            return instance;
+        }
+
+        /// <summary>
+        /// Commits all changes
+        /// </summary>
         public void Commit()
         {
             dbContext.SaveChanges();
         }
 
+        /// <summary>
+        /// Discards all changes that has not been commited
+        /// </summary>
         public void RejectChanges()
         {
             foreach (var entry in dbContext.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged))
@@ -51,6 +65,9 @@ namespace MoneyManager.MSSQLLocalDBRepository
 
 
 
+        /// <summary>
+        /// User by DeleteUserTransactionsInCurrentMonth(Guid userId)
+        /// </summary>
         public int DeleteUserTransactions(Guid userId, DateTime startDate, DateTime endDate)
         {
             IQueryable<AssetInfo> assets = AssetRepository.GetUserAssetInfos(userId);
@@ -60,6 +77,10 @@ namespace MoneyManager.MSSQLLocalDBRepository
             return deleted;
         }
 
+        /// <summary>
+        /// Task: "Write a command to delete all users' (parameter userId) transactions in the current month."
+        /// (uses DeleteUserTransactions(Guid userId, DateTime startDate, DateTime endDate))
+        /// </summary>
         public int DeleteUserTransactionsInCurrentMonth(Guid userId)
         {
             int month = DateTime.Now.Month;
@@ -99,7 +120,7 @@ namespace MoneyManager.MSSQLLocalDBRepository
         {
             return TransactionRepository.GetAll().Where(t => t.Asset.Id == assetId)
                 .Aggregate(
-                    0.0, 
+                    0.0,
                     (balance, transaction) => balance + transaction.Amount,
                     balance => new AssetBalance()
                     {
@@ -109,12 +130,16 @@ namespace MoneyManager.MSSQLLocalDBRepository
                 );
         }
 
+        /// <summary>
+        /// Ordered by Transaction.Date and grouped by month.
+        /// </summary>
         public IQueryable<AssetIncomeAndExpensesInfo> GetAssetIncomeAndExpensesInfos(Guid assetId, DateTime startDate, DateTime endDate)
         {
             Asset asset = AssetRepository.GetById(assetId);
             return TransactionRepository.GetAll().Where(t => t.Asset.Id == assetId && t.Date >= startDate && t.Date <= endDate)
                 .GroupBy(t => new DateTime(t.Date.Year, t.Date.Month, 1))
-                .Select(group => new AssetIncomeAndExpensesInfo(){
+                .Select(group => new AssetIncomeAndExpensesInfo()
+                {
                     Month = group.Key.Month,
                     Year = group.Key.Year,
                     AssetId = new AssetInfo(asset),
@@ -125,18 +150,24 @@ namespace MoneyManager.MSSQLLocalDBRepository
                 });
         }
 
+        /// <summary>
+        /// Write a query that will return the asset list for the selected user (userId) ordered by the asset’s name.
+        /// </summary>
         public IQueryable<AssetBalance> GetUserAssetsBalances(Guid userId)
         {
-            return AssetRepository.GetUserAssetInfos(userId).Select(asset => GetAssetBalanceById(asset.Id));            
+            return AssetRepository.GetUserAssetInfos(userId).Select(asset => GetAssetBalanceById(asset.Id));
         }
 
+        /// <summary>
+        /// Task: "Write a query that will return the current balance for the user."
+        /// </summary>
         public UserBalance GetUserBalance(Guid userId)
         {
             return new UserBalance()
             {
                 Balance = GetUserAssetsBalances(userId).Aggregate(0.0, (value, assetBalance) => value + assetBalance.Balance),
                 UserInfo = new UserInfo(UserRepository.GetById(userId))
-            };          
+            };
         }
 
         /// <summary>
@@ -162,6 +193,10 @@ namespace MoneyManager.MSSQLLocalDBRepository
                 });
         }
 
+        /// <summary>
+        /// Write a query that will return the total value of income and expenses for the selected period (parameters userId, startDate, endDate)
+        /// Ordered by date and grouped by month.
+        /// </summary>
         public IQueryable<UserMonthIncomeAndExpensesInfo> GetUserMonthIncomeAndExpensesInfos(Guid userId, DateTime startDate, DateTime endDate)
         {
             return GetUserTransactionInfos(userId)
@@ -180,6 +215,10 @@ namespace MoneyManager.MSSQLLocalDBRepository
                 });
         }
 
+        /// <summary>
+        /// Write a query to return the transaction list for the selected user (userId)
+        /// ordered descending by Transaction.Date, then ordered ascending by Asset.Name and then ordered ascending by Category.Name.
+        /// </summary>
         public IQueryable<TransactionInfo> GetUserTransactionInfos(Guid userId)
         {
             var assets = AssetRepository

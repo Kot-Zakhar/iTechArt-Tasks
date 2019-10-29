@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using MoneyManager.Entity;
-using MoneyManager.Repository;
+using Microsoft.EntityFrameworkCore;
+using MoneyManager.DataAccess.Entity;
 
-namespace MoneyManager.MSSQLLocalDBRepository
+namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
-    public class AssetRepository : Repository<Asset>, IAssetRepository
+    public class AssetRepository : Repository<Asset>
     {
         protected DbSet<Asset> AssetSet { get => typeSet; }
         public AssetRepository(DbContext context) : base(context) {}

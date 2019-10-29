@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using MoneyManager.Entity;
-using MoneyManager.Repository;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
+using MoneyManager.DataAccess.Entity;
 
-namespace MoneyManager.MSSQLLocalDBRepository
+namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
-    public class TransactionRepository : Repository<Transaction>, ITransactionRepository
+    public class TransactionRepository : Repository<Transaction>
     {
         protected DbSet<Transaction> TransactionSet { get => typeSet; }
         public TransactionRepository(DbContext context) : base(context) {}
@@ -27,7 +26,10 @@ namespace MoneyManager.MSSQLLocalDBRepository
             var to = from.AddDays(DateTime.DaysInMonth(now.Year, now.Month));
             return DeleteByAssetId(assetId, from, to);
         }
-        
+
+        /// <summary>
+        /// Ordering descending by Transaction.Date.
+        /// </summary>
         public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId, DateTime startDate, DateTime endDate)
         {
             return GetInfoByAssetId(assetId).Where(t => t.Date > startDate && t.Date < endDate);

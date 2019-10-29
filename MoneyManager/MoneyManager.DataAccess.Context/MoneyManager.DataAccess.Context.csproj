@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.3.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MoneyManager.Entity\MoneyManager.Entity.csproj" />
+    <ProjectReference Include="..\MoneyManager.DataAccess.Entity\MoneyManager.DataAccess.Entity.csproj" />
     <ProjectReference Include="..\MoneyManager.RandomGenerator\MoneyManager.RandomGenerator.csproj" />
   </ItemGroup>
 

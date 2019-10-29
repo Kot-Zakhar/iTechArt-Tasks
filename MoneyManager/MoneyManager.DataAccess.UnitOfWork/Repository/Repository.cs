@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Data.Entity;
-using MoneyManager.Repository;
+using Microsoft.EntityFrameworkCore;
 
-namespace MoneyManager.MSSQLLocalDBRepository
+namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
     public class Repository<T> : IRepository<T> where T: Entity.Entity
     {
@@ -18,7 +17,7 @@ namespace MoneyManager.MSSQLLocalDBRepository
 
         public T Create(T entity)
         {
-            return typeSet.Add(entity);
+            return typeSet.Add(entity).Entity;
         }
 
         public T GetById(Guid? id)
