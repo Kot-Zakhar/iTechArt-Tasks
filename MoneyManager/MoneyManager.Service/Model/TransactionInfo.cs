@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MoneyManager.DataAccess.Entity;
+using System;
 
 namespace MoneyManager.Service.Model
 {
-    class TransactionInfo
+    public class TransactionInfo
     {
         public Guid Id { get; set; }
         public AssetInfo AssetInfo { get; set; }

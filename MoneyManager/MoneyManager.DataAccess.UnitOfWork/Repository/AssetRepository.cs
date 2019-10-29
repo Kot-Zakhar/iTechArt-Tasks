@@ -10,12 +10,9 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
         protected DbSet<Asset> AssetSet { get => typeSet; }
         public AssetRepository(DbContext context) : base(context) {}
 
-        public IQueryable<AssetInfo> GetUserAssetInfos(Guid userId)
+        public IQueryable<Asset> GetUserAssets(Guid userId)
         {
-            return (from asset in AssetSet
-                    where asset.User.Id == userId
-                    select asset)
-                    .Select(a => new AssetInfo(a));
+            return AssetSet.Where(a => a.User.Id == userId);
         }
     }
 }
