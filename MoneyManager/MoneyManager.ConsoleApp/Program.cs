@@ -13,16 +13,13 @@ namespace MoneyManager.ConsoleApp
             if (unitOfWork.UserRepository.GetAll().Any() || unitOfWork.CategoryRepository.GetAll().Any())
                 return;
 
-            var fakeGenerator = new MoneyManagerFaker();
+            var faker = new MoneyManagerFaker();
+            faker.Generate();
 
-            fakeGenerator.Generate();
-
-            fakeGenerator.transactions.ForEach(t => unitOfWork.TransactionRepository.Create(t));
-            fakeGenerator.categories.ForEach(c => unitOfWork.CategoryRepository.Create(c));
-            fakeGenerator.assets.ForEach(a => unitOfWork.AssetRepository.Create(a));
-            fakeGenerator.users.ForEach(u => unitOfWork.UserRepository.Create(u));
-
-            unitOfWork.Commit();
+            faker.transactions.ForEach(t => unitOfWork.TransactionRepository.Create(t));
+            faker.categories.ForEach(c => unitOfWork.CategoryRepository.Create(c));
+            faker.assets.ForEach(a => unitOfWork.AssetRepository.Create(a));
+            faker.users.ForEach(u => unitOfWork.UserRepository.Create(u));
         }
         static void Main(string[] args)
         {

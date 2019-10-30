@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20191030163552_InitDB.cs" />
-    <Compile Remove="Migrations\20191030163552_InitDB.Designer.cs" />
+    <Compile Remove="Migrations\20191030165644_InitDB.cs" />
+    <Compile Remove="Migrations\20191030165644_InitDB.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
