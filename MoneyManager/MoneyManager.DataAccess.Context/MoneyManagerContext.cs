@@ -13,21 +13,17 @@ namespace MoneyManager.DataAccess.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBUilder)
         {
-            optionsBUilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=moneymanagerdb;Trusted_Connection=True;");
+            optionsBUilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MoneyManagerLocalDB;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            var generator = new RandomGenerator.MoneyManagerFaker();
-
-            generator.Generate();
-
-            modelBuilder.Entity<Category>().ToTable("Category").HasData(generator.categories.Select(c => RandomGenerator.CategoryFaker.ToPlainObject(c)));
-            modelBuilder.Entity<User>().ToTable("User").HasData(generator.users.Select(u => RandomGenerator.UserFaker.ToPlainObject(u)));
-            modelBuilder.Entity<Asset>().ToTable("Asset").HasData(generator.assets.Select(a => RandomGenerator.AssetFaker.ToPlainObject(a)));
-            modelBuilder.Entity<Transaction>().ToTable("Transaction").HasData(generator.transactions.Select(t => RandomGenerator.TransactionFaker.ToPlainObject(t)));
+            modelBuilder.Entity<Category>().ToTable("Category");
+            modelBuilder.Entity<User>().ToTable("User");
+            modelBuilder.Entity<Asset>().ToTable("Asset");
+            modelBuilder.Entity<Transaction>().ToTable("Transaction");
         }
 
         public DbSet<Category> Categories { get; set; }
