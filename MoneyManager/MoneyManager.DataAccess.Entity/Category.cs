@@ -21,10 +21,6 @@ namespace MoneyManager.DataAccess.Entity
         [Required]
         public CategoryType Type { get;  set; }
 
-        [ForeignKey("ParentId")]
-        public Category ParentCategory { get; set; }
-
-        public IList<Category> ChildCategories { get; set; }
         public IList<Transaction> Transactions { get; set; }
     }
 }
