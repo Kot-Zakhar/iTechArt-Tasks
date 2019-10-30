@@ -10,8 +10,8 @@ using MoneyManager.DataAccess.Context;
 namespace MoneyManager.DataAccess.Context.Migrations
 {
     [DbContext(typeof(MoneyManagerContext))]
-    [Migration("20191030163937_InitDB")]
-    partial class InitDB
+    [Migration("20191030170250_CreateDB")]
+    partial class CreateDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
