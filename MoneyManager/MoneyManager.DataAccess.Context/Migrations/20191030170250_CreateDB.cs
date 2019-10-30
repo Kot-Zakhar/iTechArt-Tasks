@@ -7,6 +7,7 @@ namespace MoneyManager.DataAccess.Context.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            this.Down(migrationBuilder);
             migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
