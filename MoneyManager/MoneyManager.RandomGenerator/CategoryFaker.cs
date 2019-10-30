@@ -12,8 +12,8 @@ namespace MoneyManager.RandomGenerator
                 Name = Faker.Company.Name(),
                 Type = (CategoryType)Faker.RandomNumber.Next(0, 1),
                 Transactions = new List<Transaction>(),
-                ChildCategories = new List<Category>(),
-                ParentCategory = null
+                //ChildCategories = new List<Category>(),
+                //ParentCategory = null
             };
         }
 
@@ -22,8 +22,8 @@ namespace MoneyManager.RandomGenerator
             var category = CreateCategory();
             category.Name = $"{parentCategory.Name}.{category.Name}";
             category.Type = parentCategory.Type;
-            category.ParentCategory = parentCategory;
-            parentCategory.ChildCategories.Add(category);
+            //category.ParentCategory = parentCategory;
+            //parentCategory.ChildCategories.Add(category);
             return category;
         }
 
@@ -58,7 +58,7 @@ namespace MoneyManager.RandomGenerator
                 category.Id,
                 category.Name,
                 category.Type,
-                ParentId = category.ParentCategory?.Id,
+                //ParentId = category.ParentCategory?.Id,
             };
         }
     }

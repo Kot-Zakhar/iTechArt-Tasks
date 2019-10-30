@@ -18,7 +18,7 @@ namespace MoneyManager.Service
         public IQueryable<CategoryInfo> GetParentCategories(CategoryType categoryType)
         {
             return unitOfWork.CategoryRepository.GetCategoriesSorted(categoryType)
-                .Where(c => String.IsNullOrEmpty(c.ParentCategory.Name))
+                //.Where(c => String.IsNullOrEmpty(c.ParentCategory.Name))
                 .Select(c => new CategoryInfo(c));
         }
 
@@ -80,7 +80,7 @@ namespace MoneyManager.Service
                     t => t.Asset.Id,
                     (a, t) => t
                 )
-                .Where(t => t.Date >= firstDay && t.Date <= lastDay && t.Category.Type == categoryType && String.IsNullOrEmpty(t.Category.ParentCategory.Name))
+                .Where(t => t.Date >= firstDay && t.Date <= lastDay && t.Category.Type == categoryType /*&& String.IsNullOrEmpty(t.Category.ParentCategory.Name)*/)
                 .GroupBy(t => t.Category)
                 .Select(transactionGroup => new CategoryAmountInfo()
                 {
