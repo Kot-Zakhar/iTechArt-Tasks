@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="12.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CustomLogger.ConsoleProvider\CustomLogger.ConsoleProvider.csproj" />
+    <ProjectReference Include="..\CustomLogger.FileProvider\CustomLogger.FileProvider.csproj" />
+    <ProjectReference Include="..\CustomLogger\CustomLogger.csproj" />
+  </ItemGroup>
+
+</Project>
