@@ -13,7 +13,7 @@ namespace ShareMe.DataAccessLayer.Entity
 
         [DataType(DataType.EmailAddress)]
         [Required]
-        public string email { get; set; }
+        public string Email { get; set; }
 
         [DataType(DataType.Password)]
         [Required]

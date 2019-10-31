@@ -14,5 +14,8 @@ namespace ShareMe.DataAccessLayer.Entity
         [StringLength(100)]
         [Required]
         public string Name { get; set; }
+
+        public IList<Post> Posts { get; set; } = new List<Post>();
+        public IList<Category> ChildCategories { get; set; } = new List<Category>();
     }
 }

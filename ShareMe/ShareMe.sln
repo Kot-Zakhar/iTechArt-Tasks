@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareMe.DataAccessLayer.Ent
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareMe.DataAccessLayer.Context", "ShareMe.DataAccessLayer.Context\ShareMe.DataAccessLayer.Context.csproj", "{182A274A-BD74-4834-8950-642CC8083B8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareMe.DataAccessLayer.UnitOfWork", "ShareMe.DataAccessLayer.UnitOfWork\ShareMe.DataAccessLayer.UnitOfWork.csproj", "{CC47EC5C-88D5-440D-A080-4ED6D349CD90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareMe.Service", "ShareMe.Service\ShareMe.Service.csproj", "{C4E5BCA3-ADC7-47E1-90E4-8FE243138D4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{182A274A-BD74-4834-8950-642CC8083B8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{182A274A-BD74-4834-8950-642CC8083B8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{182A274A-BD74-4834-8950-642CC8083B8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC47EC5C-88D5-440D-A080-4ED6D349CD90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC47EC5C-88D5-440D-A080-4ED6D349CD90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC47EC5C-88D5-440D-A080-4ED6D349CD90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC47EC5C-88D5-440D-A080-4ED6D349CD90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4E5BCA3-ADC7-47E1-90E4-8FE243138D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4E5BCA3-ADC7-47E1-90E4-8FE243138D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4E5BCA3-ADC7-47E1-90E4-8FE243138D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4E5BCA3-ADC7-47E1-90E4-8FE243138D4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
