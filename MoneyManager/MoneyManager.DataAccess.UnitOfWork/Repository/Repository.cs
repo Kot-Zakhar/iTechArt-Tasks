@@ -6,33 +6,33 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
     public class Repository<T> : IRepository<T> where T: Entity.Entity
     {
-        protected DbContext context;
-        protected DbSet<T> typeSet;
+        protected DbContext Context;
+        protected DbSet<T> TypeSet;
 
         public Repository(DbContext context)
         {
-            this.context = context ?? throw new ArgumentNullException(typeof(DbContext).FullName);
-            typeSet = context.Set<T>();
+            this.Context = context ?? throw new ArgumentNullException(typeof(DbContext).FullName);
+            TypeSet = context.Set<T>();
         }
 
         public T Create(T entity)
         {
-            return typeSet.Add(entity).Entity;
+            return TypeSet.Add(entity).Entity;
         }
 
         public T GetById(Guid? id)
         {
-            return typeSet.Find(id.GetValueOrDefault(Guid.Empty));
+            return TypeSet.Find(id.GetValueOrDefault(Guid.Empty));
         }
 
         public IQueryable<T> GetAll()
         {
-            return typeSet;
+            return TypeSet;
         }
 
         public void Update(T entity)
         {
-            context.Entry(entity).State = EntityState.Modified;
+            Context.Entry(entity).State = EntityState.Modified;
         }
 
         public bool Delete(T entity)
@@ -44,13 +44,13 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
         {
             T entity = GetById(id.GetValueOrDefault(Guid.Empty));
             if (entity != null)
-                typeSet.Remove(entity);
+                TypeSet.Remove(entity);
             return entity != null;
         }
 
         public void Save()
         {
-            context.SaveChanges();
+            Context.SaveChanges();
         }
 
 
@@ -66,9 +66,9 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
             if (!disposed)
                 if (disposing)
                 {
-                    context.Dispose();
-                    typeSet = null;
-                    context = null;
+                    Context.Dispose();
+                    TypeSet = null;
+                    Context = null;
                 }
             disposed = true;
         }

@@ -7,7 +7,7 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
     public class AssetRepository : Repository<Asset>
     {
-        protected DbSet<Asset> AssetSet { get => typeSet; }
+        protected DbSet<Asset> AssetSet { get => TypeSet; }
         public AssetRepository(DbContext context) : base(context) {}
 
         public IQueryable<Asset> GetUserAssets(Guid userId)

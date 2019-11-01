@@ -7,15 +7,13 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
     public class TransactionRepository : Repository<Transaction>
     {
-        protected DbSet<Transaction> TransactionSet { get => typeSet; }
+        protected DbSet<Transaction> TransactionSet { get => TypeSet; }
         public TransactionRepository(DbContext context) : base(context) {}
 
         public void DeleteByAssetId(Guid assetId, DateTime startDate, DateTime endDate)
         {
             TransactionSet.RemoveRange(
-                from transaction in TransactionSet
-                where transaction.Asset.Id == assetId && transaction.Date > startDate && transaction.Date < endDate
-                select transaction
+                TransactionSet.Where(transaction => transaction.Asset.Id == assetId && transaction.Date > startDate && transaction.Date < endDate)
             );
         }
 

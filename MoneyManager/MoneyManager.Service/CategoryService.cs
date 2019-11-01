@@ -8,16 +8,16 @@ namespace MoneyManager.Service
 {
     class CategoryService
     {
-        protected readonly UnitOfWork unitOfWork;
+        protected readonly UnitOfWork UnitOfWork;
 
         public CategoryService(UnitOfWork unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            this.UnitOfWork = unitOfWork;
         }
 
         public IQueryable<CategoryInfo> GetParentCategories(CategoryType categoryType)
         {
-            return unitOfWork.CategoryRepository.GetCategoriesSorted(categoryType)
+            return UnitOfWork.CategoryRepository.GetCategoriesSorted(categoryType)
                 //.Where(c => String.IsNullOrEmpty(c.ParentCategory.Name))
                 .Select(c => new CategoryInfo(c));
         }
@@ -38,22 +38,19 @@ namespace MoneyManager.Service
         /// </summary>
         public IQueryable<CategoryInfo> GetUserActiveCategoryInfos(Guid userId)
         {
-            int month = DateTime.Now.Month;
-            int year = DateTime.Now.Year;
-            int days = DateTime.DaysInMonth(year, month);
-            DateTime firstDay = new DateTime(year, month, 1);
-            DateTime lastDay = firstDay.AddDays(days);
+            DateTime firstDay = DateTime.Now.GetFirstDayOfMonth();
+            DateTime lastDay = DateTime.Now.GetLastDayOfMonth();
 
-            return unitOfWork.AssetRepository.GetAll()
+            return UnitOfWork.AssetRepository.GetAll()
                 .Where(a => a.User.Id == userId)
                 .Join(
-                    unitOfWork.TransactionRepository.GetAll()
+                    UnitOfWork.TransactionRepository.GetAll()
                         .Where(t => t.Date >= firstDay && t.Date <= lastDay),
                     a => a.Id,
                     t => t.Asset.Id,
                     (a, t) => t
                 )
-                .Join(unitOfWork.CategoryRepository.GetAll(),
+                .Join(UnitOfWork.CategoryRepository.GetAll(),
                     t => t.Category.Id,
                     c => c.Id,
                     (t, c) => new CategoryInfo(c)
@@ -73,9 +70,9 @@ namespace MoneyManager.Service
             DateTime firstDay = new DateTime(year, month, 1);
             DateTime lastDay = firstDay.AddDays(days);
 
-            return unitOfWork.AssetRepository.GetUserAssets(userId)
+            return UnitOfWork.AssetRepository.GetUserAssets(userId)
                 .Join(
-                    unitOfWork.TransactionRepository.GetAll(),
+                    UnitOfWork.TransactionRepository.GetAll(),
                     a => a.Id,
                     t => t.Asset.Id,
                     (a, t) => t

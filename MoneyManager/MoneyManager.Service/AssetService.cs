@@ -8,16 +8,16 @@ namespace MoneyManager.Service
 {
     class AssetService
     {
-        protected readonly UnitOfWork unitOfWork;
+        protected readonly UnitOfWork UnitOfWork;
 
         public AssetService(UnitOfWork unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            this.UnitOfWork = unitOfWork;
         }
 
         public IQueryable<AssetInfo> GetUserAssetInfos(Guid userId)
         {
-            return unitOfWork.AssetRepository.GetUserAssets(userId)
+            return UnitOfWork.AssetRepository.GetUserAssets(userId)
                 .OrderBy(a => a.Name)
                 .Select(a => new AssetInfo(a));
         }
@@ -26,17 +26,14 @@ namespace MoneyManager.Service
 
         public AssetBalance GetAssetBalanceById(Guid assetId)
         {
-            Asset asset = unitOfWork.AssetRepository.GetById(assetId);
-            return unitOfWork.TransactionRepository.GetAll().Where(t => t.Asset.Id == assetId)
-                .Aggregate(
-                    0.0,
-                    (balance, transaction) => balance + transaction.Amount,
-                    balance => new AssetBalance()
-                    {
-                        AssetInfo = new AssetInfo(asset),
-                        Balance = balance
-                    }
-                );
+            Asset asset = UnitOfWork.AssetRepository.GetById(assetId);
+            return new AssetBalance()
+            {
+                AssetInfo = new AssetInfo(asset),
+                Balance = UnitOfWork.TransactionRepository.GetAll()
+                            .Where(t => t.Asset.Id == assetId)
+                            .Sum(t => t.Amount * (t.Category.Type == CategoryType.Expense ? -1 : 1))
+            };
         }
 
         /// <summary>
@@ -44,8 +41,8 @@ namespace MoneyManager.Service
         /// </summary>
         public IQueryable<AssetIncomeAndExpensesInfo> GetAssetIncomeAndExpensesInfos(Guid assetId, DateTime startDate, DateTime endDate)
         {
-            Asset asset = unitOfWork.AssetRepository.GetById(assetId);
-            return unitOfWork.TransactionRepository.GetAllByAssetId(assetId)
+            Asset asset = UnitOfWork.AssetRepository.GetById(assetId);
+            return UnitOfWork.TransactionRepository.GetAllByAssetId(assetId)
                 .Where(t => t.Date >= startDate && t.Date <= endDate)
                 .GroupBy(t => new DateTime(t.Date.Year, t.Date.Month, 1))
                 .Select(group => new AssetIncomeAndExpensesInfo()
@@ -67,7 +64,7 @@ namespace MoneyManager.Service
         /// </summary>
         public IQueryable<AssetBalance> GetUserAssetsBalances(Guid userId)
         {
-            return unitOfWork.AssetRepository.GetUserAssets(userId)
+            return UnitOfWork.AssetRepository.GetUserAssets(userId)
                 .Select(asset => GetAssetBalanceById(asset.Id))
                 .OrderBy(b => b.AssetInfo.Name);
         }

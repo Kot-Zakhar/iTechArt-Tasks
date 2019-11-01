@@ -6,7 +6,7 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
     public class UserRepository : Repository<User>
     {
-        protected DbSet<User> UserSet { get => typeSet; }
+        protected DbSet<User> UserSet { get => TypeSet; }
         public UserRepository(DbContext context) : base(context) {}
 
         /// <summary>
@@ -14,9 +14,7 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
         /// </summary>
         public User GetByEmail(string email)
         {
-            return (from user in UserSet
-                    where user.Email == email
-                    select user).FirstOrDefault();
+            return UserSet.FirstOrDefault(u => u.Email == email);
         }
 
         /// <summary>

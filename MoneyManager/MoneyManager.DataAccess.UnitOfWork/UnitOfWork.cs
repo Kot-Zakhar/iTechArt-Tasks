@@ -8,7 +8,7 @@ namespace MoneyManager.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IDisposable
     {
-        protected DbContext dbContext;
+        protected DbContext DbContext;
         public UserRepository UserRepository { get; protected set; }
 
         public CategoryRepository CategoryRepository { get; protected set; }
@@ -19,11 +19,11 @@ namespace MoneyManager.DataAccess.UnitOfWork
 
         public UnitOfWork()
         {
-            dbContext = new MoneyManagerContext();
-            UserRepository = new UserRepository(dbContext);
-            CategoryRepository = new CategoryRepository(dbContext);
-            AssetRepository = new AssetRepository(dbContext);
-            TransactionRepository = new TransactionRepository(dbContext);
+            DbContext = new MoneyManagerContext();
+            UserRepository = new UserRepository(DbContext);
+            CategoryRepository = new CategoryRepository(DbContext);
+            AssetRepository = new AssetRepository(DbContext);
+            TransactionRepository = new TransactionRepository(DbContext);
         }
 
 
@@ -32,7 +32,7 @@ namespace MoneyManager.DataAccess.UnitOfWork
         /// </summary>
         public void Commit()
         {
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace MoneyManager.DataAccess.UnitOfWork
         /// </summary>
         public void RejectChanges()
         {
-            foreach (var entry in dbContext.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged))
+            foreach (var entry in DbContext.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged))
             {
                 switch (entry.State)
                 {
@@ -79,8 +79,8 @@ namespace MoneyManager.DataAccess.UnitOfWork
                     AssetRepository = null;
                     CategoryRepository.Dispose();
                     CategoryRepository = null;
-                    dbContext.Dispose();
-                    dbContext = null;
+                    DbContext.Dispose();
+                    DbContext = null;
                 }
             disposed = true;
         }

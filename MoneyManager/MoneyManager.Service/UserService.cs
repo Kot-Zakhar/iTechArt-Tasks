@@ -8,11 +8,11 @@ namespace MoneyManager.Service
 {
     public class UserService
     {
-        protected readonly UnitOfWork unitOfWork;
+        protected readonly UnitOfWork UnitOfWork;
 
         public UserService(UnitOfWork unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            this.UnitOfWork = unitOfWork;
         }
 
 
@@ -21,7 +21,7 @@ namespace MoneyManager.Service
         /// </summary>
         public IQueryable<UserInfo> GetInfos()
         {
-            return unitOfWork.UserRepository.GetUsersSorted()
+            return UnitOfWork.UserRepository.GetUsersSorted()
                     .Select(user => new UserInfo(user))
                     .OrderBy(userInfo => userInfo.Name);
         }
@@ -31,18 +31,18 @@ namespace MoneyManager.Service
         /// </summary>
         public UserBalance GetUserBalance(Guid userId)
         {
-            return unitOfWork.AssetRepository.GetUserAssets(userId)
-                .Join(
-                    unitOfWork.TransactionRepository.GetAll(),
-                    a => a.Id,
-                    t => t.Asset.Id,
-                    (a, t) => t
-                )
-                .Aggregate(
-                    0.0,
-                    (value, t) => value + (t.Category.Type == CategoryType.Income? 1 : -1) * t.Amount,
-                    value => new UserBalance() { Balance = value, UserInfo = new UserInfo(unitOfWork.UserRepository.GetById(userId)) }
-                );
+            return new UserBalance()
+            {
+                UserInfo = new UserInfo(UnitOfWork.UserRepository.GetById(userId)),
+                Balance = UnitOfWork.AssetRepository.GetUserAssets(userId)
+                    .Join(
+                        UnitOfWork.TransactionRepository.GetAll(),
+                        asset => asset.Id,
+                        transaction => transaction.Asset.Id,
+                        (asset, transaction) => transaction
+                    )
+                    .Sum(transaction => (transaction.Category.Type == CategoryType.Income ? 1 : -1) * transaction.Amount)
+            };
         }
 
         /// <summary>
@@ -51,24 +51,21 @@ namespace MoneyManager.Service
         /// </summary>
         public IQueryable<UserMonthIncomeAndExpensesInfo> GetUserMonthIncomeAndExpensesInfos(Guid userId, DateTime startDate, DateTime endDate)
         {
-            return unitOfWork.AssetRepository.GetUserAssets(userId)
+            return UnitOfWork.AssetRepository.GetUserAssets(userId)
                 .Join(
-                    unitOfWork.TransactionRepository.GetAll().Where(t => t.Date >= startDate && t.Date <= endDate),
-                    a => a.Id,
-                    t => t.Asset.Id,
-                    (a, t) => t
+                    UnitOfWork.TransactionRepository.GetAll().Where(transaction => transaction.Date >= startDate && transaction.Date <= endDate),
+                    asset => asset.Id,
+                    transaction => transaction.Asset.Id,
+                    (asset, transaction) => transaction
                 )
-                .GroupBy(t => new DateTime(t.Date.Year, t.Date.Month, 1))
+                .GroupBy(transaction => new DateTime(transaction.Date.Year, transaction.Date.Month, 1))
                 .Select(transactionGroup => new UserMonthIncomeAndExpensesInfo()
                 {
                     Month = transactionGroup.Key.Month,
                     Year = transactionGroup.Key.Year,
-                    UserInfo = new UserInfo(unitOfWork.UserRepository.GetById(userId)),
-                    Expenses = transactionGroup.Where(t => t.Category.Type == CategoryType.Expense)
-                                .Aggregate(0.0, (value, transaction) => value + transaction.Amount),
-                    Income = transactionGroup.Where(t => t.Category.Type == CategoryType.Income)
-                                .Aggregate(0.0, (value, transaction) => value + transaction.Amount),
-
+                    UserInfo = new UserInfo(UnitOfWork.UserRepository.GetById(userId)),
+                    Expenses = transactionGroup.Where(transaction => transaction.Category.Type == CategoryType.Expense).Sum(transaction => transaction.Amount),
+                    Income = transactionGroup.Where(transaction => transaction.Category.Type == CategoryType.Income).Sum(transaction => transaction.Amount)
                 });
         }
     }

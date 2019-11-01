@@ -10,11 +10,11 @@ namespace MoneyManager.Service
 {
     class TransactionService
     {
-        protected readonly UnitOfWork unitOfWork;
+        protected readonly UnitOfWork UnitOfWork;
 
         public TransactionService(UnitOfWork unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            this.UnitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -27,15 +27,15 @@ namespace MoneyManager.Service
 
         public IQueryable<TransactionInfo> GetInfoByAssetId(Guid assetId)
         {
-            return unitOfWork.TransactionRepository.GetAllByAssetId(assetId)
+            return UnitOfWork.TransactionRepository.GetAllByAssetId(assetId)
                 .Select(t => new TransactionInfo(t));
         }
         
         public void DeleteByAssetId(Guid assetId, DateTime startDate, DateTime endDate) =>
-            unitOfWork.TransactionRepository.DeleteByAssetId(assetId, startDate, endDate);
+            UnitOfWork.TransactionRepository.DeleteByAssetId(assetId, startDate, endDate);
 
         public void DeleteByAssetIdInCurrentMonth(Guid assetId) =>
-            unitOfWork.TransactionRepository.DeleteByAssetIdInCurrentMonth(assetId);
+            UnitOfWork.TransactionRepository.DeleteByAssetIdInCurrentMonth(assetId);
 
 
 
@@ -45,9 +45,9 @@ namespace MoneyManager.Service
         /// </summary>
         public void DeleteUserTransactions(Guid userId, DateTime startDate, DateTime endDate)
         {
-            IQueryable<Asset> assets = unitOfWork.AssetRepository.GetUserAssets(userId);
+            IQueryable<Asset> assets = UnitOfWork.AssetRepository.GetUserAssets(userId);
             foreach (var asset in assets)
-                unitOfWork.TransactionRepository.DeleteByAssetId(asset.Id, startDate, endDate);
+                UnitOfWork.TransactionRepository.DeleteByAssetId(asset.Id, startDate, endDate);
         }
 
         /// <summary>
@@ -56,11 +56,9 @@ namespace MoneyManager.Service
         /// </summary>
         public void DeleteUserTransactionsInCurrentMonth(Guid userId)
         {
-            int month = DateTime.Now.Month;
-            int year = DateTime.Now.Year;
-            int days = DateTime.DaysInMonth(year, month);
-            DateTime firstDay = new DateTime(year, month, 1);
-            DeleteUserTransactions(userId, firstDay, firstDay.AddDays(days));
+            DateTime firstDay = DateTime.Now.GetFirstDayOfMonth();
+            DateTime lastDay = DateTime.Now.GetLastDayOfMonth();
+            DeleteUserTransactions(userId, firstDay, lastDay);
         }
 
 
@@ -71,10 +69,10 @@ namespace MoneyManager.Service
         /// </summary>
         public IQueryable<TransactionInfo> GetUserTransactionInfos(Guid userId)
         {
-            return unitOfWork.AssetRepository.GetUserAssets(userId)
+            return UnitOfWork.AssetRepository.GetUserAssets(userId)
                 .OrderBy(a => a.Name)
                 .Join(
-                    unitOfWork.TransactionRepository.GetAll(),
+                    UnitOfWork.TransactionRepository.GetAll(),
                     a => a.Id,
                     t => t.Asset.Id,
                     (a, t) => t

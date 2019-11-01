@@ -6,7 +6,7 @@ namespace MoneyManager.DataAccess.UnitOfWork.Repository
 {
     public class CategoryRepository : Repository<Category>
     {
-        protected DbSet<Category> CategorySet { get => typeSet; }
+        protected DbSet<Category> CategorySet { get => TypeSet; }
 
         public CategoryRepository(DbContext context) : base(context) {}
 
