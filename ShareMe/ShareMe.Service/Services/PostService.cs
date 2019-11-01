@@ -33,9 +33,9 @@ namespace ShareMe.Service
             return PostRepository.GetAll().Where(post => post.PostTags.Any(postTag => postTag.Tag.Id == tagId));
         }
 
-        public IQueryable<Post> GetPostByCategoryId(Guid categoryId)
+        public IQueryable<Post> GetPostsByCategoryId(Guid categoryId)
         {
-            return PostRepository.GetAll().Where(post => post.Categories.Any(category => category.Id == categoryId));
+            return PostRepository.GetAll().Where(post => post.Category.Id == categoryId);
         }
 
         public IQueryable<Post> GetTopRatedPosts(int amount)

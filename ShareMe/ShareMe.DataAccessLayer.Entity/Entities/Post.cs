@@ -34,11 +34,9 @@ namespace ShareMe.DataAccessLayer.Entity
         public string URI { get; set; }
 
         [ForeignKey("CategoryId")]
-        [Required]
         public Category Category { get; set; }
 
         public IList<PostTag> PostTags { get; set; } = new List<PostTag>();
-        public IList<Category> Categories { get; set; } = new List<Category>();
         public IList<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

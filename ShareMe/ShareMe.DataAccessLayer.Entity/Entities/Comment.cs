@@ -12,7 +12,6 @@ namespace ShareMe.DataAccessLayer.Entity
 
         public Comment(Guid id) : base(id) { }
 
-        [Required]
         [ForeignKey("PostId")]
         public Post Post { get; set; }
 
@@ -21,7 +20,6 @@ namespace ShareMe.DataAccessLayer.Entity
 
         public IList<Comment> ChildComments { get; set; } = new List<Comment>();
 
-        [Required]
         [ForeignKey("AuthorId")]
         public User Author { get; set; }
 

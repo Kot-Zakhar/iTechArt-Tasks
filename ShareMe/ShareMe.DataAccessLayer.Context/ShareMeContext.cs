@@ -25,7 +25,7 @@ namespace ShareMe.DataAccessLayer.Context
             modelBuilder.Entity<Post>().ToTable("Post");
             modelBuilder.Entity<Tag>().ToTable("Tag");
             modelBuilder.Entity<User>().ToTable("User");
-            modelBuilder.Entity<PostTag>().ToTable("PostTag").HasKey(entity => new { TagId = entity.Tag.Id, PostId = entity.Post.Id });
+            modelBuilder.Entity<PostTag>().ToTable("PostTag").HasKey(pt => new { pt.PostId, pt.TagId });
 
         }
 

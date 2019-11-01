@@ -8,12 +8,10 @@ namespace ShareMe.DataAccessLayer.Entity
 {
     public class PostTag
     {
-        [Required]
-        [ForeignKey("PostId")]
+        public Guid? PostId { get; set; }
         public Post Post { get; set; }
 
-        [Required]
-        [ForeignKey("TagId")]
+        public Guid? TagId { get; set; }
         public Tag Tag { get; set; }
     }
 }

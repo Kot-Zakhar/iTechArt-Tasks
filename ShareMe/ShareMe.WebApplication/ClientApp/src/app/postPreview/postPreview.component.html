@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="card">
+        <img class="card-img-top" [src]="post.imageSrc" alt="TempPic">
+        <div class="card-body">
+            <h3 class="card-title">{{post.title}}</h3>
+            <h5 class="card-title">
+                <p>{{post.author.username}}</p>
+                <p>{{post.creationDate}}</p>
+            </h5>
+            <p class="card-text">{{post.content.wholeText}}</p>
+        </div>
+        <div class="card-footer text-muted">
+            <div class="btn btn-secondary">tag 1</div>
+            <div class="btn btn-secondary">tag 2</div>
+            <div class="btn btn-primary">Read more</div>
+        </div>
+    </div>
+
+</div>
