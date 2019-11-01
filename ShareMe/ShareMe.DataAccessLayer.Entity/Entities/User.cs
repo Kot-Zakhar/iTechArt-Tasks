@@ -25,6 +25,6 @@ namespace ShareMe.DataAccessLayer.Entity
         public string Name { get; set; }
         public string Surname { get; set; }
 
-        public IList<Comment> comments { get; set; }
+        public IList<Comment> Comments { get; set; }
     }
 }

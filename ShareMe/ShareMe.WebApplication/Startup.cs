@@ -66,7 +66,7 @@ namespace ShareMe.WebApplication
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
-                {
+                { 
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });

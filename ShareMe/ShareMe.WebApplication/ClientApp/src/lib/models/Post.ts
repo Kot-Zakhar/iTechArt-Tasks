@@ -11,4 +11,5 @@ export class Post extends Entity {
     content: Text;
     imageSrc: string;
     category: Category;
+    tags: Tag[];
 }

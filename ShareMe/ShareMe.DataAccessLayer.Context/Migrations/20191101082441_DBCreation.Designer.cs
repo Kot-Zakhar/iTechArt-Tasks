@@ -184,7 +184,7 @@ namespace ShareMe.DataAccessLayer.Context.Migrations
             modelBuilder.Entity("ShareMe.DataAccessLayer.Entity.Comment", b =>
                 {
                     b.HasOne("ShareMe.DataAccessLayer.Entity.User", "Author")
-                        .WithMany("comments")
+                        .WithMany("Comments")
                         .HasForeignKey("AuthorId");
 
                     b.HasOne("ShareMe.DataAccessLayer.Entity.Comment", "ParentComment")
