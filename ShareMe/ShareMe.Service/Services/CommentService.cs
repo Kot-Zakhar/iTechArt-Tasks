@@ -7,11 +7,11 @@ using System.Text;
 
 namespace ShareMe.Service
 {
-    class CommentService : Service<Comment>
+    public class CommentService : Service<Comment>
     {
         protected readonly UnitOfWork unitOfWork;
 
-        protected IRepository<Comment> CommentRepository { get => this.repository; }
+        protected IRepository<Comment> CommentRepository { get => this.Repository; }
 
         public CommentService(UnitOfWork unitOfWork) : base(unitOfWork.CommentRepository)
         {
@@ -31,6 +31,11 @@ namespace ShareMe.Service
         public int GetAmountOfChildComments(Guid commentId)
         {
             return CommentRepository.GetAll().Where(comment => comment.Id == commentId && comment.ParentComment != null).Count();
+        }
+
+        public override IQueryable<Comment> GetAll()
+        {
+            return unitOfWork.CommentRepository.GetAll();
         }
     }
 }

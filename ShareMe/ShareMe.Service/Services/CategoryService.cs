@@ -9,7 +9,7 @@ namespace ShareMe.Service
     {
         protected readonly UnitOfWork unitOfWork;
 
-        protected IRepository<Category> CategoryRepository { get => this.repository; }
+        protected IRepository<Category> CategoryRepository { get => this.Repository; }
 
         public CategoryService(UnitOfWork unitOfWork) : base (unitOfWork.CategoryRepository)
         {
@@ -26,5 +26,9 @@ namespace ShareMe.Service
             return CategoryRepository.GetAll().Where(category => category.Parent == null);
         }
 
+        public override IQueryable<Category> GetAll()
+        {
+            return unitOfWork.CategoryRepository.GetAll();
+        }
     }
 }

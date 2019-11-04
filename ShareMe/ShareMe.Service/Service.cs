@@ -2,19 +2,20 @@
 using ShareMe.DataAccessLayer.UnitOfWork;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ShareMe.Service
 {
     public abstract class Service<T> where T : Entity
     {
-        protected IRepository<T> repository;
+        protected IRepository<T> Repository;
 
         public Service(IRepository<T> repository)
         {
-            this.repository = repository;
+            Repository = repository;
         }
 
-        // crud
+        public abstract IQueryable<T> GetAll();
     }
 }

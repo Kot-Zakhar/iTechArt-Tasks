@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareMe.DataAccessLayer.Uni
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareMe.Service", "ShareMe.Service\ShareMe.Service.csproj", "{C4E5BCA3-ADC7-47E1-90E4-8FE243138D4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareMe.WebApplication", "ShareMe.WebApplication\ShareMe.WebApplication.csproj", "{BA339CA0-B1FD-4467-9CB3-CD40C7AE6CD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShareMe.WebApplication", "ShareMe.WebApplication\ShareMe.WebApplication.csproj", "{BA339CA0-B1FD-4467-9CB3-CD40C7AE6CD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShareMe.Faker", "ShareMe.Faker\ShareMe.Faker.csproj", "{4959170D-430A-4857-ADF4-70E2C28DE7DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{BA339CA0-B1FD-4467-9CB3-CD40C7AE6CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA339CA0-B1FD-4467-9CB3-CD40C7AE6CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA339CA0-B1FD-4467-9CB3-CD40C7AE6CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4959170D-430A-4857-ADF4-70E2C28DE7DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4959170D-430A-4857-ADF4-70E2C28DE7DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4959170D-430A-4857-ADF4-70E2C28DE7DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4959170D-430A-4857-ADF4-70E2C28DE7DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

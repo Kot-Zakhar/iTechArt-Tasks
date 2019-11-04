@@ -7,11 +7,11 @@ using System.Text;
 
 namespace ShareMe.Service
 {
-    class PostService : Service<Post>
+    public class PostService : Service<Post>
     {
         protected readonly UnitOfWork unitOfWork;
 
-        protected IRepository<Post> PostRepository { get => this.repository; }
+        protected IRepository<Post> PostRepository { get => this.Repository; }
 
         public PostService(UnitOfWork unitOfWork) : base(unitOfWork.PostRepository)
         {
@@ -41,6 +41,11 @@ namespace ShareMe.Service
         public IQueryable<Post> GetTopRatedPosts(int amount)
         {
             return PostRepository.GetAll().OrderByDescending(post => post.Rating).Take(amount);
+        }
+
+        public override IQueryable<Post> GetAll()
+        {
+            return unitOfWork.PostRepository.GetAll();
         }
     }
 }
