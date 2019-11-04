@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Post } from 'src/lib/models/Post';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  posts: Post[] = [
+  posts: Post[];
+  /* = [
     {
        author: {
          email: 'tempEmail',
@@ -127,6 +129,11 @@ export class HomeComponent {
          }
        ]
     }
-  ];
+  ]; */
 
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    http.get<Post[]>(baseUrl + 'posts').subscribe(result => {
+      this.posts = result;
+    }, error => console.error(error));
+  }
 }
