@@ -7,10 +7,10 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
-  posts: Post[];
-  
-  constructor(http: HttpClient, @Inject('API_URL') apiUrl: string) {
-    http.get<Post[]>(apiUrl + 'posts').subscribe(result => {
+  public posts: Post[];
+
+  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, @Inject('API_URL') apiUrl: string) {
+    http.get<Post[]>(baseUrl + apiUrl + 'posts').subscribe(result => {
       this.posts = result;
     }, error => console.error(error));
   }
