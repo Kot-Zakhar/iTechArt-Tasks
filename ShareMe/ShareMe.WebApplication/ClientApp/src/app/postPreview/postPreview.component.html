@@ -1,12 +1,11 @@
-<div class="container py-3 px-0">
+<div class="container pb-3 px-0">
     <div class="card">
-        <img class="card-img-top" [src]="post.imageSrc" alt="TempPic">
+        <img class="card-img-top" [src]="post.imageUrl" alt="TempPic">
         <div class="card-body">
             <h3 class="card-title">{{post.title}}</h3>
-            <h5 class="card-title">
-                <span>{{post.author.username}}</span> <span>{{post.creationDate}}</span>
-            </h5>
-            <p class="card-text">{{post.content.wholeText}}</p>
+            <h5 class="card-title">{{post.author.username}}</h5>
+            <p>{{ post.creationDate | date }}</p>
+            <p class="card-text">{{post.content}}</p>
         </div>
         <div class="card-footer text-muted d-flex">
             <div class="btn btn-secondary mr-3" *ngFor="let tag of post.tags" [id]="'tag' + tag.id">{{tag.name}}</div>

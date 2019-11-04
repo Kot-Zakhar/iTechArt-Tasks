@@ -1,6 +1,22 @@
 <body>
-  <app-nav-menu></app-nav-menu>
-  <div class="container">
-    <router-outlet></router-outlet>
-  </div>
+    <app-nav-menu></app-nav-menu>
+    <div class="container">
+        <div class="row">
+            <div class="col-7">
+                <router-outlet></router-outlet>
+            </div>
+            <div class="col-5">
+                <!-- <app-social-plugin></app-social-plugin> -->
+                <div class="container mb-3">
+                    <app-popular-posts></app-popular-posts>
+                </div>
+                <div class="container mb-3">
+                    <app-categories-section></app-categories-section>
+                </div>
+                <div class="container mb-3">
+                    <app-tag-section></app-tag-section>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>

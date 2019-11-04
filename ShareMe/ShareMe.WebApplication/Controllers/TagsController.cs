@@ -13,49 +13,48 @@ namespace ShareMe.WebApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostsController : ControllerBase
+    public class TagsController : ControllerBase
     {
         private readonly ShareMeContext _context;
 
-        public PostsController(ShareMeContext context)
+        public TagsController(ShareMeContext context)
         {
             _context = context;
         }
 
-        // GET: api/Posts
+        // GET: api/Tags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts(int count = 10)
+        public async Task<ActionResult<IEnumerable<Tag>>> GetTags(int count = 10)
         {
-            return PostFaker.GenerateRange(count).ToList();
+            return TagFaker.GenerateRange(count).ToList();
         }
 
-        // GET: api/Posts/5
+        // GET: api/Tags/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(Guid id)
+        public async Task<ActionResult<Tag>> GetTag(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            //var post = PostFaker.Generate();
+            var tag = await _context.Tags.FindAsync(id);
 
-            if (post == null)
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            return post;
+            return tag;
         }
 
-        // PUT: api/Posts/5
+        // PUT: api/Tags/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(Guid id, Post post)
+        public async Task<IActionResult> PutTag(Guid id, Tag tag)
         {
-            if (id != post.Id)
+            if (id != tag.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(post).State = EntityState.Modified;
+            _context.Entry(tag).State = EntityState.Modified;
 
             try
             {
@@ -63,7 +62,7 @@ namespace ShareMe.WebApplication.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PostExists(id))
+                if (!TagExists(id))
                 {
                     return NotFound();
                 }
@@ -76,37 +75,37 @@ namespace ShareMe.WebApplication.Controllers
             return NoContent();
         }
 
-        // POST: api/Posts
+        // POST: api/Tags
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<Tag>> PostTag(Tag tag)
         {
-            _context.Posts.Add(post);
+            _context.Tags.Add(tag);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            return CreatedAtAction("GetTag", new { id = tag.Id }, tag);
         }
 
-        // DELETE: api/Posts/5
+        // DELETE: api/Tags/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Post>> DeletePost(Guid id)
+        public async Task<ActionResult<Tag>> DeleteTag(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
+            var tag = await _context.Tags.FindAsync(id);
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            _context.Posts.Remove(post);
+            _context.Tags.Remove(tag);
             await _context.SaveChangesAsync();
 
-            return post;
+            return tag;
         }
 
-        private bool PostExists(Guid id)
+        private bool TagExists(Guid id)
         {
-            return _context.Posts.Any(e => e.Id == id);
+            return _context.Tags.Any(e => e.Id == id);
         }
     }
 }

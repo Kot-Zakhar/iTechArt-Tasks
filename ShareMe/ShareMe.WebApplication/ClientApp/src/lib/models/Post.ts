@@ -9,7 +9,7 @@ export class Post extends Entity {
     creationDate: Date;
     rating: number;
     content: Text;
-    imageSrc: string;
+    imageUrl: string;
     category: Category;
     tags: Tag[];
 }

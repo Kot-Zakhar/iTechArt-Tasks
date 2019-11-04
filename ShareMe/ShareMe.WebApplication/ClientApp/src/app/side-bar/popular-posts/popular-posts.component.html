@@ -1,0 +1,19 @@
+<div class='card'>
+    <div class='card-header'>
+        <h4>Popular posts</h4>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li *ngFor="let post of popularPosts" class="list-group-item">
+            <div class="row no-gutters">
+                <div class="col-3">
+                    <img [src]="post.imageUrl" alt="tempPim" class="rounded img-fluid">
+                </div>
+                <div class="col-9">
+                    <div class="card-body p-2">
+                        <h5>{{post.title}}</h5>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

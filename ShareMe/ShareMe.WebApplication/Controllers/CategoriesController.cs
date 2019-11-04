@@ -13,49 +13,48 @@ namespace ShareMe.WebApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostsController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly ShareMeContext _context;
 
-        public PostsController(ShareMeContext context)
+        public CategoriesController(ShareMeContext context)
         {
             _context = context;
         }
 
-        // GET: api/Posts
+        // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts(int count = 10)
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories(int count = 10)
         {
-            return PostFaker.GenerateRange(count).ToList();
+            return CategoryFaker.GenerateRange(count).ToList();
         }
 
-        // GET: api/Posts/5
+        // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(Guid id)
+        public async Task<ActionResult<Category>> GetCategory(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            //var post = PostFaker.Generate();
+            var category = await _context.Categories.FindAsync(id);
 
-            if (post == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return post;
+            return category;
         }
 
-        // PUT: api/Posts/5
+        // PUT: api/Categories/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(Guid id, Post post)
+        public async Task<IActionResult> PutCategory(Guid id, Category category)
         {
-            if (id != post.Id)
+            if (id != category.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(post).State = EntityState.Modified;
+            _context.Entry(category).State = EntityState.Modified;
 
             try
             {
@@ -63,7 +62,7 @@ namespace ShareMe.WebApplication.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PostExists(id))
+                if (!CategoryExists(id))
                 {
                     return NotFound();
                 }
@@ -76,37 +75,37 @@ namespace ShareMe.WebApplication.Controllers
             return NoContent();
         }
 
-        // POST: api/Posts
+        // POST: api/Categories
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            _context.Posts.Add(post);
+            _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
-        // DELETE: api/Posts/5
+        // DELETE: api/Categories/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Post>> DeletePost(Guid id)
+        public async Task<ActionResult<Category>> DeleteCategory(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
 
-            _context.Posts.Remove(post);
+            _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
 
-            return post;
+            return category;
         }
 
-        private bool PostExists(Guid id)
+        private bool CategoryExists(Guid id)
         {
-            return _context.Posts.Any(e => e.Id == id);
+            return _context.Categories.Any(e => e.Id == id);
         }
     }
 }

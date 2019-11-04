@@ -19,6 +19,19 @@ namespace ShareMe.Faker
                 .RuleFor(p => p.ImageUrl, f => f.Image.PicsumUrl())
                 .RuleFor(p => p.Rating, f => f.Random.Int(0, 100))
                 .RuleFor(p => p.Title, f => f.Lorem.Sentence())
+                .RuleFor(p => p.PostTags, (f, p) => {
+                    IEnumerable<Tag> tags = TagFaker.GenerateRange(5);
+                    var result = new List<PostTag>();
+                    foreach (var tag in tags)
+                        result.Add(new PostTag()
+                            {
+                                Post = p,
+                                PostId = p.Id,
+                                Tag = tag,
+                                TagId = tag.Id
+                            });
+                    return result;
+                })
                 .RuleFor(p => p.URI, (f, p) => p.Id.ToString());
         }
 
