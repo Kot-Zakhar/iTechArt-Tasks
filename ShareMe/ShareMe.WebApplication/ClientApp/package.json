@@ -4,6 +4,7 @@
     "scripts": {
         "ng": "ng",
         "start": "ng serve --proxy-config proxy.conf.json",
+        "start:asp": "ng serve",
         "build": "ng build",
         "build:ssr": "ng run ShareMe.WebApplication:server:dev",
         "test": "ng test",
