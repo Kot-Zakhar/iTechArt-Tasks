@@ -13,7 +13,6 @@ namespace ShareMe.Faker
             return new Faker<Comment>()
                 .RuleFor(c => c.Id, f => Guid.NewGuid())
                 .RuleFor(c => c.ChildComments, f => new List<Comment>());
-                //.RuleFor(c => c.CreationTime, f => f.Date.Past())
         }
     }
 }

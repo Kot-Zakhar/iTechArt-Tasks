@@ -2,7 +2,7 @@
 
 namespace ShareMe.DataAccessLayer.Context.Migrations
 {
-    public partial class columnRenaming : Migration
+    public partial class DbInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

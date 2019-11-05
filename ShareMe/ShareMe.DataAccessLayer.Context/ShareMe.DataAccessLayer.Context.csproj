@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20191104075605_DBCreate.cs" />
-    <Compile Remove="Migrations\20191104075605_DBCreate.Designer.cs" />
-    <Compile Remove="Migrations\20191105172631_TagFixing.cs" />
-    <Compile Remove="Migrations\20191105172631_TagFixing.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>

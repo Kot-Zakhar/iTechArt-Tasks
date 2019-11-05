@@ -77,7 +77,8 @@ namespace ShareMe.Faker
                     Post post = Posts[f.Random.Int(0, Posts.Count - 1)];
                     post.Comments.Add(c);
                     return post;
-                });
+                })
+                .RuleFor(c => c.CreationTime, (f,c) => f.Date.Between(c.Post.CreationDate, DateTime.Now));
 
             Comments = commentFaker.GenerateLazy(RootCommentsAmount).ToList();
 

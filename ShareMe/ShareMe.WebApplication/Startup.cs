@@ -28,8 +28,7 @@ namespace ShareMe.WebApplication
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-
-            services.AddSingleton<ShareMeContext, ShareMeContext>();
+            services.AddDbContext<ShareMeContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
