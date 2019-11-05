@@ -12,23 +12,23 @@ namespace ShareMe.WebApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly ShareMeContext _context;
 
-        public UserController(ShareMeContext context)
+        public UsersController(ShareMeContext context)
         {
             _context = context;
         }
 
-        // GET: api/User
+        // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/User/5
+        // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
@@ -42,7 +42,7 @@ namespace ShareMe.WebApplication.Controllers
             return user;
         }
 
-        // PUT: api/User/5
+        // PUT: api/Users/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -74,7 +74,7 @@ namespace ShareMe.WebApplication.Controllers
             return NoContent();
         }
 
-        // POST: api/User
+        // POST: api/Users
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
@@ -86,7 +86,7 @@ namespace ShareMe.WebApplication.Controllers
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
-        // DELETE: api/User/5
+        // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<User>> DeleteUser(Guid id)
         {

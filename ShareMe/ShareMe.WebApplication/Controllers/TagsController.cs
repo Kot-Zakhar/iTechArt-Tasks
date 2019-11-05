@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShareMe.DataAccessLayer.Context;
 using ShareMe.DataAccessLayer.Entity;
-using ShareMe.Faker;
 
 namespace ShareMe.WebApplication.Controllers
 {
@@ -26,7 +25,7 @@ namespace ShareMe.WebApplication.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tag>>> GetTags(int count = 10)
         {
-            return TagFaker.GenerateRange(count).ToList();
+            return await _context.Tags.ToListAsync();
         }
 
         // GET: api/Tags/5

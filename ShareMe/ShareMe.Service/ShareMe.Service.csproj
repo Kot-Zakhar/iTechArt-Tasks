@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ShareMe.DataAccessLayer.UnitOfWork\ShareMe.DataAccessLayer.UnitOfWork.csproj" />
     <ProjectReference Include="..\ShareMe.Faker\ShareMe.Faker.csproj" />
   </ItemGroup>

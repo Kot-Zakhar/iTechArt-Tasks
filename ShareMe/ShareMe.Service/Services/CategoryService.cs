@@ -23,7 +23,7 @@ namespace ShareMe.Service
 
         public IQueryable<Category> GetRootCategories()
         {
-            return CategoryRepository.GetAll().Where(category => category.Parent == null);
+            return CategoryRepository.GetAll().Where(category => category.ParentCategory == null);
         }
 
         public override IQueryable<Category> GetAll()

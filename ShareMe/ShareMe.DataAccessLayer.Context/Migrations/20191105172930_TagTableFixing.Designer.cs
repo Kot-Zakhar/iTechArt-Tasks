@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShareMe.DataAccessLayer.Context;
 
 namespace ShareMe.DataAccessLayer.Context.Migrations
 {
     [DbContext(typeof(ShareMeContext))]
-    partial class ShareMeContextModelSnapshot : ModelSnapshot
+    [Migration("20191105172930_TagTableFixing")]
+    partial class TagTableFixing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

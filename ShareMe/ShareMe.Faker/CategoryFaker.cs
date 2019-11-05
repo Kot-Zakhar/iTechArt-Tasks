@@ -17,15 +17,5 @@ namespace ShareMe.Faker
                 .RuleFor(c => c.Posts, () => new List<Post>());
         }
 
-        public static Category Generate()
-        {
-            return GetCategoryFaker().Generate();
-        }
-
-        public static IEnumerable<Category> GenerateRange(int amount = 100)
-        {
-            return GetCategoryFaker().GenerateLazy(amount);
-        }
-
     }
 }

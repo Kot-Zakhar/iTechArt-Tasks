@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ShareMe.DataAccessLayer.UnitOfWork.Repository
@@ -18,6 +19,11 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repository
         public T Create(T entity)
         {
             return typeSet.Add(entity).Entity;
+        }
+
+        public void CreateRange(IEnumerable<T> entities)
+        {
+            typeSet.AddRange(entities);
         }
 
         public T GetById(Guid? id)

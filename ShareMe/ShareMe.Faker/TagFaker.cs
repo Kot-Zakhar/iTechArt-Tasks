@@ -14,15 +14,5 @@ namespace ShareMe.Faker
                 .RuleFor(u => u.Id, f => Guid.NewGuid())
                 .RuleFor(u => u.Name, f => f.Lorem.Word());
         }
-
-        public static Tag Generate()
-        {
-            return GetTagFaker().Generate();
-        }
-
-        public static IEnumerable<Tag> GenerateRange(int amount = 100)
-        {
-            return GetTagFaker().GenerateLazy(amount);
-        }
     }
 }

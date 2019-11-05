@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20191104075605_DBCreate.cs" />
     <Compile Remove="Migrations\20191104075605_DBCreate.Designer.cs" />
+    <Compile Remove="Migrations\20191105172631_TagFixing.cs" />
+    <Compile Remove="Migrations\20191105172631_TagFixing.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,10 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ShareMe.DataAccessLayer.Entity\ShareMe.DataAccessLayer.Entity.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

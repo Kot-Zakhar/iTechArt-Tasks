@@ -12,49 +12,48 @@ namespace ShareMe.WebApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PostsController : ControllerBase
+    public class CommentsController : ControllerBase
     {
         private readonly ShareMeContext _context;
 
-        public PostsController(ShareMeContext context)
+        public CommentsController(ShareMeContext context)
         {
             _context = context;
         }
 
-        // GET: api/Posts
+        // GET: api/Comments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPosts(int count = 10)
+        public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
-            return await _context.Posts.ToListAsync();
+            return await _context.Comments.ToListAsync();
         }
 
-        // GET: api/Posts/5
+        // GET: api/Comments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(Guid id)
+        public async Task<ActionResult<Comment>> GetComment(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            //var post = PostFaker.Generate();
+            var comment = await _context.Comments.FindAsync(id);
 
-            if (post == null)
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            return post;
+            return comment;
         }
 
-        // PUT: api/Posts/5
+        // PUT: api/Comments/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(Guid id, Post post)
+        public async Task<IActionResult> PutComment(Guid id, Comment comment)
         {
-            if (id != post.Id)
+            if (id != comment.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(post).State = EntityState.Modified;
+            _context.Entry(comment).State = EntityState.Modified;
 
             try
             {
@@ -62,7 +61,7 @@ namespace ShareMe.WebApplication.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!PostExists(id))
+                if (!CommentExists(id))
                 {
                     return NotFound();
                 }
@@ -75,37 +74,37 @@ namespace ShareMe.WebApplication.Controllers
             return NoContent();
         }
 
-        // POST: api/Posts
+        // POST: api/Comments
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-            _context.Posts.Add(post);
+            _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
         }
 
-        // DELETE: api/Posts/5
+        // DELETE: api/Comments/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Post>> DeletePost(Guid id)
+        public async Task<ActionResult<Comment>> DeleteComment(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            if (post == null)
+            var comment = await _context.Comments.FindAsync(id);
+            if (comment == null)
             {
                 return NotFound();
             }
 
-            _context.Posts.Remove(post);
+            _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
 
-            return post;
+            return comment;
         }
 
-        private bool PostExists(Guid id)
+        private bool CommentExists(Guid id)
         {
-            return _context.Posts.Any(e => e.Id == id);
+            return _context.Comments.Any(e => e.Id == id);
         }
     }
 }
