@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace ShareMe.DataAccessLayer.Entity
 {
@@ -13,29 +12,19 @@ namespace ShareMe.DataAccessLayer.Entity
 
         public Comment(Guid id) : base(id) { }
 
-        [JsonIgnore]
+        [ForeignKey("PostId")]
         public Post Post { get; set; }
 
-        [NotMapped]
-        public Guid PostId { get => Post.Id; }
-
-        [JsonIgnore]
+        [ForeignKey("ParentId")]
         public Comment ParentComment { get; set; }
 
-        [NotMapped]
-        public Guid ParentCommentId { get => ParentComment.Id; }
-
-        [JsonIgnore]
         public IList<Comment> ChildComments { get; set; } = new List<Comment>();
 
-        [JsonIgnore]
+        [ForeignKey("AuthorId")]
         public User Author { get; set; }
 
-        [NotMapped]
-        public Guid AuthorId { get => Author.Id; }
-
-        [Required]
         [DataType(DataType.DateTime)]
+        [Required]
         public DateTime CreationTime { get; set; }
     }
 }

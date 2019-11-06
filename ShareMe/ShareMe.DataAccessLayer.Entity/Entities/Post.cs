@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace ShareMe.DataAccessLayer.Entity
 {
@@ -37,9 +36,7 @@ namespace ShareMe.DataAccessLayer.Entity
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }
 
-        [JsonIgnore]
         public IList<PostTag> PostTags { get; set; } = new List<PostTag>();
-        [JsonIgnore]
         public IList<Comment> Comments { get; set; } = new List<Comment>();
     }
 }
