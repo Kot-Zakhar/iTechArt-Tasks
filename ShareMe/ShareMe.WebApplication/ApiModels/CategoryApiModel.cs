@@ -8,7 +8,7 @@ namespace ShareMe.WebApplication.ApiModels
 {
     public class CategoryApiModel : ApiModel
     {
-        public Guid ParentCategoryId { get; set; }
+        public Guid? ParentCategoryId { get; set; }
         public string Name { get; set; }
         public List<Guid> ChildCategoriesIds { get; set; } = new List<Guid>();
 
@@ -16,7 +16,7 @@ namespace ShareMe.WebApplication.ApiModels
 
         public CategoryApiModel(Category category) : base(category)
         {
-            ParentCategoryId = category.ParentCategory.Id;
+            ParentCategoryId = category.ParentCategory?.Id;
             Name = category.Name;
             ChildCategoriesIds.AddRange(category.ChildCategories.Select(c => c.Id));
         }

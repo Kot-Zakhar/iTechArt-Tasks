@@ -24,7 +24,7 @@ namespace ShareMe.WebApplication.Controllers
 
         // GET: api/Posts?count=10&categoryId=id&tagsIds=[id1,id2]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PostApiModel>>> GetPosts(Guid? categoryId, IList<Guid> tagsIds, int? count = 10)
+        public async Task<ActionResult<IEnumerable<PostApiModel>>> GetPosts([FromQuery(Name = "category")] Guid? categoryId,[FromQuery(Name = "tags")] IList<Guid> tagsIds,[FromQuery(Name = "count")] int? count = 10)
         {
             return await _context.Posts
                 .Where(p => categoryId == null || p.Category.Id == categoryId)

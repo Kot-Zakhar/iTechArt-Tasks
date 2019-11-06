@@ -8,7 +8,7 @@ namespace ShareMe.WebApplication.ApiModels
     public class CommentApiModel : ApiModel
     {
         public Guid PostId { get; set; }
-        public Guid ParentCommentId { get; set; }
+        public Guid? ParentCommentId { get; set; }
         public Guid AuthorId { get; set; }
         public List<Guid> ChildCommentIds { get; set; } = new List<Guid>();
         public DateTime CreationTime { get; set; }
@@ -18,7 +18,7 @@ namespace ShareMe.WebApplication.ApiModels
         public CommentApiModel(Comment comment) : base(comment)
         {
             PostId = comment.Post.Id;
-            ParentCommentId = comment.ParentComment.Id;
+            ParentCommentId = comment.ParentComment?.Id;
             AuthorId = comment.Author.Id;
             ChildCommentIds.AddRange(comment.ChildComments.Select(c => c.Id));
             CreationTime = comment.CreationTime;

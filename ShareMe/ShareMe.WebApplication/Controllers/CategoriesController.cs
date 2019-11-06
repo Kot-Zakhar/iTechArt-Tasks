@@ -28,7 +28,7 @@ namespace ShareMe.WebApplication.Controllers
         {
             return await _context.Categories
                 .Take(count)
-                .Select(c => new CategoryApiModel(c))
+                .Select(c => c == null ? null : new CategoryApiModel(c))
                 .ToListAsync();
         }
 

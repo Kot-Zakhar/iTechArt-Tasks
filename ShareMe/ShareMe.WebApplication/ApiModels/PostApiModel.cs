@@ -12,7 +12,7 @@ namespace ShareMe.WebApplication.ApiModels
         public string Content { get; set; }
         public string ImageUrl { get; set; }
         public string URI { get; set; }
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
 
         public PostApiModel() { }
 
@@ -25,7 +25,7 @@ namespace ShareMe.WebApplication.ApiModels
             Content = post.Content;
             ImageUrl = post.ImageUrl;
             URI = post.URI;
-            CategoryId = post.Category.Id;
+            CategoryId = post.Category?.Id;
         }
     }
 }
