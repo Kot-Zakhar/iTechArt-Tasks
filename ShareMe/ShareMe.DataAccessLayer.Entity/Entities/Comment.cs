@@ -26,5 +26,9 @@ namespace ShareMe.DataAccessLayer.Entity
         [DataType(DataType.DateTime)]
         [Required]
         public DateTime CreationTime { get; set; }
+
+        [DataType(DataType.Text)]
+        [Required]
+        public string Content { get; set; }
     }
 }

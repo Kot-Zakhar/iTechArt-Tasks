@@ -10,7 +10,7 @@ using ShareMe.DataAccessLayer.Context;
 namespace ShareMe.DataAccessLayer.Context.Migrations
 {
     [DbContext(typeof(ShareMeContext))]
-    [Migration("20191105185158_DbInit")]
+    [Migration("20191106082423_DbInit")]
     partial class DbInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,12 +32,12 @@ namespace ShareMe.DataAccessLayer.Context.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<Guid?>("ParentCategoryId1")
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentCategoryId1");
+                    b.HasIndex("ParentId");
 
                     b.ToTable("Category");
                 });
@@ -48,25 +48,29 @@ namespace ShareMe.DataAccessLayer.Context.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AuthorId1")
+                    b.Property<Guid?>("AuthorId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("ParentCommentId1")
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PostId1")
+                    b.Property<Guid?>("PostId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId1");
+                    b.HasIndex("AuthorId");
 
-                    b.HasIndex("ParentCommentId1");
+                    b.HasIndex("ParentId");
 
-                    b.HasIndex("PostId1");
+                    b.HasIndex("PostId");
 
                     b.ToTable("Comment");
                 });
@@ -182,22 +186,22 @@ namespace ShareMe.DataAccessLayer.Context.Migrations
                 {
                     b.HasOne("ShareMe.DataAccessLayer.Entity.Category", "ParentCategory")
                         .WithMany("ChildCategories")
-                        .HasForeignKey("ParentCategoryId1");
+                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("ShareMe.DataAccessLayer.Entity.Comment", b =>
                 {
                     b.HasOne("ShareMe.DataAccessLayer.Entity.User", "Author")
                         .WithMany("Comments")
-                        .HasForeignKey("AuthorId1");
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("ShareMe.DataAccessLayer.Entity.Comment", "ParentComment")
                         .WithMany("ChildComments")
-                        .HasForeignKey("ParentCommentId1");
+                        .HasForeignKey("ParentId");
 
                     b.HasOne("ShareMe.DataAccessLayer.Entity.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("PostId1");
+                        .HasForeignKey("PostId");
                 });
 
             modelBuilder.Entity("ShareMe.DataAccessLayer.Entity.Post", b =>

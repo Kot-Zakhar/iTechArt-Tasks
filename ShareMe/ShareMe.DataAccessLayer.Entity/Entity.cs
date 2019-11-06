@@ -4,7 +4,7 @@ using System.ComponentModel.Design;
 
 namespace ShareMe.DataAccessLayer.Entity
 {
-    public class Entity
+    public abstract class Entity
     {
         [Key]
         [Required]

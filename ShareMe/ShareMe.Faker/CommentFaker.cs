@@ -12,6 +12,7 @@ namespace ShareMe.Faker
         {
             return new Faker<Comment>()
                 .RuleFor(c => c.Id, f => Guid.NewGuid())
+                .RuleFor(c => c.Content, f => f.Lorem.Sentence())
                 .RuleFor(c => c.ChildComments, f => new List<Comment>());
         }
     }
