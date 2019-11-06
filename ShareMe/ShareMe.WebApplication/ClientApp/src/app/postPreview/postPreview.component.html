@@ -8,8 +8,8 @@
             <p class="card-text">{{post.content}}</p>
         </div>
         <div class="card-footer text-muted d-flex">
-            <div class="btn btn-secondary mr-3" *ngFor="let tag of post.tags" [id]="'tag' + tag.id">{{tag.name}}</div>
-            <div class="btn btn-primary ml-auto">Read more</div>
+            <button class="btn btn-secondary mr-3" *ngFor="let tag of post.tags" [id]="'tag' + tag.id">{{tag.name}}</button>
+            <button class="btn btn-primary ml-auto">Read more</button>
         </div>
     </div>
 

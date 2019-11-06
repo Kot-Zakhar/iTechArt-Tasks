@@ -24,11 +24,14 @@ namespace ShareMe.WebApplication.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryApiModel>>> GetCategories(int count = 10)
-        {
-            return await _context.Categories
-                .Take(count)
-                .Select(c => c == null ? null : new CategoryApiModel(c))
+        public async Task<ActionResult<IEnumerable<CategoryApiModel>>> GetCategories(
+            [FromQuery(Name = "count")] int? count
+        ){
+            var query = _context.Categories.AsQueryable();
+            if (count != null)
+                query = query.Take(count.Value);
+            return await query
+                .Select(c => new CategoryApiModel(c))
                 .ToListAsync();
         }
 

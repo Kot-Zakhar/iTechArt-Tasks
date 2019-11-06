@@ -22,15 +22,31 @@ namespace ShareMe.WebApplication.Controllers
             _context = context;
         }
 
-        // GET: api/Posts?count=10&categoryId=id&tagsIds=[id1,id2]
+        // GET: api/Posts?count=10&categoryId=id&tags[]=id1&tags[]=id2
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PostApiModel>>> GetPosts([FromQuery(Name = "category")] Guid? categoryId,[FromQuery(Name = "tags")] IList<Guid> tagsIds,[FromQuery(Name = "count")] int? count = 10)
-        {
-            return await _context.Posts
-                .Where(p => categoryId == null || p.Category.Id == categoryId)
-                .Where(p => tagsIds == null || tagsIds.Count == 0 || p.PostTags.Any(pt => tagsIds.Any(tagId => pt.TagId == tagId)))
-                .TakeWhile((p, index) => count == null || index < count)
-                .Select(p => new PostApiModel(p))
+        public async Task<ActionResult<IEnumerable<PostApiModel>>> GetPosts(
+            [FromQuery(Name = "category")] Guid? categoryId,
+            [FromQuery(Name = "tags[]")] IList<Guid> tagsIds,
+            [FromQuery(Name = "count")] int? count,
+            [FromQuery(Name = "rating")] string rating
+        ){
+            var query = _context.Posts
+                .Include(p => p.Author)
+                .Include(p => p.Category)
+                .Include(p => p.PostTags)
+                    .ThenInclude(postTag => postTag.Tag)
+                .AsQueryable();
+            if (categoryId != null)
+                query = query.Where(p => p.Category.Id == categoryId);
+            if (tagsIds.Count != 0)
+                query = query.Where(p => p.PostTags.Any(pt => tagsIds.Any(tagId => pt.TagId == tagId)));
+            if (count != null)
+                query = query.Take(count.Value);
+            if (rating == "desc")
+                query = query.OrderByDescending(p => p.Rating);
+            if (rating == "asc")
+                query = query.OrderBy(p => p.Rating);
+            return await query.Select(p => new PostApiModel(p))
                 .ToListAsync();
         }
 
@@ -38,8 +54,13 @@ namespace ShareMe.WebApplication.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PostApiModel>> GetPost(Guid id)
         {
-            var post = await _context.Posts.FindAsync(id);
-            //var post = PostFaker.Generate();
+            var post = await _context.Posts
+                .Include(p => p.Author)
+                .Include(p => p.Category)
+                .Include(p => p.PostTags)
+                    .ThenInclude(postTag => postTag.Tag)
+                .Include(p => p.Comments)
+                .SingleAsync(p => p.Id == id);
 
             if (post == null)
             {

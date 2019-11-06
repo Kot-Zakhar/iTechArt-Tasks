@@ -12,7 +12,7 @@ export class CategoriesSectionComponent implements OnInit {
 
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, @Inject('API_URL') apiUrl) {
-    http.get<Category[]>(baseUrl + apiUrl + 'categories').subscribe(result => {
+    http.get<Category[]>(baseUrl + apiUrl + 'categories?count=4').subscribe(result => {
       this.categories = result;
     }, error => console.error(error));
   }

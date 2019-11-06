@@ -24,11 +24,14 @@ namespace ShareMe.WebApplication.Controllers
 
         // GET: api/Tags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TagApiModel>>> GetTags(int? count = 10)
-        {
-            return await _context.Tags
-                .TakeWhile((t, index) => count == null || index < count)
-                .Select(t => new TagApiModel(t))
+        public async Task<ActionResult<IEnumerable<TagApiModel>>> GetTags(
+            [FromQuery(Name = "count")] int? count
+        ){
+            var query = _context.Tags.AsQueryable();
+            if (count != null)
+                query = query.Take(count.Value);
+            return await query
+                .Select(t =>  new TagApiModel(t))
                 .ToListAsync();
         }
 
