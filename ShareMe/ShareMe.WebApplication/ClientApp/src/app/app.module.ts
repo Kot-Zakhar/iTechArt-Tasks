@@ -5,13 +5,15 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { PostPreviewComponent } from './postPreview/postPreview.component';
-import { CategoriesSectionComponent } from './side-bar/categories-section/categories-section.component';
-import { PopularPostsComponent } from './side-bar/popular-posts/popular-posts.component';
-import { SocialPluginComponent } from './side-bar/social-plugin/social-plugin.component';
-import { TagSectionComponent } from './side-bar/tag-section/tag-section.component';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { HomeComponent } from './pages/home/home.component';
+import { PostPreviewComponent } from './components/postPreview/postPreview.component';
+import { PostComponent } from './pages/post/post.component';
+import { CategoriesSectionComponent } from './components/side-bar/categories-section/categories-section.component';
+import { PopularPostsComponent } from './components/side-bar/popular-posts/popular-posts.component';
+import { TagSectionComponent } from './components/side-bar/tag-section/tag-section.component';
+import { environment } from '../environments/environment';
+import { from } from 'rxjs';
 
 @NgModule({
   declarations: [
@@ -19,9 +21,9 @@ import { TagSectionComponent } from './side-bar/tag-section/tag-section.componen
     NavMenuComponent,
     HomeComponent,
     PostPreviewComponent,
+    PostComponent,
     CategoriesSectionComponent,
     PopularPostsComponent,
-    SocialPluginComponent,
     TagSectionComponent
   ],
   imports: [
@@ -30,8 +32,12 @@ import { TagSectionComponent } from './side-bar/tag-section/tag-section.componen
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'postPreview', component: PostPreviewComponent},
-    ])
+      { path: 'post/:id', component: PostComponent },
+    ],
+    {
+      // enableTracing: !environment.production
+    }
+    )
   ],
   providers: [],
   bootstrap: [AppComponent]
