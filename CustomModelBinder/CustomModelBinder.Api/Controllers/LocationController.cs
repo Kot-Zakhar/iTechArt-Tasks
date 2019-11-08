@@ -14,16 +14,15 @@ namespace CustomModelBinder.Api.Controllers
     {
         // GET: api/location
         [HttpGet]
-        public ActionResult<Point> Get([FromQuery] string coord)
+        public ActionResult<Point> Get([FromQuery] List<int> coord)
         {
-            int[] coordinates = coord.Split(",").Select(value => Convert.ToInt32(value)).ToArray();
-            if (coordinates.Length != 3)
+            if (coord.Count != 3)
                 return NotFound();
             return new Point()
             {
-                x = coordinates[0],
-                y = coordinates[1],
-                z = coordinates[2]
+                x = coord[0],
+                y = coord[1],
+                z = coord[2]
             };
         }
 
