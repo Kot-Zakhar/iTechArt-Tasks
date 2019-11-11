@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CustomModelBinder.Api.Models;
-using Microsoft.AspNetCore.Http;
+﻿using CustomModelBinder.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CustomModelBinder.Api.Controllers
@@ -20,8 +14,8 @@ namespace CustomModelBinder.Api.Controllers
             return new Person();
         }
 
-        // GET: api/Person?GUID
-        [HttpGet("{Id}", Name = "Get")]
+        // GET: api/Person/GUID
+        [HttpGet("{Id}")]
         public ActionResult<Person> Get([ModelBinder(Name = "id")]Person person)
         {
             return person;

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CustomModelBinder.Api.Binders;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CustomModelBinder.Api.Models
 {
+    [ModelBinder(BinderType = typeof(PointEntityBinder))]
     public class Point
     {
         public double x { get; set; }
