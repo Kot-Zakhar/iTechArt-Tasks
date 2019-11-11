@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RateLimit.Api.Services;
 
 namespace RateLimit.Api
 {
@@ -26,6 +27,7 @@ namespace RateLimit.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton(typeof(ProfileService), new ProfileService());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
