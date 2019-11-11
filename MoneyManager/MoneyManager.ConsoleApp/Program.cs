@@ -1,7 +1,11 @@
-﻿using MoneyManager.DataAccess.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using MoneyManager.DataAccess.Context;
+using MoneyManager.DataAccess.Entity;
 using MoneyManager.DataAccess.UnitOfWork;
 using MoneyManager.RandomGenerator;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace MoneyManager.ConsoleApp
@@ -23,7 +27,15 @@ namespace MoneyManager.ConsoleApp
         }
         static void Main(string[] args)
         {
-            using (var unitOfWork = new UnitOfWork())
+            var builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile("appsettings.json");
+            var config = builder.Build();
+
+            var optionsBuilder = new DbContextOptionsBuilder<MoneyManagerContext>();
+            optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+
+            using (var unitOfWork = new UnitOfWork(optionsBuilder.Options))
             {
                 InitDBIfEmpty(unitOfWork);
 
