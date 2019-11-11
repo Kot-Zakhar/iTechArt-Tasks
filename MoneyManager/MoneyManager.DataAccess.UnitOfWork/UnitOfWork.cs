@@ -19,9 +19,12 @@ namespace MoneyManager.DataAccess.UnitOfWork
 
         public TransactionRepository TransactionRepository { get; protected set; }
 
-        public UnitOfWork(DbContextOptions options)
+        public UnitOfWork(string connectionString)
         {
-            DbContext = new MoneyManagerContext(options);
+            var optionsBuilder = new DbContextOptionsBuilder<MoneyManagerContext>();
+            optionsBuilder.UseSqlServer(connectionString);
+
+            DbContext = new MoneyManagerContext(optionsBuilder.Options);
             UserRepository = new UserRepository(DbContext);
             CategoryRepository = new CategoryRepository(DbContext);
             AssetRepository = new AssetRepository(DbContext);

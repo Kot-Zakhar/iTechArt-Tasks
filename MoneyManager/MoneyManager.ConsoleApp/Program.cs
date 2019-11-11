@@ -32,10 +32,7 @@ namespace MoneyManager.ConsoleApp
             builder.AddJsonFile("appsettings.json");
             var config = builder.Build();
 
-            var optionsBuilder = new DbContextOptionsBuilder<MoneyManagerContext>();
-            optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
-
-            using (var unitOfWork = new UnitOfWork(optionsBuilder.Options))
+            using (var unitOfWork = new UnitOfWork(config.GetConnectionString("DefaultConnection")))
             {
                 InitDBIfEmpty(unitOfWork);
 
