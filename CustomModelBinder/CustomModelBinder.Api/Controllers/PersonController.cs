@@ -20,11 +20,11 @@ namespace CustomModelBinder.Api.Controllers
             return new Person();
         }
 
-        // GET: api/Person/5
-        [HttpGet("{base64Id}", Name = "Get")]
-        public ActionResult<Person> Get(string base64Id)
+        // GET: api/Person?GUID
+        [HttpGet("{Id}", Name = "Get")]
+        public ActionResult<Person> Get([ModelBinder(Name = "id")]Person person)
         {
-            return new Person(Guid.Parse(Encoding.UTF8.GetString(Convert.FromBase64String(base64Id))));
+            return person;
         }
     }
 }

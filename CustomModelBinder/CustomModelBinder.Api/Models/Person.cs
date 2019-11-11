@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Bogus;
-using Bogus.DataSets;
+using CustomModelBinder.Api.Binders;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CustomModelBinder.Api.Models
 {
+    [ModelBinder(BinderType = typeof(PersonEntityBuilder))]
     public class Person
     {
         private void InitPerson(Bogus.Person person)
