@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MoneyManager.DataAccess.Context;
 using MoneyManager.DataAccess.UnitOfWork.Repository;
 
@@ -19,7 +21,15 @@ namespace MoneyManager.DataAccess.UnitOfWork
 
         public UnitOfWork()
         {
-            DbContext = new MoneyManagerContext();
+            var builder = new ConfigurationBuilder();
+            builder.SetBasePath(Directory.GetCurrentDirectory());
+            builder.AddJsonFile("appsettings.json");
+            var config = builder.Build();
+
+            var optionsBuilder = new DbContextOptionsBuilder<MoneyManagerContext>();
+            optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+
+            DbContext = new MoneyManagerContext(optionsBuilder.Options);
             UserRepository = new UserRepository(DbContext);
             CategoryRepository = new CategoryRepository(DbContext);
             AssetRepository = new AssetRepository(DbContext);

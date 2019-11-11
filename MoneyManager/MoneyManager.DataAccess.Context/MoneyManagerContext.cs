@@ -6,14 +6,9 @@ namespace MoneyManager.DataAccess.Context
 {
     public class MoneyManagerContext : DbContext
     {
-        public MoneyManagerContext()
+        public MoneyManagerContext(DbContextOptions options) : base(options)
         {
             Database.EnsureCreated();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBUilder)
-        {
-            optionsBUilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=MoneyManagerLocalDB;Trusted_Connection=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
