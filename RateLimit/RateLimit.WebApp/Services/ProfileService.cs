@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -23,6 +22,11 @@ namespace RateLimit.WebApp.Services
         public ProfileService(int amount)
         {
             profiles.AddRange(Enumerable.Range(0, amount).Select(index => new Profile()));
+        }
+
+        public IQueryable<Profile> GetAll()
+        {
+            return profiles.AsQueryable();
         }
 
         public IQueryable<Profile> GetPage(int pageIndex = 0, int profilesPerPage = 10)

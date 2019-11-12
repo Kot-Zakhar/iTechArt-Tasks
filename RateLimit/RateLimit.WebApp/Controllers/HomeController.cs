@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RateLimit.WebApp.Filters;
 using RateLimit.WebApp.Models;
 using RateLimit.WebApp.Services;
 
@@ -12,15 +9,14 @@ namespace RateLimit.WebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly ProfileService _profileService;
 
-        public HomeController(ILogger<HomeController> logger, ProfileService profileService)
+        public HomeController(ProfileService profileService)
         {
-            _logger = logger;
             _profileService = profileService;
         }
 
+        [TypeFilter(typeof(ConcurrentRequestsLimitFilter), Arguments = new object[] { 10 }, IsReusable = true)]
         public IActionResult Profile(int page = 0, int pageSize = 10)
         {
             var url = "/home/profile";
