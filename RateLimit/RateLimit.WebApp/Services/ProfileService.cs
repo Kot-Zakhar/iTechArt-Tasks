@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using RateLimit.WebApp.Models;
 
 namespace RateLimit.WebApp.Services
@@ -26,6 +27,7 @@ namespace RateLimit.WebApp.Services
 
         public IQueryable<Profile> GetPage(int pageIndex = 0, int profilesPerPage = 10)
         {
+            Thread.Sleep(1000);
             return profiles.GetRange(pageIndex * profilesPerPage, profilesPerPage).AsQueryable();
         }
     }

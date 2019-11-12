@@ -1,0 +1,26 @@
+#!/bin/bash
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
+newman run iTechArt.RateMeRequest.json --silent &
