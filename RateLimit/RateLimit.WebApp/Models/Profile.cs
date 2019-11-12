@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RateLimit.Api.Models
+namespace RateLimit.WebApp.Models
 {
     public class Profile
     {

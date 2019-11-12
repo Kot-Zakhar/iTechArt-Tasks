@@ -1,18 +1,18 @@
-﻿using RateLimit.Api.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using RateLimit.WebApp.Models;
 
-namespace RateLimit.Api.Services
+namespace RateLimit.WebApp.Services
 {
     public class ProfileService
     {
         private List<Profile> profiles = new List<Profile>();
         public readonly string FileName;
 
-        public ProfileService(string fileName = "./profiles.json")
+        public ProfileService(string fileName = "./Data/profiles.json")
         {
             FileName = fileName;
             string serializedProfiles = File.ReadAllText(Path.GetFullPath(FileName), System.Text.Encoding.UTF8);

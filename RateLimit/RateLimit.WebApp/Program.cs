@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace RateLimit.Api
+namespace RateLimit.WebApp
 {
     public class Program
     {
