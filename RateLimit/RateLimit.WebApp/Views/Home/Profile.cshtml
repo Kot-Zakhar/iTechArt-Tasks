@@ -6,9 +6,6 @@
 
 <h1>Profiles</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -62,3 +59,10 @@
 }
     </tbody>
 </table>
+<nav aria-label="Profiles navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link" href="@ViewData["previousPageUrl"]" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li class="page-item"><a class="page-link" href="#">@ViewData["page"]</a></li>
+        <li class="page-item"><a class="page-link" href="@ViewData["nextPageUrl"]" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+    </ul>
+</nav>

@@ -4,6 +4,7 @@ namespace RateLimit.WebApp.Models
 {
     public class Profile
     {
+        private DateTime _birthday;
         private void InitPerson(Bogus.Person person)
         {
             Website = person.Website;
@@ -13,7 +14,7 @@ namespace RateLimit.WebApp.Models
             UserName = person.UserName;
             Avatar = person.Avatar;
             Email = person.Email;
-            Birthday = person.DateOfBirth;
+            Birthday = person.DateOfBirth.ToString();
             Phone = person.Phone;
         }
         public Profile()
@@ -37,7 +38,14 @@ namespace RateLimit.WebApp.Models
         public string UserName { get; set; }
         public string Avatar { get; set; }
         public string Email { get; set; }
-        public DateTime Birthday { get; set; }
+        public string Birthday { 
+            get {
+                return _birthday.ToShortDateString();
+            }
+            set {
+                _birthday = DateTime.Parse(value); 
+            }
+        }
         public string Phone { get; set; }
     }
 }
