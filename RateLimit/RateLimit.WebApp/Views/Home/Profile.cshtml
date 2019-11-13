@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RateLimit.WebApp.Models.Profile>
+﻿@model FilteredResult<Profile>
 
 @{
     ViewData["Title"] = "Profile";
@@ -9,60 +9,43 @@
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.LastName)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th scope="col">
-                @Html.DisplayNameFor(model => model.Birthday)
-            </th>
+            @foreach (var property in typeof(Profile).GetProperties()) {
+                <th scope="col" >
+                    <a class="page-link" href="@(Model.Url + "?sortField=" + property.Name + "&pageSize=" + Model.PageSize)">@property.Name</a>
+                </th>
+            }
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr scope="row">
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Birthday)
-            </td>
-            @*<td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>*@
-        </tr>
-}
+        @foreach (var item in Model.Values)
+        {
+            <tr scope="row">
+                @foreach (var property in typeof(Profile).GetProperties())
+                {
+                    <td>
+                        @if (property.PropertyType == typeof(DateTime))
+                        {
+                            @(((DateTime)property.GetValue(item)).ToShortDateString())
+                        }
+                        else
+                        {
+                            @(property.GetValue(item))
+                        }
+                    </td>
+                }
+                @*<td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>*@
+            </tr>
+        }
     </tbody>
 </table>
 <nav aria-label="Profiles navigation">
     <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link" href="@ViewData["previousPageUrl"]" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-        <li class="page-item"><a class="page-link" href="#">@ViewData["page"]</a></li>
-        <li class="page-item"><a class="page-link" href="@ViewData["nextPageUrl"]" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+        <li class="page-item @(@Model.Previous ? "" : "disabled")"><a class="page-link" href="@Model.PreviousPage" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li class="page-item active"><a class="page-link" href="#">@(@Model.Page + 1)</a></li>
+        <li class="page-item @(Model.Next ? "" : "disabled")"><a class="page-link" href="@Model.NextPage" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
     </ul>
 </nav>
