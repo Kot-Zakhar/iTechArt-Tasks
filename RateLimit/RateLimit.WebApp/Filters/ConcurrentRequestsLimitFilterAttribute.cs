@@ -13,17 +13,17 @@ namespace RateLimit.WebApp.Filters
     //    }
     //}
 
-    public class ConcurrentRequestsLimitFilter : IActionFilter
+    public class ConcurrentRequestsLimitFilterAttribute: ActionFilterAttribute
     {
         private int _requestsAmount = 0;
-        public int MaxConcurrentRequestsAmoun { get; private set; } = 10;
-
-        public ConcurrentRequestsLimitFilter(params object[] args)
+        public int MaxConcurrentRequestsAmount { get; private set; }
+        
+        public ConcurrentRequestsLimitFilterAttribute(int maxConcurrentRequestsAmount = 10)
         {
-            MaxConcurrentRequestsAmoun = (int)args[0];
+            MaxConcurrentRequestsAmount = maxConcurrentRequestsAmount;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             Log(ConsoleColor.Yellow, $"ConcurrentRequestsLimitMiddleware_{Thread.CurrentThread.ManagedThreadId} invoke start");
             if (IsLimitReached())
@@ -38,7 +38,7 @@ namespace RateLimit.WebApp.Filters
             }
         }
 
-        public void OnActionExecuted(ActionExecutedContext context)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
             if (!context.Canceled)
                 Interlocked.Decrement(ref _requestsAmount);
@@ -58,7 +58,7 @@ namespace RateLimit.WebApp.Filters
 
         public bool IsLimitReached()
         {
-            return _requestsAmount >= MaxConcurrentRequestsAmoun;
+            return _requestsAmount >= MaxConcurrentRequestsAmount;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace RateLimit.WebApp.Services
 
         public IQueryable<Profile> GetPage(int pageIndex = 0, int profilesPerPage = 10)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(5000);
             return profiles.GetRange(pageIndex * profilesPerPage, profilesPerPage).AsQueryable();
         }
     }

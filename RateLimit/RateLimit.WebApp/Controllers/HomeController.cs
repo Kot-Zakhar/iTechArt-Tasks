@@ -16,7 +16,7 @@ namespace RateLimit.WebApp.Controllers
             _profileService = profileService;
         }
 
-        [TypeFilter(typeof(ConcurrentRequestsLimitFilter), Arguments = new object[] { 10 }, IsReusable = true)]
+        [ConcurrentRequestsLimitFilter(10)]
         public IActionResult Profile(int page = 0, int pageSize = 10)
         {
             var url = "/home/profile";
