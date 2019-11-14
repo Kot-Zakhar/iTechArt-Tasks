@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ShareMe.DataAccessLayer.Context;
 using ShareMe.DataAccessLayer.Entity;
 using ShareMe.WebApplication.ApiModels;
+using ShareMe.WebApplication.Services;
 
 namespace ShareMe.WebApplication.Controllers
 {
@@ -16,10 +17,11 @@ namespace ShareMe.WebApplication.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ShareMeContext _context;
+        private readonly CategoryService _categoryService;
 
-        public CategoriesController(ShareMeContext context)
+        public CategoriesController(CategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
         // GET: api/Categories
@@ -27,7 +29,7 @@ namespace ShareMe.WebApplication.Controllers
         public async Task<ActionResult<IEnumerable<CategoryApiModel>>> GetCategories(
             [FromQuery(Name = "count")] int? count
         ){
-            var query = _context.Categories.AsQueryable();
+            var query = _categoryService.GetAll();
             if (count != null)
                 query = query.Take(count.Value);
             return await query

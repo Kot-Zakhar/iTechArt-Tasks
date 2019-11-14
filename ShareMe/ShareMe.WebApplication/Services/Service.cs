@@ -1,11 +1,13 @@
 ﻿using ShareMe.DataAccessLayer.Entity;
 using ShareMe.DataAccessLayer.UnitOfWork;
+using ShareMe.DataAccessLayer.UnitOfWork.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace ShareMe.Service
+namespace ShareMe.WebApplication.Services
 {
     public abstract class Service<T> where T : Entity
     {
@@ -16,6 +18,9 @@ namespace ShareMe.Service
             Repository = repository;
         }
 
-        public abstract IQueryable<T> GetAll();
+        public async Task<IQueryable<T>> GetAllAsync()
+        {
+            return await Repository.GetAllAsync();
+        }
     }
 }

@@ -34,7 +34,6 @@
     <ProjectReference Include="..\ShareMe.DataAccessLayer.Context\ShareMe.DataAccessLayer.Context.csproj" />
     <ProjectReference Include="..\ShareMe.DataAccessLayer.Entity\ShareMe.DataAccessLayer.Entity.csproj" />
     <ProjectReference Include="..\ShareMe.DataAccessLayer.UnitOfWork\ShareMe.DataAccessLayer.UnitOfWork.csproj" />
-    <ProjectReference Include="..\ShareMe.Service\ShareMe.Service.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
