@@ -1,20 +1,17 @@
 ﻿using ShareMe.DataAccessLayer.Entity;
 using ShareMe.DataAccessLayer.UnitOfWork;
+using ShareMe.DataAccessLayer.UnitOfWork.Repository;
 using System;
 using System.Linq;
 
-namespace ShareMe.Service
+namespace ShareMe.WebApplication.Services
 {
     public class CategoryService : Service<Category>
     {
-        protected readonly UnitOfWork unitOfWork;
+        protected IRepository<Category> CategoryRepository { get => Repository; }
 
-        protected IRepository<Category> CategoryRepository { get => this.Repository; }
-
-        public CategoryService(UnitOfWork unitOfWork) : base (unitOfWork.CategoryRepository)
-        {
-            this.unitOfWork = unitOfWork;
-        }
+        public CategoryService(UnitOfWork unitOfWork) : base(unitOfWork.CategoryRepository)
+        {}
 
         public Category GetByName(string name)
         {
@@ -28,7 +25,7 @@ namespace ShareMe.Service
 
         public override IQueryable<Category> GetAll()
         {
-            return unitOfWork.CategoryRepository.GetAll();
+            return CategoryRepository.GetAll();
         }
     }
 }

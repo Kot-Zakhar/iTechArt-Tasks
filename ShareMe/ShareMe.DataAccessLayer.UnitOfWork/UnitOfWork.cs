@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ShareMe.DataAccessLayer.Context;
 using ShareMe.DataAccessLayer.Entity;
-using ShareMe.DataAccessLayer.UnitOfWork.Repository;
+using ShareMe.DataAccessLayer.UnitOfWork.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +18,9 @@ namespace ShareMe.DataAccessLayer.UnitOfWork
         public Repository<Comment> CommentRepository { get; protected set; }
         public Repository<Category> CategoryRepository { get; protected set; }
 
-        public UnitOfWork()
+        public UnitOfWork(ShareMeContext context)
         {
-            context = new ShareMeContext();
+            this.context = context;
             UserRepository = new Repository<User>(context);
             TagRepository = new Repository<Tag>(context);
             PostRepository = new Repository<Post>(context);

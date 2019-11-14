@@ -5,18 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ShareMe.Service
+namespace ShareMe.WebApplication.Services
 {
     public class CommentService : Service<Comment>
     {
-        protected readonly UnitOfWork unitOfWork;
-
-        protected IRepository<Comment> CommentRepository { get => this.Repository; }
+        protected IRepository<Comment> CommentRepository { get => Repository; }
 
         public CommentService(UnitOfWork unitOfWork) : base(unitOfWork.CommentRepository)
-        {
-            this.unitOfWork = unitOfWork;
-        }
+        {}
 
         public IQueryable<Comment> GetCommentsByUserId(Guid userId)
         {
@@ -35,7 +31,7 @@ namespace ShareMe.Service
 
         public override IQueryable<Comment> GetAll()
         {
-            return unitOfWork.CommentRepository.GetAll();
+            return CommentRepository.GetAll();
         }
     }
 }

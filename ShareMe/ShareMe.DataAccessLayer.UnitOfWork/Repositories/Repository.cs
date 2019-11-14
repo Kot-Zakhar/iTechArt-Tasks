@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShareMe.DataAccessLayer.UnitOfWork.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace ShareMe.DataAccessLayer.UnitOfWork.Repository
+namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
 {
-    public class Repository <T>: IRepository<T> where T : Entity.Entity
+    public class Repository<T> : IRepository<T> where T : Entity.Entity
     {
         protected DbContext context;
         protected DbSet<T> typeSet;
@@ -16,47 +18,43 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repository
             typeSet = context.Set<T>();
         }
 
-        public T Create(T entity)
+        public async Task<T> CreateAsync(T entity)
         {
-            return typeSet.Add(entity).Entity;
+            var result = await typeSet.AddAsync(entity);
+            return result.Entity;
         }
 
-        public void CreateRange(IEnumerable<T> entities)
+        public async Task CreateRangeAsync(IEnumerable<T> entities)
         {
-            typeSet.AddRange(entities);
+            await typeSet.AddRangeAsync(entities);
         }
 
-        public T GetById(Guid? id)
+        public async Task<T> GetByIdAsync(Guid? id)
         {
-            return typeSet.Find(id.GetValueOrDefault(Guid.Empty));
+            return await typeSet.FindAsync(id.GetValueOrDefault(Guid.Empty));
         }
 
-        public IQueryable<T> GetAll()
+        public async Task<IQueryable<T>> GetAllAsync()
         {
             return typeSet;
         }
 
-        public void Update(T entity)
+        public async Task<bool> Delete(T entity)
         {
-            context.Entry(entity).State = EntityState.Modified;
+            return await DeleteById(entity?.Id);
         }
 
-        public bool Delete(T entity)
+        public async Task<bool> DeleteById(Guid? id)
         {
-            return DeleteById(entity?.Id);
-        }
-
-        public bool DeleteById(Guid? id)
-        {
-            T entity = GetById(id.GetValueOrDefault(Guid.Empty));
+            T entity = await GetByIdAsync(id.GetValueOrDefault(Guid.Empty));
             if (entity != null)
                 typeSet.Remove(entity);
             return entity != null;
         }
 
-        public void Save()
+        public async Task Save()
         {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
 

@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ShareMe.DataAccessLayer.Context;
-using ShareMe.DataAccessLayer.Entity;
 using ShareMe.WebApplication.ApiModels;
+using ShareMe.WebApplication.Services;
 
 namespace ShareMe.WebApplication.Controllers
 {
@@ -15,27 +13,25 @@ namespace ShareMe.WebApplication.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly ShareMeContext _context;
+        private readonly UserService _userService;
 
-        public UsersController(ShareMeContext context)
+        public UsersController(UserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserApiModel>>> GetUsers()
         {
-            return await _context.Users
-                .Select(u => new UserApiModel(u))
-                .ToListAsync();
+            return await _userService.GetAllAsync();
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserApiModel>> GetUser(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userService.GetByIdAsync(id);
 
             if (user == null)
             {
