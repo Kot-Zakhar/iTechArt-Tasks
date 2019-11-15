@@ -7,9 +7,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using CustomJsonFormatter.Api.Models;
+using CustomJsonFormatter.Api.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
 
 namespace CustomJsonFormatter.Api.Formatters
 {
@@ -18,57 +18,44 @@ namespace CustomJsonFormatter.Api.Formatters
         private class OutputObject
         {
             public object Data { get; set; }
-            public string Self { get; set; }
+
+            [JsonPropertyName("_links")]
+            public IDictionary<string, string> Links { get; set; }
             public OutputObject(object obj)
             {
                 Data = obj;
-            }
-            public OutputObject(OutputObject outputObject) : this(outputObject.Data)
-            {
-                Self = outputObject.Self;
+                Links = new Dictionary<string, string>();
             }
         }
 
-        private class OutputArticle : OutputObject
+        private readonly LinkService _linkService;
+
+        public CustomTextJsonOutputFormatter(LinkService linkService, JsonSerializerOptions jsonSerializerOptions) : base(jsonSerializerOptions)
         {
-            public OutputArticle(Article article) : base(article) { }
-            public OutputArticle(OutputObject outputObject) : base(outputObject) { }
-
-            [JsonPropertyName("get-author")]
-            public string AuthorLink { get; set; }
+            _linkService = linkService;
         }
 
-        public CustomTextJsonOutputFormatter(JsonSerializerOptions jsonSerializerOptions)
-            : base(jsonSerializerOptions ?? new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase } )
-        {}
-
-        public CustomTextJsonOutputFormatter() : base(new JsonSerializerOptions())
+        public CustomTextJsonOutputFormatter(LinkService linkService) : this(linkService, new JsonSerializerOptions())
         {}
 
         public override Task WriteAsync(OutputFormatterWriteContext context)
         {
-            OutputObject data = new OutputObject(context.Object);
-            data.Self = context.HttpContext.Request.Host + context.HttpContext.Request.Path;
-            if (context.Object is Article)
+            var data = new OutputObject(context.Object)
             {
-                var article = context.Object as Article;
-                var outputArticle = new OutputArticle(data);
-                // I don't know where to get path to Profile-api, so i hardcoded it
-                outputArticle.AuthorLink = context.HttpContext.Request.Host + "/api/profile/" + article.AuthorId.ToString();
-                data = outputArticle; 
-            }
-            return base.WriteAsync(new OutputFormatterWriteContext(context.HttpContext, context.WriterFactory, typeof(OutputObject), data));
+                Links = _linkService.GetLinks(context.Object)
+            };
+            return base.WriteAsync(new OutputFormatterWriteContext(context.HttpContext, context.WriterFactory, typeof(OutputObject), (object)data));
         }
     }
 
     public static class CustomTextJsonOutputFormatterExtension
     {
-        public static IMvcBuilder AddCustomJsonOutputFormatter(this IServiceCollection service, JsonSerializerOptions jsonOptions = null)
+        public static IMvcBuilder AddCustomJsonOutputFormatter(this IServiceCollection service, string hostAddress, JsonSerializerOptions jsonOptions = null)
         {
             return service.AddMvc(options => {
                 options.ReturnHttpNotAcceptable = true;
 
-                var customJsonFormatter = new CustomTextJsonOutputFormatter(jsonOptions);
+                var customJsonFormatter = new CustomTextJsonOutputFormatter(new LinkService(hostAddress), jsonOptions);
                 customJsonFormatter.SupportedMediaTypes.Clear();
                 customJsonFormatter.SupportedMediaTypes.Add("application/json+custom");
                 options.OutputFormatters.Add(customJsonFormatter);
