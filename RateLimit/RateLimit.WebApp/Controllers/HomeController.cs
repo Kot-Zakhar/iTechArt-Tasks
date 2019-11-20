@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RateLimit.WebApp.Filters;
@@ -18,20 +19,22 @@ namespace RateLimit.WebApp.Controllers
             _profileService = profileService;
         }
 
-        private string getFilterAndSortQueryFromFilter(FilterModel<Profile> filter)
+        private string GetQueryStringFromFilter(GridModel<Profile> grid)
         {
-            string query = "";
-            if (filter.Filter)
+            StringBuilder query = new StringBuilder();
+            if (grid.Filter)
             {
-                query += "&filterfield=" + filter.FilterField;
-                query += filter.FilterValues.Aggregate("", (result, value) => "&filterValues[]=" + result);
+                query.Append("filterfield=" + grid.FilterField);
+                query.Append(grid.FilterValues.Aggregate("", (result, value) => "&filterValues[]=" + result));
             }
-            if (!String.IsNullOrEmpty(filter.Sort))
+            if (!String.IsNullOrEmpty(grid.Sort))
             {
-                query += "&sort=" + filter.Sort;
-                query += "&sortField=" + filter.SortField;
+                if (query.Length != 0)
+                    query.Append("&");
+                query.Append("&sort=" + grid.Sort);
+                query.Append("&sortField=" + grid.SortField);
             }
-            return query;
+            return query.ToString();
         }
 
 
@@ -48,14 +51,22 @@ namespace RateLimit.WebApp.Controllers
         //           sort=desc&
         //           sortField=birthday
         [ConcurrentRequestsLimitFilter(10)]
-        public IActionResult Profile([FromQuery]FilterModel<Profile> profileFilter)
+        public IActionResult Profile([FromQuery]GridModel<Profile> profileGrid)
         {
-            FilteredResult<Profile> result = _profileService.GetFiltered(profileFilter);
-            string filterAndSort = getFilterAndSortQueryFromFilter(profileFilter);
-            result.Url = "/home/profile";
-            result.NextPage = result.Next ? (result.Url + "?page=" + (profileFilter.Page + 1) + "&pageSize=" + profileFilter.PageSize + filterAndSort) : null;
-            result.PreviousPage = result.Previous ? (result.Url + "?page=" + (profileFilter.Page - 1) + "&pageSize=" + profileFilter.PageSize + filterAndSort) : null;
+            GridResult<Profile> result = _profileService.GetFiltered(profileGrid);
+            AddPageLinks(ref result, profileGrid);
             return View(result);
+        }
+
+        private void AddPageLinks(ref GridResult<Profile> result, GridModel<Profile> profileGrid)
+        {
+            string filterAndSort = GetQueryStringFromFilter(profileGrid);
+            result.Url = "/home/profile";
+
+            Func<int, string> GetQueryString = (int pageInc) => "?page=" + (profileGrid.Page + pageInc) + "&pageSize=" + profileGrid.PageSize + "&" + filterAndSort;
+
+            result.NextPageUrl = result.Next ? result.Url + GetQueryString(1) : null;
+            result.PreviousPageUrl = result.Previous ? result.Url + GetQueryString(-1) : null;
         }
 
         public IActionResult Index()

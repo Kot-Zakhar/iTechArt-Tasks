@@ -1,4 +1,4 @@
-﻿@model FilteredResult<Profile>
+﻿@model GridResult<Profile>
 
 @{
     ViewData["Title"] = "Profile";
@@ -44,8 +44,8 @@
 </table>
 <nav aria-label="Profiles navigation">
     <ul class="pagination justify-content-center">
-        <li class="page-item @(@Model.Previous ? "" : "disabled")"><a class="page-link" href="@Model.PreviousPage" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li class="page-item @(@Model.Previous ? "" : "disabled")"><a class="page-link" href="@Model.PreviousPageUrl" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
         <li class="page-item active"><a class="page-link" href="#">@(@Model.Page + 1)</a></li>
-        <li class="page-item @(Model.Next ? "" : "disabled")"><a class="page-link" href="@Model.NextPage" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+        <li class="page-item @(Model.Next ? "" : "disabled")"><a class="page-link" href="@Model.NextPageUrl" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
     </ul>
 </nav>

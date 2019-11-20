@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace RateLimit.WebApp.Models
 {
-    public class FilterModel<T> where T : class
+    public class GridModel<T> where T : class
     {
         private bool _sort = false;
         private bool _sortASC = true;
@@ -58,7 +58,7 @@ namespace RateLimit.WebApp.Models
         }
         public List<string> FilterValues { get; set; }
 
-        public FilterModel()
+        public GridModel()
         {
             Page = 0;
             PageSize = 10;
@@ -68,17 +68,5 @@ namespace RateLimit.WebApp.Models
         {
             return String.IsNullOrEmpty(name) ? null : typeof(T).GetProperty(name, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance)?.Name;
         }
-    }
-
-    public class FilteredResult<T> where T : class
-    {
-        public IEnumerable<T> Values { get; set; } = new List<T>();
-        public int Page;
-        public int PageSize; 
-        public bool Next = false;
-        public bool Previous = false;
-        public string Url = null;
-        public string NextPage { get; set; } = null;
-        public string PreviousPage { get; set; } = null;
     }
 }

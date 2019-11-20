@@ -30,31 +30,31 @@ namespace RateLimit.WebApp.Services
             return profiles.AsQueryable();
         }
 
-        public FilteredResult<Profile> GetFiltered(FilterModel<Profile> filter)
+        public GridResult<Profile> GetFiltered(GridModel<Profile> grid)
         {
             Func<String, Profile, object> getPropertyValue = (fieldName, profile) => typeof(Profile).GetProperty(fieldName).GetValue(profile);
 
             Thread.Sleep(1000);
             IQueryable<Profile> allValues = GetAll();
 
-            if (filter.Filter)
-                allValues = allValues.Where(profile => filter.FilterValues.Any(value => value == getPropertyValue(filter.FilterField, profile).ToString()));
+            if (grid.Filter)
+                allValues = allValues.Where(profile => grid.FilterValues.Any(value => value == getPropertyValue(grid.FilterField, profile).ToString()));
 
-            if (!String.IsNullOrEmpty(filter.Sort))
-                if (filter.Sort.ToUpper() == "ASC")
-                    allValues = allValues.OrderBy(profile => getPropertyValue(filter.SortField, profile));
+            if (!String.IsNullOrEmpty(grid.Sort))
+                if (grid.Sort.ToUpper() == "ASC")
+                    allValues = allValues.OrderBy(profile => getPropertyValue(grid.SortField, profile));
                 else
-                    allValues = allValues.OrderByDescending(profile => getPropertyValue(filter.SortField, profile));
+                    allValues = allValues.OrderByDescending(profile => getPropertyValue(grid.SortField, profile));
 
-            IQueryable<Profile> pagedValues = allValues.Skip(filter.Page * filter.PageSize).Take(filter.PageSize);
+            IQueryable<Profile> pagedValues = allValues.Skip(grid.Page * grid.PageSize).Take(grid.PageSize);
 
-            var result = new FilteredResult<Profile>()
+            var result = new GridResult<Profile>()
             {
                 Values = pagedValues,
-                Next = allValues.Skip((filter.Page + 1) * filter.PageSize).Take(filter.PageSize).Any(),
-                Previous = filter.Page != 0 && allValues.Skip((filter.Page - 1) * filter.PageSize).Take(filter.PageSize).Any(),
-                Page = filter.Page,
-                PageSize = filter.PageSize
+                Next = allValues.Skip((grid.Page + 1) * grid.PageSize).Take(grid.PageSize).Any(),
+                Previous = grid.Page != 0 && allValues.Skip((grid.Page - 1) * grid.PageSize).Take(grid.PageSize).Any(),
+                Page = grid.Page,
+                PageSize = grid.PageSize
             };
             return result;
         }
