@@ -44,22 +44,8 @@ namespace CustomJsonFormatter.Api.Formatters
             {
                 Links = _linkService.GetLinks(context.Object)
             };
+            data.Links.Add("self", context.HttpContext.Request.Host + context.HttpContext.Request.Path + context.HttpContext.Request.QueryString);
             return base.WriteAsync(new OutputFormatterWriteContext(context.HttpContext, context.WriterFactory, typeof(OutputObject), (object)data));
-        }
-    }
-
-    public static class CustomTextJsonOutputFormatterExtension
-    {
-        public static IMvcBuilder AddCustomJsonOutputFormatter(this IServiceCollection service, string hostAddress, JsonSerializerOptions jsonOptions = null)
-        {
-            return service.AddMvc(options => {
-                options.ReturnHttpNotAcceptable = true;
-
-                var customJsonFormatter = new CustomTextJsonOutputFormatter(new LinkService(hostAddress), jsonOptions);
-                customJsonFormatter.SupportedMediaTypes.Clear();
-                customJsonFormatter.SupportedMediaTypes.Add("application/json+custom");
-                options.OutputFormatters.Add(customJsonFormatter);
-            });
         }
     }
 }

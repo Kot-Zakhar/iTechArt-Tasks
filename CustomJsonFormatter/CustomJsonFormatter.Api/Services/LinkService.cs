@@ -16,14 +16,12 @@ namespace CustomJsonFormatter.Api.Services
         public IDictionary<string, string> GetLinks(Article article)
         {
             var links = new Dictionary<string, string>();
-            links["self"] = _host + "/api/article/" + article.Id.ToString();
             links["get-author"] = _host + "/api/profile/" + article.AuthorId.ToString();
             return links;
         }
         public IDictionary<string, string> GetLinks(Profile profile)
         {
             var links = new Dictionary<string, string>();
-            links["self"] = _host + "/api/profile/" + profile.Id;
             return links;
         }
 
