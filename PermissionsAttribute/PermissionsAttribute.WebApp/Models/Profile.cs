@@ -33,5 +33,6 @@ namespace PermissionsAttribute.WebApp.Models
         public string Email { get; set; }
         public DateTime Birthday { get; set; }
         public string Phone { get; set; }
+        public ProfileStatus Status { get; set; } = ProfileStatus.Submitted;
     }
 }

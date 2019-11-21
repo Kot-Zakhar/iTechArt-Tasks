@@ -30,6 +30,11 @@ namespace PermissionsAttribute.WebApp.Services
             return profiles.AsQueryable();
         }
 
+        public Profile GetById(Guid id)
+        {
+            return profiles.Single(p => p.Id == id);
+        }
+
         public GridResult<Profile> GetFiltered(GridModel<Profile> grid)
         {
             Func<string, Profile, object> getPropertyValue = (fieldName, profile) => typeof(Profile).GetProperty(fieldName).GetValue(profile);
@@ -57,6 +62,43 @@ namespace PermissionsAttribute.WebApp.Services
                 PageSize = grid.PageSize
             };
             return result;
+        }
+
+        public bool Create(Profile profile)
+        {
+            if (!profiles.Any(p => p.Id == profile.Id))
+            {
+                profiles.Add(profile);
+                Save();
+                return true;
+            }
+            return false;
+        }
+
+        public bool Update(Profile profile)
+        {
+            var index = profiles.FindIndex(p => p.Id == profile.Id);
+            if (index >= 0)
+            {
+                profiles.RemoveAt(index);
+                profiles.Add(profile);
+                Save();
+                return true;
+            }
+            return false;
+        }
+
+        public bool DeleteById(Guid id)
+        {
+            var result = profiles.Any(p => p.Id == id);
+            profiles.RemoveAll(p => p.Id == id);
+            return result;
+        }
+
+        private void Save()
+        {
+            string serializedProfiles = JsonSerializer.Serialize(profiles, typeof(IList<Profile>));
+            File.WriteAllText(Path.GetFullPath(FileName), serializedProfiles, System.Text.Encoding.UTF8);
         }
     }
 }

@@ -29,8 +29,11 @@ namespace PermissionsAttribute.WebApp.Controllers
         [HttpGet("{id}")]
         public ActionResult Details(Guid id)
         {
-            //return View();
-            return NotFound();
+            Profile profile = _profileService.GetById(id);
+            if (profile == null)
+                return NotFound();
+            else
+                return View("Details", profile);
         }
 
         // GET: Profile/all
@@ -71,5 +74,25 @@ namespace PermissionsAttribute.WebApp.Controllers
             result.PreviousPageUrl = result.Previous ? result.Url + GetQueryString(-1) : null;
         }
 
+
+        // POST: profile
+        [HttpPost]
+        public ActionResult Create([FromBody] Profile profile)
+        {
+            if (_profileService.Create(profile))
+                return Ok();
+            else
+                return NotFound();
+        }
+
+        // PUT: profile
+        [HttpPut]
+        public ActionResult Update([FromBody] Profile profile)
+        {
+            if (_profileService.Update(profile))
+                return Ok();
+            else
+                return NotFound();
+        }
     }
 }

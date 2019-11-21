@@ -1,0 +1,21 @@
+﻿@model Profile
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div>
+    <h4>Profile</h4>
+    <hr />
+    <dl class="row">
+        @foreach (var prop in typeof(Profile).GetProperties())
+        {
+            <dt class = "col-sm-2">
+                @prop.Name
+            </dt>
+            <dd class = "col-sm-10">
+                @prop.GetValue(Model)
+            </dd>
+        }
+    </dl>
+</div>
