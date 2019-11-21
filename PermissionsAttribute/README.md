@@ -9,7 +9,7 @@ Add custom permissions attribute in ASP.NET Core MVC application.
  - Security, Authentication, and Authorization
  - Async methods
 ## Requirements
- - Create a simple web app with authorization like this
+ - Create a simple web app with authorization like [this](https://docs.microsoft.com/en-us/aspnet/core/security/authorization/secure-data?view=aspnetcore-2.2)
  - Implement ProfileController with several actions:
    - Action that will return one profile by user Id
    - Action that will return a collection of profiles
