@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 
@@ -25,16 +26,18 @@ namespace RateLimit.WebApp.Filters
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            Log(ConsoleColor.Yellow, $"ConcurrentRequestsLimitMiddleware_{Thread.CurrentThread.ManagedThreadId} invoke start");
+            object log = context.HttpContext.RequestServices.GetService(typeof(ILogger));
+            ILogger logger = log as ILogger;
+            logger?.LogInformation($"{nameof(ConcurrentRequestsLimitFilterAttribute)}-{Thread.CurrentThread.ManagedThreadId} invoke start");
             if (IsLimitReached())
             {
-                Log(ConsoleColor.Red, $"ConcurrentRequestsLimitMiddleware_{Thread.CurrentThread.ManagedThreadId} Request blocked.");
+                logger?.LogWarning($"{nameof(ConcurrentRequestsLimitFilterAttribute)}-{Thread.CurrentThread.ManagedThreadId} Request blocked.");
                 context.Result = new StatusCodeResult(429);
             }
             else
             {
                 Interlocked.Increment(ref _requestsAmount);
-                Log(ConsoleColor.Green, $"ConcurrentRequestsLimitMiddleware_{Thread.CurrentThread.ManagedThreadId}: " + _requestsAmount + " threads.");
+                logger?.LogInformation($"{nameof(ConcurrentRequestsLimitFilterAttribute)}-{Thread.CurrentThread.ManagedThreadId}: " + _requestsAmount + " threads.");
             }
         }
 
@@ -42,18 +45,8 @@ namespace RateLimit.WebApp.Filters
         {
             if (!context.Canceled)
                 Interlocked.Decrement(ref _requestsAmount);
-            Log(ConsoleColor.Yellow, $"ConcurrentRequestsLimitMiddleware_{Thread.CurrentThread.ManagedThreadId} invoke end");
-        }
-
-        private void Log(ConsoleColor c, string message)
-        {
-            lock (Console.Out)
-            {
-                ConsoleColor old = Console.ForegroundColor;
-                Console.ForegroundColor = c;
-                Console.WriteLine(message);
-                Console.ForegroundColor = old;
-            }
+            ILogger logger = (ILogger)context.HttpContext.RequestServices.GetService(typeof(ILogger));
+            logger?.LogInformation($"{nameof(ConcurrentRequestsLimitFilterAttribute)}-{Thread.CurrentThread.ManagedThreadId} invoke end");
         }
 
         public bool IsLimitReached()
