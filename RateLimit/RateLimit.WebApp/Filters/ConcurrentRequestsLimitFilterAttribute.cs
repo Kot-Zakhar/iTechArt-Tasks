@@ -26,7 +26,7 @@ namespace RateLimit.WebApp.Filters
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            object log = context.HttpContext.RequestServices.GetService(typeof(ILogger));
+            object log = context.HttpContext.RequestServices.GetService(typeof(ILogger<ConcurrentRequestsLimitFilterAttribute>));
             ILogger logger = log as ILogger;
             logger?.LogInformation($"{nameof(ConcurrentRequestsLimitFilterAttribute)}-{Thread.CurrentThread.ManagedThreadId} invoke start");
             if (IsLimitReached())
