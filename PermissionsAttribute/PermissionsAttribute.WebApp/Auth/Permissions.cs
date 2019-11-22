@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PermissionsAttribute.WebApp.Filter
+namespace PermissionsAttribute.WebApp.Auth
 {
-    public enum Permissions
+    public enum Permission
     {
-        None,
+        GetProfiles,
         GetProfileById,
         AddProfile,
         UpdateProfile,
-        DeleteProfile,
-        All = 100
+        DeleteProfile
     }
 }

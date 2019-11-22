@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PermissionsAttribute.WebApp.Models;
 using PermissionsAttribute.WebApp.Services;
+using PermissionsAttribute.WebApp.Filter;
 
 namespace PermissionsAttribute.WebApp.Controllers
 {
@@ -20,6 +22,7 @@ namespace PermissionsAttribute.WebApp.Controllers
             _profileService = profileService;
         }
 
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return Redirect("/Profile/All?page=0&pageSize=10");
@@ -27,6 +30,7 @@ namespace PermissionsAttribute.WebApp.Controllers
 
         // GET: Profile/5
         [HttpGet("{id}")]
+        [HasPermission(Auth.Permission.GetProfileById)]
         public ActionResult Details(Guid id)
         {
             Profile profile = _profileService.GetById(id);
@@ -38,6 +42,7 @@ namespace PermissionsAttribute.WebApp.Controllers
 
         // GET: Profile/all
         [HttpGet("all")]
+        [AllowAnonymous]
         public ActionResult All([FromQuery]GridModel<Profile> gridModel)
         {
             GridResult<Profile> result = _profileService.GetFiltered(gridModel);
