@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using PermissionsAttribute.WebApp.Filter;
+using System;
 
 namespace PermissionsAttribute.WebApp.Auth.Claims
 {
     public static class UserPermissionsClaimNames
     {
-        public static string UserPermissionsClaimTypeName = "Permissions";
+        public static string UserPermissionsClaimTypeName = "Permission";
 
         public static string GetPermissionName(Permission permission)
         {
-            return Enum.GetName(typeof(Permission), Permission.GetProfileById);
+            return Enum.GetName(typeof(Permission), permission);
         }
 
         public static Permission GetPermissionByName(string name)

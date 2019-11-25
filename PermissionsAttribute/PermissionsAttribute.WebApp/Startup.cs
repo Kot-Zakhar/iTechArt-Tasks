@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using PermissionsAttribute.WebApp.Data;
 using Microsoft.EntityFrameworkCore;
 using PermissionsAttribute.WebApp.Auth.Claims;
+using PermissionsAttribute.WebApp.Models;
 
 namespace PermissionsAttribute.WebApp
 {
@@ -29,7 +30,8 @@ namespace PermissionsAttribute.WebApp
             services.AddDbContext<PermissionsDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<IdentityProfile>()
+                .AddUserManager<UserManager<IdentityProfile>>()
                 .AddEntityFrameworkStores<PermissionsDbContext>()
                 .AddClaimsPrincipalFactory<UserPermissionClaimsPrincipalFactory>();
             services.AddControllersWithViews();
@@ -44,7 +46,7 @@ namespace PermissionsAttribute.WebApp
                 config.Filters.Add(new AuthorizeFilter(policy));
             });
 
-            services.AddSingleton(typeof(ProfileService), new ProfileService());
+            services.AddScoped<ProfileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +62,7 @@ namespace PermissionsAttribute.WebApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();

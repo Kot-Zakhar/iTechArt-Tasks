@@ -10,7 +10,7 @@ using PermissionsAttribute.WebApp.Data;
 namespace PermissionsAttribute.WebApp.Migrations
 {
     [DbContext(typeof(PermissionsDbContext))]
-    [Migration("20191122092655_DbInit")]
+    [Migration("20191125000120_DbInit")]
     partial class DbInit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,4 +1,9 @@
-﻿@model GridResult<Profile>
+﻿@using Microsoft.AspNetCore.Identity
+@using PermissionsAttribute.WebApp.Auth.Claims;
+@using PermissionsAttribute.WebApp.Filter;
+@inject SignInManager<IdentityProfile> SignInManager
+@inject UserManager<IdentityProfile> UserManager
+@model GridResult<Profile>
 
 @{
     ViewData["Title"] = "Profile";
@@ -9,8 +14,9 @@
 <table class="table">
     <thead>
         <tr>
-            @foreach (var property in typeof(Profile).GetProperties()) {
-                <th scope="col" >
+            @foreach (var property in typeof(Profile).GetProperties())
+            {
+                <th scope="col">
                     <a class="page-link" href="@(Model.Url + "?sortField=" + property.Name + "&pageSize=" + Model.PageSize)">@property.Name</a>
                 </th>
             }
@@ -33,11 +39,20 @@
                         }
                     </td>
                 }
-                @*<td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>*@
+                <td>
+                    @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.UpdateProfile)))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                    }
+                    @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.GetProfileById)))
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id })
+                    }
+                    @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.DeleteProfile)))
+                    {
+                        @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                    }
+                </td>
             </tr>
         }
     </tbody>

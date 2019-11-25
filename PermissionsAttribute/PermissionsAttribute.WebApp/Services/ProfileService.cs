@@ -4,35 +4,31 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using PermissionsAttribute.WebApp.Models;
 
 namespace PermissionsAttribute.WebApp.Services
 {
     public class ProfileService
     {
-        private List<Profile> profiles = new List<Profile>();
-        public readonly string FileName;
+        private UserManager<IdentityProfile> _userManager;
 
-        public ProfileService(string fileName = "./Data/profiles.json")
+        public ProfileService(UserManager<IdentityProfile> userManager)
         {
-            FileName = fileName;
-            string serializedProfiles = File.ReadAllText(Path.GetFullPath(FileName), System.Text.Encoding.UTF8);
-            profiles.AddRange(JsonSerializer.Deserialize<IList<Profile>>(serializedProfiles));
-        }
-
-        public ProfileService(int amount)
-        {
-            profiles.AddRange(Enumerable.Range(0, amount).Select(index => new Profile()));
+            _userManager = userManager;
         }
 
         public IQueryable<Profile> GetAll()
         {
-            return profiles.AsQueryable();
+            return _userManager.Users
+                .Select(u => new Profile(u));
         }
 
-        public Profile GetById(Guid id)
+        public async Task<Profile> GetById(Guid id)
         {
-            return profiles.Single(p => p.Id == id);
+            IdentityProfile user = await _userManager.FindByIdAsync(id.ToString());
+            return new Profile(user);
         }
 
         public GridResult<Profile> GetFiltered(GridModel<Profile> grid)
@@ -64,41 +60,40 @@ namespace PermissionsAttribute.WebApp.Services
             return result;
         }
 
-        public bool Create(Profile profile)
+        public async Task<bool> Create(Profile profile, string password)
         {
-            if (!profiles.Any(p => p.Id == profile.Id))
+            var user = new IdentityProfile(profile.UserName)
             {
-                profiles.Add(profile);
-                Save();
-                return true;
-            }
-            return false;
+                Email = profile.Email,
+                PhoneNumber = profile.PhoneNumber,
+                FirstName = profile.FirstName,
+                LastName = profile.LastName,
+                UserName = profile.UserName,
+                Birthday = profile.Birthday,
+            };
+            return (await _userManager.CreateAsync(user, password)).Succeeded;
         }
 
-        public bool Update(Profile profile)
+        public async Task<bool> Update(Profile profile)
         {
-            var index = profiles.FindIndex(p => p.Id == profile.Id);
-            if (index >= 0)
-            {
-                profiles.RemoveAt(index);
-                profiles.Add(profile);
-                Save();
-                return true;
-            }
-            return false;
+            IdentityProfile user = await _userManager.FindByIdAsync(profile.Id.ToString());
+            if (user == null)
+                return false;
+            user.Email = profile.Email ?? user.Email;
+            user.Birthday = profile.Birthday ?? user.Birthday;
+            user.FirstName = profile.FirstName ?? user.FirstName;
+            user.LastName = profile.LastName ?? user.LastName;
+            user.PhoneNumber = profile.PhoneNumber ?? user.PhoneNumber;
+            user.UserName = profile.UserName ?? user.UserName;
+            return (await _userManager.UpdateAsync(user)).Succeeded;
         }
 
-        public bool DeleteById(Guid id)
+        public async Task<bool> DeleteById(Guid id)
         {
-            var result = profiles.Any(p => p.Id == id);
-            profiles.RemoveAll(p => p.Id == id);
-            return result;
-        }
-
-        private void Save()
-        {
-            string serializedProfiles = JsonSerializer.Serialize(profiles, typeof(IList<Profile>));
-            File.WriteAllText(Path.GetFullPath(FileName), serializedProfiles, System.Text.Encoding.UTF8);
+            IdentityProfile user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+                return false;
+            return (await _userManager.DeleteAsync(user)).Succeeded;
         }
     }
 }

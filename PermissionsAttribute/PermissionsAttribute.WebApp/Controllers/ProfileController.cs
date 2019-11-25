@@ -22,7 +22,6 @@ namespace PermissionsAttribute.WebApp.Controllers
             _profileService = profileService;
         }
 
-        [AllowAnonymous]
         public ActionResult Index()
         {
             return Redirect("/Profile/All?page=0&pageSize=10");
@@ -30,10 +29,10 @@ namespace PermissionsAttribute.WebApp.Controllers
 
         // GET: Profile/5
         [HttpGet("{id}")]
-        [HasPermission(Auth.Permission.GetProfileById)]
-        public ActionResult Details(Guid id)
+        [HasPermission(Permission.GetProfileById)]
+        public async Task<ActionResult> Details(Guid id)
         {
-            Profile profile = _profileService.GetById(id);
+            Profile profile = await _profileService.GetById(id);
             if (profile == null)
                 return NotFound();
             else
@@ -42,7 +41,7 @@ namespace PermissionsAttribute.WebApp.Controllers
 
         // GET: Profile/all
         [HttpGet("all")]
-        [AllowAnonymous]
+        [HasPermission(Permission.GetProfiles)]
         public ActionResult All([FromQuery]GridModel<Profile> gridModel)
         {
             GridResult<Profile> result = _profileService.GetFiltered(gridModel);
@@ -82,9 +81,11 @@ namespace PermissionsAttribute.WebApp.Controllers
 
         // POST: profile
         [HttpPost]
-        public ActionResult Create([FromBody] Profile profile)
+        [HasPermission(Permission.AddProfile)]
+        public async Task<ActionResult> Create([FromBody] Profile profile)
         {
-            if (_profileService.Create(profile))
+            string password = profile.Email;
+            if (await _profileService.Create(profile, password))
                 return Ok();
             else
                 return NotFound();
@@ -92,9 +93,10 @@ namespace PermissionsAttribute.WebApp.Controllers
 
         // PUT: profile
         [HttpPut]
-        public ActionResult Update([FromBody] Profile profile)
+        [HasPermission(Permission.UpdateProfile)]
+        public async Task<ActionResult> Update([FromBody] Profile profile)
         {
-            if (_profileService.Update(profile))
+            if (await _profileService.Update(profile))
                 return Ok();
             else
                 return NotFound();

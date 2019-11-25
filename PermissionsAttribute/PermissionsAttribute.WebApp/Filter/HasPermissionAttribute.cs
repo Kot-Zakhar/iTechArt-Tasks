@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using PermissionsAttribute.WebApp.Auth;
 using PermissionsAttribute.WebApp.Auth.Claims;
 using System;
 using System.Collections.Generic;
@@ -19,9 +18,14 @@ namespace PermissionsAttribute.WebApp.Filter
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            IEnumerable<Permission> permissions = context.HttpContext.User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Select(c => UserPermissionsClaimNames.GetPermissionByName(c.Value));
-            if (!permissions.Contains(_permission))
+            if (!context.HttpContext.User
+                .HasClaim(UserPermissionsClaimNames.UserPermissionsClaimTypeName, 
+                    UserPermissionsClaimNames.GetPermissionName(_permission)
+                )
+            )
+            {
                 context.Result = new StatusCodeResult(403);
+            }
         }
     }
 }
