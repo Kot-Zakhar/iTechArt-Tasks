@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ShareMe.DataAccessLayer.Entity;
 
-namespace ShareMe.DataAccessLayer.UnitOfWork.Repository
+namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
 {
     public interface IRepository<T> where T : Entity.Entity
     {
@@ -13,7 +13,7 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repository
         Task<bool> Delete(T entity);
         Task<bool> DeleteById(Guid? id);
         void Dispose();
-        Task<IQueryable<T>> GetAllAsync();
+        IQueryable<T> GetAll();
         Task<T> GetByIdAsync(Guid? id);
         Task Save();
     }
