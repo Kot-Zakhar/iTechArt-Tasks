@@ -1,26 +1,31 @@
-﻿using ShareMe.DataAccessLayer.Entity;
-using ShareMe.DataAccessLayer.UnitOfWork;
-using ShareMe.DataAccessLayer.UnitOfWork.Repository;
+﻿using ShareMe.DataAccessLayer.UnitOfWork.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ShareMe.WebApplication.Services
 {
-    public abstract class Service<T> where T : Entity
+    public abstract class Service<ApiModelT, DbEntityT> 
+        where ApiModelT : ApiModels.ApiModel
+        where DbEntityT : DataAccessLayer.Entity.Entity
     {
-        protected IRepository<T> Repository;
+        private Repository<DbEntityT> _repository;
 
-        public Service(IRepository<T> repository)
+        protected abstract ApiModelT Translate(DbEntityT entity);
+
+        public Service(Repository<DbEntityT> repository)
         {
-            Repository = repository;
+            _repository = repository;
         }
 
-        public async Task<IQueryable<T>> GetAllAsync()
+        public async Task<ApiModelT> GetById(Guid id)
         {
-            return await Repository.GetAllAsync();
+            return Translate(await _repository.GetByIdAsync(id));
+        }
+
+        public IQueryable<ApiModelT> GetAll()
+        {
+            return _repository.GetAll().Select(e => Translate(e));
         }
     }
 }

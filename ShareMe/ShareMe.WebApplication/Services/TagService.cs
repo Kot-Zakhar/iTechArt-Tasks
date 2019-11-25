@@ -1,27 +1,33 @@
 ﻿using ShareMe.DataAccessLayer.Entity;
 using ShareMe.DataAccessLayer.UnitOfWork;
-using System;
-using System.Collections.Generic;
+using ShareMe.DataAccessLayer.UnitOfWork.Repositories;
+using ShareMe.WebApplication.ApiModels;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace ShareMe.WebApplication.Services
 {
-    public class TagService : Service<Tag>
+    public class TagService : Service<TagApiModel, Tag>
     {
-        protected IRepository<Tag> TagRepository { get => Repository; }
+        protected TagRepository _tagRepository;
 
         public TagService(UnitOfWork unitOfWork) : base(unitOfWork.TagRepository)
-        {}
-
-        public Tag GetByName(string name)
         {
-            return TagRepository.GetAll().Single(tag => tag.Name == name);
+            _tagRepository = unitOfWork.TagRepository;
+        }
+        protected override TagApiModel Translate(Tag t)
+        {
+            return new TagApiModel(t);
         }
 
-        public override IQueryable<Tag> GetAll()
+        public async Task<TagApiModel> GetByName(string name)
         {
-            return TagRepository.GetAll();
+            return Translate(await _tagRepository.GetByNameAsync(name));
+        }
+
+        public IQueryable<TagApiModel> GetTop(int count)
+        {
+            return _tagRepository.GetAll().Take(count).Select(t => Translate(t));
         }
     }
 }

@@ -12,20 +12,20 @@ namespace ShareMe.DataAccessLayer.UnitOfWork
     public class UnitOfWork : IDisposable
     {
         protected DbContext context;
-        public Repository<User> UserRepository { get; protected set; }
-        public Repository<Tag> TagRepository { get; protected set; }
-        public Repository<Post> PostRepository { get; protected set; }
-        public Repository<Comment> CommentRepository { get; protected set; }
-        public Repository<Category> CategoryRepository { get; protected set; }
+        public UserRepository UserRepository { get; protected set; }
+        public TagRepository TagRepository { get; protected set; }
+        public PostRepository PostRepository { get; protected set; }
+        public CommentRepository CommentRepository { get; protected set; }
+        public CategoryRepository CategoryRepository { get; protected set; }
 
         public UnitOfWork(ShareMeContext context)
         {
             this.context = context;
-            UserRepository = new Repository<User>(context);
-            TagRepository = new Repository<Tag>(context);
-            PostRepository = new Repository<Post>(context);
-            CommentRepository = new Repository<Comment>(context);
-            CategoryRepository = new Repository<Category>(context);
+            UserRepository = new UserRepository(context);
+            TagRepository = new TagRepository(context);
+            PostRepository = new PostRepository(context);
+            CommentRepository = new CommentRepository(context);
+            CategoryRepository = new CategoryRepository(context);
         }
 
         public void Commit()

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShareMe.DataAccessLayer.UnitOfWork.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +33,7 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
             return await typeSet.FindAsync(id.GetValueOrDefault(Guid.Empty));
         }
 
-        public async Task<IQueryable<T>> GetAllAsync()
+        public IQueryable<T> GetAll()
         {
             return typeSet;
         }

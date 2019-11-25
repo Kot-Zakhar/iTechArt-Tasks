@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShareMe.DataAccessLayer.Context;
-using ShareMe.DataAccessLayer.Entity;
 using ShareMe.WebApplication.ApiModels;
+using ShareMe.WebApplication.Services;
 
 namespace ShareMe.WebApplication.Controllers
 {
@@ -15,38 +13,28 @@ namespace ShareMe.WebApplication.Controllers
     [ApiController]
     public class TagsController : ControllerBase
     {
-        private readonly ShareMeContext _context;
+        private TagService _tagService;
 
-        public TagsController(ShareMeContext context)
+        public TagsController(TagService tagService)
         {
-            _context = context;
+            _tagService = tagService;
         }
 
         // GET: api/Tags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TagApiModel>>> GetTags(
-            [FromQuery(Name = "count")] int? count
-        ){
-            var query = _context.Tags.AsQueryable();
+        public async Task<ActionResult<IEnumerable<TagApiModel>>> GetTags(int? count)
+        {
             if (count != null)
-                query = query.Take(count.Value);
-            return await query
-                .Select(t =>  new TagApiModel(t))
-                .ToListAsync();
+                return await _tagService.GetTop(count.Value).ToListAsync();
+            else
+                return await _tagService.GetAll().ToListAsync();
         }
 
         // GET: api/Tags/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TagApiModel>> GetTag(Guid id)
         {
-            var tag = await _context.Tags.FindAsync(id);
-
-            if (tag == null)
-            {
-                return NotFound();
-            }
-
-            return new TagApiModel(tag);
+            return await _tagService.GetById(id);
         }
     }
 }
