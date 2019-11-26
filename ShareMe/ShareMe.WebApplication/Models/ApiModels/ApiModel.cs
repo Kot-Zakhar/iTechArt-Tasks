@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShareMe.WebApplication.ApiModels
+namespace ShareMe.WebApplication.Models.ApiModels
 {
     [Serializable]
     public abstract class ApiModel
@@ -12,7 +12,8 @@ namespace ShareMe.WebApplication.ApiModels
         public Guid Id { get; set; }
 
         public ApiModel() { }
-        public ApiModel(Entity dbEntity) {
+        public ApiModel(Entity dbEntity)
+        {
             Id = dbEntity.Id;
         }
 

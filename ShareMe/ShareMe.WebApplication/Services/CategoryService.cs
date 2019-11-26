@@ -1,31 +1,40 @@
 ﻿using ShareMe.DataAccessLayer.Entity;
 using ShareMe.DataAccessLayer.UnitOfWork;
-using ShareMe.DataAccessLayer.UnitOfWork.Repository;
-using System;
+using ShareMe.DataAccessLayer.UnitOfWork.Repositories;
+using ShareMe.WebApplication.Models.ApiModels;
+using ShareMe.WebApplication.Services.Contracts;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ShareMe.WebApplication.Services
 {
-    public class CategoryService : Service<Category>
+    public class CategoryService : Service<CategoryApiModel, Category>, ICategoryService
     {
-        protected IRepository<Category> CategoryRepository { get => Repository; }
+        private readonly CategoryRepository _categoryRepository;
 
         public CategoryService(UnitOfWork unitOfWork) : base(unitOfWork.CategoryRepository)
-        {}
-
-        public Category GetByName(string name)
         {
-            return CategoryRepository.GetAll().Single(category => category.Name == name);
+            _categoryRepository = unitOfWork.CategoryRepository;
         }
 
-        public IQueryable<Category> GetRootCategories()
+        protected override CategoryApiModel TranslateToApiModel(Category category)
         {
-            return CategoryRepository.GetAll().Where(category => category.ParentCategory == null);
+            return new CategoryApiModel(category);
         }
 
-        public override IQueryable<Category> GetAll()
+        public async Task<CategoryApiModel> GetByName(string name)
         {
-            return CategoryRepository.GetAll();
+            return TranslateToApiModel(await _categoryRepository.GetByNameAsync(name));
+        }
+
+        public IQueryable<CategoryApiModel> GetTop(int count)
+        {
+            return _categoryRepository.GetAll().Take(count).Select(c => TranslateToApiModel(c));
+        }
+
+        public IQueryable<Category> GetAllRootCategories()
+        {
+            return _categoryRepository.GetAllRootCategories();
         }
     }
 }

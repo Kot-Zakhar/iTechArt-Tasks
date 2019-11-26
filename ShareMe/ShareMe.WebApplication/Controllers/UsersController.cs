@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShareMe.WebApplication.ApiModels;
+using ShareMe.WebApplication.Models.ApiModels;
 using ShareMe.WebApplication.Services;
 
 namespace ShareMe.WebApplication.Controllers

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShareMe.WebApplication.ApiModels;
+using ShareMe.WebApplication.Models.ApiModels;
 using ShareMe.WebApplication.Services;
 
 namespace ShareMe.WebApplication.Controllers
@@ -13,7 +13,7 @@ namespace ShareMe.WebApplication.Controllers
     [ApiController]
     public class TagsController : ControllerBase
     {
-        private TagService _tagService;
+        private readonly TagService _tagService;
 
         public TagsController(TagService tagService)
         {
@@ -34,7 +34,7 @@ namespace ShareMe.WebApplication.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TagApiModel>> GetTag(Guid id)
         {
-            return await _tagService.GetById(id);
+            return await _tagService.GetByIdAsync(id);
         }
     }
 }

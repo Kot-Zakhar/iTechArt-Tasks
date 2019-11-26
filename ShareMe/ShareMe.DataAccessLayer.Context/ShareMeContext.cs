@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Proxies;
 using ShareMe.DataAccessLayer.Entity;
 using System;
 
@@ -15,6 +16,12 @@ namespace ShareMe.DataAccessLayer.Context
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<PostTag>().HasKey(pt => new { pt.PostId, pt.TagId });
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder
+                .UseLazyLoadingProxies();
         }
 
         public DbSet<Category> Categories { get; set; }

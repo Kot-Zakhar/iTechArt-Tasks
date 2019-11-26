@@ -14,7 +14,7 @@ namespace ShareMe.DataAccessLayer.Entity
 
         [ForeignKey("AuthorId")]
         [Required]
-        public User Author { get; set; }
+        public virtual User Author { get; set; }
 
         [DataType(DataType.DateTime)]
         [Required]
@@ -34,9 +34,9 @@ namespace ShareMe.DataAccessLayer.Entity
         public string URI { get; set; }
 
         [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
 
-        public IList<PostTag> PostTags { get; set; } = new List<PostTag>();
-        public IList<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual IList<PostTag> PostTags { get; set; } = new List<PostTag>();
+        public virtual IList<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

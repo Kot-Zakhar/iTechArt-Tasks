@@ -11,6 +11,6 @@ namespace ShareMe.DataAccessLayer.Entity
         [Required]
         public string Name { get; set; }
 
-        public IList<PostTag> PostTags { get; set; } = new List<PostTag>();
+        public virtual IList<PostTag> PostTags { get; set; } = new List<PostTag>();
     }
 }

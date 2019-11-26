@@ -6,17 +6,17 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
 {
     public class UserRepository : Repository<User>
     {
-        private DbSet<User> _usetTypeSet { get => typeSet; }
+        private DbSet<User> UserTypeSet { get => typeSet; }
         public UserRepository(DbContext context) : base(context) { }
 
         public async Task<User> GetByEmailAsync(string email)
         {
-            return await _usetTypeSet.SingleAsync(u => u.Email == email);
+            return await UserTypeSet.SingleAsync(u => u.Email == email);
         }
 
         public async Task<User> GetByUsernameAsync(string username)
         {
-            return await _usetTypeSet.SingleAsync(u => u.Username == username);
+            return await UserTypeSet.SingleAsync(u => u.Username == username);
         }
     }
 }

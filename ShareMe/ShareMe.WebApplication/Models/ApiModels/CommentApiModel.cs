@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShareMe.DataAccessLayer.Entity;
+using ShareMe.WebApplication.Models.ApiModels;
 
-namespace ShareMe.WebApplication.ApiModels
+namespace ShareMe.WebApplication.Models.ApiModels
 {
     public class CommentApiModel : ApiModel
     {
