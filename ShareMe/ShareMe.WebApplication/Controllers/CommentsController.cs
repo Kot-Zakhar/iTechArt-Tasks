@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShareMe.DataAccessLayer.Context;
-using ShareMe.DataAccessLayer.Entity;
-using ShareMe.WebApplication.ApiModels;
+using ShareMe.WebApplication.Models.ApiModels;
+using ShareMe.WebApplication.Services;
 
 namespace ShareMe.WebApplication.Controllers
 {
@@ -15,37 +13,25 @@ namespace ShareMe.WebApplication.Controllers
     [ApiController]
     public class CommentsController : ControllerBase
     {
-        private readonly ShareMeContext _context;
+        private readonly CommentService _commentService;
 
-        public CommentsController(ShareMeContext context)
+        public CommentsController(CommentService commentService)
         {
-            _context = context;
+            this._commentService = commentService;
         }
 
         // GET: api/Comments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CommentApiModel>>> GetComments(Guid? postId)
+        public async Task<ActionResult<IList<CommentApiModel>>> GetComments(Guid postId)
         {
-            if (postId == null)
-                return NotFound();
-            return await _context.Comments
-                .Where(c => c.Post.Id == postId)
-                .Select(c => new CommentApiModel(c))
-                .ToListAsync();
+            return await _commentService.GetCommentsByPostId(postId).ToListAsync();
         }
 
         // GET: api/Comments/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CommentApiModel>> GetComment(Guid id)
         {
-            var comment = await _context.Comments.FindAsync(id);
-
-            if (comment == null)
-            {
-                return NotFound();
-            }
-
-            return new CommentApiModel(comment);
+            return await _commentService.GetByIdAsync(id);
         }
     }
 }

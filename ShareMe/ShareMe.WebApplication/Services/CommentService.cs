@@ -1,37 +1,47 @@
-﻿using ShareMe.DataAccessLayer.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using ShareMe.DataAccessLayer.Entity;
 using ShareMe.DataAccessLayer.UnitOfWork;
+using ShareMe.DataAccessLayer.UnitOfWork.Repositories;
+using ShareMe.WebApplication.Models.ApiModels;
+using ShareMe.WebApplication.Services.Contracts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace ShareMe.WebApplication.Services
 {
-    public class CommentService : Service<Comment>
+    public class CommentService : Service<CommentApiModel, Comment>, ICommentService
     {
-        protected IRepository<Comment> CommentRepository { get => Repository; }
+        private readonly CommentRepository _commentRepository;
 
         public CommentService(UnitOfWork unitOfWork) : base(unitOfWork.CommentRepository)
-        {}
-
-        public IQueryable<Comment> GetCommentsByUserId(Guid userId)
         {
-            return CommentRepository.GetAll().Where(comment => comment.Author.Id == userId);
+            _commentRepository = unitOfWork.CommentRepository;
         }
 
-        public IQueryable<Comment> GetCommentsByPostId(Guid postId)
+        protected override CommentApiModel TranslateToApiModel(Comment comment)
         {
-            return CommentRepository.GetAll().Where(comment => comment.Post.Id == postId);
+            return new CommentApiModel(comment);
         }
 
-        public int GetAmountOfChildComments(Guid commentId)
+        public IQueryable<CommentApiModel> GetCommentsByUserId(Guid userId)
         {
-            return CommentRepository.GetAll().Where(comment => comment.Id == commentId && comment.ParentComment != null).Count();
+            return _commentRepository.GetByUserId(userId).Select(c => TranslateToApiModel(c));
         }
 
-        public override IQueryable<Comment> GetAll()
+        public IQueryable<CommentApiModel> GetCommentsByPostId(Guid postId)
         {
-            return CommentRepository.GetAll();
+            return _commentRepository.GetByPostId(postId).Select(c => TranslateToApiModel(c));
+        }
+
+        public async Task<int> GetAmountOfChildCommentsAsync(Guid parentCommentId)
+        {
+            return await _commentRepository.GetChildComments(parentCommentId).CountAsync();
+        }
+
+        public IQueryable<CommentApiModel> GetChildComments(Guid parentCommentId)
+        {
+            return _commentRepository.GetChildComments(parentCommentId).Select(c => TranslateToApiModel(c));
         }
     }
 }

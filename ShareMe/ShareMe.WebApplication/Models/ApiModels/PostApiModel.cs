@@ -1,9 +1,10 @@
 ﻿using ShareMe.DataAccessLayer.Entity;
+using ShareMe.WebApplication.Models.ApiModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ShareMe.WebApplication.ApiModels
+namespace ShareMe.WebApplication.Models.ApiModels
 {
     public class PostApiModel : ApiModel
     {
