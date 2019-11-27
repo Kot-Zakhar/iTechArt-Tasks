@@ -7,11 +7,11 @@ namespace CustomCsv
 {
     public class CustomCsvReader
     {
-        private readonly StreamReader _stream;
+        private readonly TextReader _stream;
         private IList<string> _headers = new List<string>();
         private readonly CustomCsvReaderOptions _options;
 
-        public CustomCsvReader(StreamReader stream, CustomCsvReaderOptions options = null)
+        public CustomCsvReader(TextReader stream, CustomCsvReaderOptions options = null)
         {
             _stream = stream ?? throw new NullReferenceException();
             _options = options ?? new CustomCsvReaderOptions();
