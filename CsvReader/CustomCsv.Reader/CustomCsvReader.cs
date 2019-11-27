@@ -39,14 +39,14 @@ namespace CustomCsv
         {
             if (_options.AreHeadersRequired && _headers.Count == 0)
                 throw new Exception("No headers.");
-            return ReadValues()
+            return ReadValues()?
                 .Select((value, index) => new KeyValuePair<string, string>(_headers[index], value))
                 .ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
         }
 
         public IEnumerable<string> ReadValues()
         {
-            return _stream.ReadLine()
+            return _stream?.ReadLine()?
                 .Split(',')
                 .Select(s => s.Trim());
         }

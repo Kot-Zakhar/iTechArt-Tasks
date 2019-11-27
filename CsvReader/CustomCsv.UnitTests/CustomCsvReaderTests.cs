@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,7 @@ namespace CustomCsv.UnitTests
         [Test]
         public void ReadValues_GoodStreamWithHeadersAndNoOptions_ReturnsListOfValues()
         {
-            TextReader stream = GetGoodTextReader_WithHeaders();
+            TextReader stream = GetGoodTextReader(addHeaders: true);
             var csvReader = new CustomCsvReader(stream);
 
             IEnumerable<string> recordValues = csvReader.ReadValues();
@@ -25,7 +26,7 @@ namespace CustomCsv.UnitTests
         [Test]
         public void ReadValues_GoodStreamAndNoHeaders_ReturnsListOfValues()
         {
-            TextReader stream = GetGoodTextReader_NoHeaders();
+            TextReader stream = GetGoodTextReader();
             var csvReader = new CustomCsvReader(stream, new CustomCsvReaderOptions() { AreHeadersInFile = false, AreHeadersRequired = false });
 
             IEnumerable<string> recordValues = csvReader.ReadValues();
@@ -36,7 +37,7 @@ namespace CustomCsv.UnitTests
         [Test]
         public void ReadRecord_GoodStreamWithHeadersAndNoOptions_ReturnsDictionary()
         {
-            TextReader stream = GetGoodTextReader_WithHeaders();
+            TextReader stream = GetGoodTextReader(addHeaders: true);
             var csvReader = new CustomCsvReader(stream);
 
             IDictionary<string, string> record = csvReader.ReadRecord();
@@ -45,14 +46,44 @@ namespace CustomCsv.UnitTests
         }
 
         [Test]
+        public void ReadRecord_HeadersAmountNotEqualValueAmount_ThrowsException()
+        {
+            var csvReader = new CustomCsvReader(GetNotNormalizedTextReader(addHeaders: true));
+
+            Assert.Catch(() =>
+            {
+                csvReader.ReadRecord();
+            });
+        }
+
+        [Test]
+        public void ReadRecord_ReadingMoreThanExist_ReturnsNull()
+        {
+            var csvReader = new CustomCsvReader(GetGoodTextReader(recordAmount: 4, addHeaders: true));
+
+            IList<IDictionary<string, string>> records = Enumerable.Range(0, 6).Select(index => csvReader.ReadRecord()).ToList();
+
+            Assert.IsNull(records[4]);
+        }
+
+        [Test]
         public void ReaderCreation_GoodStreamNoHeaders_ThrowsException()
         {
             Assert.Catch(() =>
             {
-                TextReader stream = GetGoodTextReader_NoHeaders();
-                var csvReader = new CustomCsvReader(stream, new CustomCsvReaderOptions() { AreHeadersInFile = false });
+                var csvReader = new CustomCsvReader(GetGoodTextReader(), new CustomCsvReaderOptions() { AreHeadersInFile = false });
             });
         }
+
+        [Test]
+        public void ReaderCreation_StreamIsNull_ThrowsException()
+        {
+            Assert.Catch(typeof(NullReferenceException),() =>
+            {
+                new CustomCsvReader(null);
+            });
+        }
+
 
         private string[] GetRecordValues(int recordIndex, int fieldAmount = magicNumber)
         {
@@ -67,18 +98,18 @@ namespace CustomCsv.UnitTests
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
-        private TextReader GetGoodTextReader_NoHeaders(int recordAmount = magicNumber, int fieldAmount = magicNumber)
+        private TextReader GetNotNormalizedTextReader(int recordAmount = magicNumber, int minFieldAmount = magicNumber, int maxFieldAmount = 2 * magicNumber, bool addHeaders = false)
         {
-            string[][] records = Enumerable.Range(0, recordAmount).Select(index => GetRecordValues(index, fieldAmount)).ToArray();
+            Random rand = new Random();
+            string[][] records = Enumerable.Range(addHeaders ? -1 : 0, recordAmount + (addHeaders ? 1 : 0)).Select(index => GetRecordValues(index, rand.Next(minFieldAmount, maxFieldAmount))).ToArray();
 
             var abstractCsvFile = string.Join('\n', records.Select(record => string.Join(',', record)));
             return new StringReader(abstractCsvFile);
         }
 
-        private TextReader GetGoodTextReader_WithHeaders(int recordAmount = magicNumber, int fieldAmount = magicNumber)
+        private TextReader GetGoodTextReader(int recordAmount = magicNumber, int fieldAmount = magicNumber, bool addHeaders = false)
         {
-            string[][] records = Enumerable.Range(-1, recordAmount + 1).Select(index => GetRecordValues(index, fieldAmount))
-                .ToArray();
+            string[][] records = Enumerable.Range(addHeaders ? -1 : 0, recordAmount + (addHeaders ? 1 : 0)).Select(index => GetRecordValues(index, fieldAmount)).ToArray();
 
             var abstractCsvFile = string.Join('\n', records.Select(record => string.Join(',', record)));
             return new StringReader(abstractCsvFile);
