@@ -19,6 +19,13 @@ namespace CustomCsv
                 ParseRowAsHeaders();
                 if (_headers == null)
                     throw new Exception("File is empty. Cannot read headers.");
+
+                if (currentOptions.Headers != null)
+                {
+                    if (currentOptions.Headers.Count != _headers.Count)
+                        throw new Exception("Provided headers amount not equal to the amount of headers in file.");
+                    _headers = currentOptions.Headers;
+                }
             }
             else
                 _headers = currentOptions.Headers;
