@@ -27,7 +27,7 @@ namespace CustomCsv.UnitTests
         public void ReadValues_GoodStreamAndNoHeaders_ReturnsListOfValues()
         {
             TextReader stream = GetGoodTextReader();
-            var csvReader = new CustomCsvReader(stream, new CustomCsvReaderOptions() { AreHeadersInFile = false, AreHeadersRequired = false });
+            var csvReader = new CustomCsvReader(stream, new CustomCsvReaderOptions() { AreHeadersInStream = false });
 
             IEnumerable<string> recordValues = csvReader.ReadValues();
 
@@ -46,6 +46,16 @@ namespace CustomCsv.UnitTests
         }
 
         [Test]
+        public void ReadRecord_GoodStreamNoHeadersInFileOrInOptions_ThrowsException()
+        {
+            var csvReader = new CustomCsvReader(GetGoodTextReader(), new CustomCsvReaderOptions() { AreHeadersInStream = false });
+            Assert.Catch(() =>
+            {
+                csvReader.ReadRecord();
+            });
+        }
+
+        [Test]
         public void ReadRecord_HeadersAmountNotEqualValueAmount_ThrowsException()
         {
             var csvReader = new CustomCsvReader(GetNotNormalizedTextReader(addHeaders: true));
@@ -61,18 +71,9 @@ namespace CustomCsv.UnitTests
         {
             var csvReader = new CustomCsvReader(GetGoodTextReader(recordAmount: 4, addHeaders: true));
 
-            IList<IDictionary<string, string>> records = Enumerable.Range(0, 6).Select(index => csvReader.ReadRecord()).ToList();
+            IList<IDictionary<string, string>> records = Enumerable.Range(0, 5).Select(index => csvReader.ReadRecord()).ToList();
 
             Assert.IsNull(records[4]);
-        }
-
-        [Test]
-        public void ReaderCreation_GoodStreamNoHeaders_ThrowsException()
-        {
-            Assert.Catch(() =>
-            {
-                var csvReader = new CustomCsvReader(GetGoodTextReader(), new CustomCsvReaderOptions() { AreHeadersInFile = false });
-            });
         }
 
         [Test]

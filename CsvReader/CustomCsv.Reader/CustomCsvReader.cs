@@ -8,28 +8,25 @@ namespace CustomCsv
     public class CustomCsvReader
     {
         private readonly TextReader _stream;
-        private IList<string> _headers = new List<string>();
-        private readonly CustomCsvReaderOptions _options;
+        private IList<string> _headers;
 
         public CustomCsvReader(TextReader stream, CustomCsvReaderOptions options = null)
         {
             _stream = stream ?? throw new NullReferenceException();
-            _options = options ?? new CustomCsvReaderOptions();
-            if (_options.AreHeadersInFile)
+            var currentOptions = options ?? new CustomCsvReaderOptions();
+            if (currentOptions.AreHeadersInStream)
             {
                 ParseRowAsHeaders();
+                if (_headers == null)
+                    throw new Exception("File is empty. Cannot read headers.");
             }
             else
-            {
-                _headers = _options.Headers;
-                if (_options.AreHeadersRequired && _headers == null)
-                    throw new Exception("Headers are not provided.");
-            }
+                _headers = currentOptions.Headers;
         }
 
         private void ParseRowAsHeaders()
         {
-            _headers = _stream?.ReadLine()
+            _headers = _stream?.ReadLine()?
                 .Split(',')
                 .Select(s => s.Trim())
                 .ToList();
@@ -37,7 +34,7 @@ namespace CustomCsv
 
         public IDictionary<string, string> ReadRecord()
         {
-            if (_options.AreHeadersRequired && _headers.Count == 0)
+            if (_headers == null || _headers.Count == 0)
                 throw new Exception("No headers.");
             return ReadValues()?
                 .Select((value, index) => new KeyValuePair<string, string>(_headers[index], value))
