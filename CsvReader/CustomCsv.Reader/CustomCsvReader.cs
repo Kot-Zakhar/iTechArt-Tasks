@@ -36,16 +36,22 @@ namespace CustomCsv
         {
             if (_headers == null || _headers.Count == 0)
                 throw new Exception("No headers.");
-            return ReadValues()?
+            IList<string> values = ReadValues();
+            if (values == null)
+                return null;
+            if (values.Count != _headers.Count)
+                throw new Exception("Values amount not equal headers amount.");
+            return values
                 .Select((value, index) => new KeyValuePair<string, string>(_headers[index], value))
                 .ToDictionary(keyValue => keyValue.Key, keyValue => keyValue.Value);
         }
 
-        public IEnumerable<string> ReadValues()
+        public IList<string> ReadValues()
         {
             return _stream?.ReadLine()?
                 .Split(',')
-                .Select(s => s.Trim());
+                .Select(s => s.Trim())
+                .ToList();
         }
     }
 }

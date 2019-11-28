@@ -18,7 +18,7 @@ namespace CustomCsv.UnitTests
             TextReader stream = GetGoodTextReader(addHeaders: true);
             var csvReader = new CustomCsvReader(stream);
 
-            IEnumerable<string> recordValues = csvReader.ReadValues();
+            IList<string> recordValues = csvReader.ReadValues();
 
             Assert.AreEqual(recordValues, GetRecordValues(0));
         }
@@ -29,7 +29,7 @@ namespace CustomCsv.UnitTests
             TextReader stream = GetGoodTextReader();
             var csvReader = new CustomCsvReader(stream, new CustomCsvReaderOptions() { AreHeadersInStream = false });
 
-            IEnumerable<string> recordValues = csvReader.ReadValues();
+            IList<string> recordValues = csvReader.ReadValues();
 
             Assert.AreEqual(recordValues, GetRecordValues(0));
         }
@@ -58,11 +58,11 @@ namespace CustomCsv.UnitTests
         [Test]
         public void ReadRecord_HeadersAmountNotEqualValueAmount_ThrowsException()
         {
-            var csvReader = new CustomCsvReader(GetNotNormalizedTextReader(addHeaders: true));
+            var csvReader = new CustomCsvReader(GetNotNormalizedTextReader(addHeaders: true, recordAmount: 10));
 
             Assert.Catch(() =>
             {
-                csvReader.ReadRecord();
+                var results = Enumerable.Range(0, 10).Select(i => csvReader.ReadRecord()).ToList();
             });
         }
 
@@ -99,10 +99,26 @@ namespace CustomCsv.UnitTests
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
-        private TextReader GetNotNormalizedTextReader(int recordAmount = magicNumber, int minFieldAmount = magicNumber, int maxFieldAmount = 2 * magicNumber, bool addHeaders = false)
+        private TextReader GetNotNormalizedTextReader(int recordAmount = magicNumber, int headerAmount = magicNumber, int minFieldAmount = magicNumber / 2, int maxFieldAmount = 2 * magicNumber, bool addHeaders = false)
         {
             Random rand = new Random();
-            string[][] records = Enumerable.Range(addHeaders ? -1 : 0, recordAmount + (addHeaders ? 1 : 0)).Select(index => GetRecordValues(index, rand.Next(minFieldAmount, maxFieldAmount))).ToArray();
+
+            int RandomFieldAmount()
+            {
+                int result;
+                do
+                {
+                    result = rand.Next(minFieldAmount, maxFieldAmount);
+                } while (result == headerAmount);
+
+                return result;
+            }
+
+            string[][] records = Enumerable.Range(
+                addHeaders ? -1 : 0,
+                recordAmount + (addHeaders ? 1 : 0)
+            ).Select(index => GetRecordValues(index, index >= 0 ? RandomFieldAmount() : headerAmount))
+             .ToArray();
 
             var abstractCsvFile = string.Join('\n', records.Select(record => string.Join(',', record)));
             return new StringReader(abstractCsvFile);
