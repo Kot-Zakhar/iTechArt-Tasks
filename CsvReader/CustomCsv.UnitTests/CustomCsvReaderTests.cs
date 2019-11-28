@@ -27,7 +27,7 @@ namespace CustomCsv.UnitTests
         public void ReadValues_GoodStreamAndNoHeaders_ReturnsListOfValues()
         {
             TextReader stream = GenerateGoodTextReader();
-            var csvReader = new CustomCsvReader(stream, new CustomCsvReaderOptions() { AreHeadersInStream = false });
+            var csvReader = new CustomCsvReader(stream, new CustomCsvReaderOptions() { ReadHeaders = false });
 
             IList<string> recordValues = csvReader.ReadValues();
 
@@ -48,7 +48,7 @@ namespace CustomCsv.UnitTests
         [Test]
         public void ReadRecord_GoodStreamNoHeadersInFileOrInOptions_ThrowsException()
         {
-            var csvReader = new CustomCsvReader(GenerateGoodTextReader(), new CustomCsvReaderOptions() { AreHeadersInStream = false });
+            var csvReader = new CustomCsvReader(GenerateGoodTextReader(), new CustomCsvReaderOptions() { ReadHeaders = false });
             Assert.Catch(() =>
             {
                 csvReader.ReadRecord();
@@ -73,7 +73,7 @@ namespace CustomCsv.UnitTests
                 GenerateGoodTextReader(addHeaders: true),
                 new CustomCsvReaderOptions()
                 {
-                    AreHeadersInStream = true,
+                    ReadHeaders = true,
                     Headers = GenerateRecordValues(-10)
                 });
 
@@ -95,7 +95,7 @@ namespace CustomCsv.UnitTests
                     GenerateGoodTextReader(addHeaders: true),
                     new CustomCsvReaderOptions()
                     {
-                        AreHeadersInStream = true,
+                        ReadHeaders = true,
                         Headers = GenerateRecordValues(-10, magicNumber * 2)
                     });
             });
@@ -108,7 +108,7 @@ namespace CustomCsv.UnitTests
                 GenerateGoodTextReader(addHeaders: false, recordAmount: 10),
                 new CustomCsvReaderOptions()
                 {
-                    AreHeadersInStream = false,
+                    ReadHeaders = false,
                     Headers = GenerateRecordValues(-10)
                 });
 

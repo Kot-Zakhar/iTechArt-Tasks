@@ -14,7 +14,7 @@ namespace CustomCsv
         {
             _stream = stream ?? throw new NullReferenceException();
             var currentOptions = options ?? new CustomCsvReaderOptions();
-            if (currentOptions.AreHeadersInStream)
+            if (currentOptions.ReadHeaders)
             {
                 ParseRowAsHeaders();
                 if (_headers == null)

@@ -7,6 +7,6 @@ namespace CustomCsv
     public class CustomCsvReaderOptions
     {
         public IList<string> Headers { get; set; } = null;
-        public bool AreHeadersInStream { get; set; } = true;
+        public bool ReadHeaders { get; set; } = true;
     }
 }
