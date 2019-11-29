@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using ShareMe.DataAccessLayer.Entity;
 using ShareMe.WebApplication.Models.ApiModels;
 using ShareMe.WebApplication.Models.Grid;
-using ShareMe.WebApplication.Services;
+using ShareMe.WebApplication.Services.Contracts;
 
 namespace ShareMe.WebApplication.Controllers
 {
@@ -15,9 +11,9 @@ namespace ShareMe.WebApplication.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly PostService _postService;
+        private readonly IPostService _postService;
 
-        public PostsController(PostService postService)
+        public PostsController(IPostService postService)
         {
             _postService = postService;
         }
