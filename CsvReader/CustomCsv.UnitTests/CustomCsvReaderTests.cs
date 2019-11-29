@@ -130,9 +130,9 @@ namespace CustomCsv.UnitTests
         }
 
         [Test]
-        public void ReaderCreation_StreamIsNull_ThrowsException()
+        public void ReaderCreation_StreamIsNull_ThrowsArgumentNullException()
         {
-            Assert.Catch(typeof(NullReferenceException),() =>
+            Assert.Catch(typeof(ArgumentNullException),() =>
             {
                 new CustomCsvReader(null);
             });

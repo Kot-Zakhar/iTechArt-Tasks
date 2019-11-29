@@ -12,7 +12,7 @@ namespace CustomCsv
 
         public CustomCsvReader(TextReader stream, CustomCsvReaderOptions options = null)
         {
-            _stream = stream ?? throw new NullReferenceException();
+            _stream = stream ?? throw new ArgumentNullException();
             var currentOptions = options ?? new CustomCsvReaderOptions();
             if (currentOptions.ReadHeaders)
             {
