@@ -41,13 +41,13 @@ namespace ShareMe.WebApplication
                 optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddSingleton<UnitOfWork>();
+            services.AddScoped<UnitOfWork>();
 
-            services.AddSingleton<CategoryService>();
-            services.AddSingleton<CommentService>();
-            services.AddSingleton<PostService>();
-            services.AddSingleton<TagService>();
-            services.AddSingleton<UserService>();
+            services.AddScoped<CategoryService>();
+            services.AddScoped<CommentService>();
+            services.AddScoped<PostService>();
+            services.AddScoped<TagService>();
+            services.AddScoped<UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

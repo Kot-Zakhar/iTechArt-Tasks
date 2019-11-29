@@ -9,7 +9,7 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
 {
     public class PostRepository : Repository<Post>
     {
-        private DbSet<Post> PostTypeSet { get => typeSet; }
+        private DbSet<Post> PostTypeSet => typeSet;
 
         public PostRepository(DbContext context) : base(context) { }
 

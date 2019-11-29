@@ -10,7 +10,7 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
 {
     public class CategoryRepository : Repository<Category>
     {
-        private DbSet<Category> CategoryTypeSet { get => typeSet; }
+        private DbSet<Category> CategoryTypeSet => typeSet;
         public CategoryRepository(DbContext context) : base(context) { }
 
         public async Task<Category> GetByNameAsync(string name)

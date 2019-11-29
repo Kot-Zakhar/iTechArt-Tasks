@@ -6,7 +6,7 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
 {
     public class TagRepository : Repository<Tag>
     {
-        private DbSet<Tag> TagTypeSet { get => typeSet; }
+        private DbSet<Tag> TagTypeSet => typeSet;
 
         public TagRepository(DbContext context) : base(context) { }
 

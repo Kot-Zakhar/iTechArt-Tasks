@@ -24,7 +24,7 @@ namespace ShareMe.WebApplication.Controllers
 
         // GET: api/Posts
         [HttpGet]
-        public async Task<ActionResult<GridResult<PostApiModel>>> GetPosts(
+        public async Task<ActionResult<GridResult<PostApiModel>>> GetPostsAsync(
             [FromQuery] PostGridModel postGridModel
         ){
             return await _postService.GetGridAsync(postGridModel);
@@ -32,7 +32,7 @@ namespace ShareMe.WebApplication.Controllers
 
         // GET: api/Posts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PostApiModel>> GetPost(Guid id)
+        public async Task<ActionResult<PostApiModel>> GetPostAsync(Guid id)
         {
             return await _postService.GetByIdAsync(id);
         }

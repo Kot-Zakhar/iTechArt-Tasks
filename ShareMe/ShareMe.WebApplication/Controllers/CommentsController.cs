@@ -24,7 +24,7 @@ namespace ShareMe.WebApplication.Controllers
         [HttpGet]
         public async Task<ActionResult<IList<CommentApiModel>>> GetComments(Guid postId)
         {
-            return await _commentService.GetCommentsByPostId(postId).ToListAsync();
+            return (await _commentService.GetCommentsByPostIdAsync(postId)).ToList();
         }
 
         // GET: api/Comments/5

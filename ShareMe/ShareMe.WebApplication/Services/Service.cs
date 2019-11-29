@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -11,7 +12,8 @@ using ShareMe.WebApplication.Services.Contracts;
 
 namespace ShareMe.WebApplication.Services
 {
-    public abstract class Service<ApiModelT, DbEntityT> : IService<ApiModelT> where ApiModelT : ApiModel
+    public abstract class Service<ApiModelT, DbEntityT> : IService<ApiModelT>
+        where ApiModelT : ApiModel
         where DbEntityT : DataAccessLayer.Entity.Entity
     {
         private readonly Repository<DbEntityT> _repository;
@@ -28,44 +30,72 @@ namespace ShareMe.WebApplication.Services
             return TranslateToApiModel(await _repository.GetByIdAsync(id));
         }
 
-        public IQueryable<ApiModelT> GetAll()
+        public async Task<IList<ApiModelT>> GetAllAsync()
         {
-            return _repository.GetAll().Select(e => TranslateToApiModel(e));
+            return (await _repository.GetAll().ToListAsync()).Select(e => TranslateToApiModel(e)).ToList();
         }
 
-        protected async Task<GridResult<ApiModelT>> ApplyGridAsync(GridModel<ApiModelT> postGridModel, IQueryable<ApiModelT> posts)
+        protected async Task<GridResult<ApiModelT>> ApplyGridAsync(GridModel<ApiModelT> entityGridModel, IQueryable<DbEntityT> entities)
         {
+            var type = typeof(DbEntityT);
 
-            // todo: check what is returned typ typeof(ApiModelT)
-            if (postGridModel.IsFiltering)
+            if (entityGridModel.IsFiltering)
             {
-                PropertyInfo filterProperty = typeof(ApiModelT).GetProperty(postGridModel.FilterField);
-                if (filterProperty != null)
-                    posts = posts.Where(post => postGridModel.FilterValues.Any(value => filterProperty.GetValue(post).ToString() == value));
+                // entities = entities.Where(post => entityGridModel.FilterValues.Contains(filterProperty.GetValue(post).ToString()));
+             
+                // ALARMA: this expression tree doesn't work
+
+
+                PropertyInfo filterProperty = type.GetProperty(entityGridModel.FilterField);
+                var parameter = Expression.Parameter(type, filterProperty.Name);
+                var propertyAccess = Expression.MakeMemberAccess(parameter, filterProperty);
+
+                MethodInfo toString = filterProperty.PropertyType.GetMethod("ToString", new Type[] {});
+                var toStringExp = Expression.Call(propertyAccess, toString);
+
+                MethodInfo containsMethod = typeof(List<string>).GetMethod("Contains", new Type[] {typeof(string)});
+                var values = Expression.Constant(entityGridModel.FilterValues);
+                //var contains
+                var containsExp = Expression.Call(values, containsMethod, toStringExp);
+                //var containsLambda = Expression.Lambda(containsExp, parameter);
+
+                var whereExp = Expression.Lambda<Func<DbEntityT, bool>>(containsExp, parameter);
+
+                var resultExp = Expression.Call(typeof(Queryable), "Where", new Type[] {type, typeof(bool)},
+                    entities.Expression, Expression.Quote(whereExp));
+
+                entities = entities.Provider.CreateQuery<DbEntityT>(resultExp);
             }
 
 
-            if (postGridModel.IsSorting)
+            if (entityGridModel.IsSorting)
             {
-                PropertyInfo sortProperty = typeof(ApiModelT).GetProperty(postGridModel.SortField);
-                if (sortProperty != null)
-                {
-                    Expression<Func<ApiModelT, object>> orderExpression = p => sortProperty.GetValue(p);
-                    posts = postGridModel.IsSortingASC ? posts.OrderBy(orderExpression) : posts.OrderByDescending(orderExpression);
-                }
+
+                //Expression<Func<ApiModelT, object>> orderExpression = p => sortProperty.GetValue(p);
+                //posts = postGridModel.IsSortingASC ? posts.OrderBy(orderExpression) : posts.OrderByDescending(orderExpression);
+
+                PropertyInfo sortProperty = type.GetProperty(entityGridModel.SortField);
+                var parameter = Expression.Parameter(type, sortProperty.Name);
+                var propertyAccess = Expression.MakeMemberAccess(parameter, sortProperty);
+                var orderByExp = Expression.Lambda(propertyAccess, parameter);
+                var typeArguments = new Type[] {type, sortProperty.PropertyType};
+                var methodName = entityGridModel.IsSortingASC ? "OrderBy" : "OrderByDescending";
+                var resultExp = Expression.Call(typeof(Queryable), methodName, typeArguments, entities.Expression,
+                    Expression.Quote(orderByExp));
+                entities = entities.Provider.CreateQuery<DbEntityT>(resultExp);
             }
 
-            IQueryable<ApiModelT> page = posts
-                .Skip(postGridModel.PageIndex * postGridModel.PageSize)
-                .Take(postGridModel.PageSize);
+            IQueryable<DbEntityT> page = entities
+                .Skip(entityGridModel.PageIndex * entityGridModel.PageSize)
+                .Take(entityGridModel.PageSize);
 
             var result = new GridResult<ApiModelT>()
             {
-                Values = await page.ToListAsync(),
-                PageIndex = postGridModel.PageIndex,
-                PageSize = postGridModel.PageSize,
-                Next = posts.Skip((postGridModel.PageIndex + 1) * postGridModel.PageSize).Take(postGridModel.PageSize).Any(),
-                Previous = postGridModel.PageIndex > 0
+                Values = (await page.ToListAsync()).Select(e => TranslateToApiModel(e)).ToList(),
+                PageIndex = entityGridModel.PageIndex,
+                PageSize = entityGridModel.PageSize,
+                Next = entities.Skip((entityGridModel.PageIndex + 1) * entityGridModel.PageSize).Take(entityGridModel.PageSize).Any(),
+                Previous = entityGridModel.PageIndex > 0
             };
             return result;
         }

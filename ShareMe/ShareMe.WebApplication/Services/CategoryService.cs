@@ -1,10 +1,12 @@
-﻿using ShareMe.DataAccessLayer.Entity;
+﻿using System.Collections.Generic;
+using ShareMe.DataAccessLayer.Entity;
 using ShareMe.DataAccessLayer.UnitOfWork;
 using ShareMe.DataAccessLayer.UnitOfWork.Repositories;
 using ShareMe.WebApplication.Models.ApiModels;
 using ShareMe.WebApplication.Services.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShareMe.WebApplication.Services
 {
@@ -22,19 +24,19 @@ namespace ShareMe.WebApplication.Services
             return new CategoryApiModel(category);
         }
 
-        public async Task<CategoryApiModel> GetByName(string name)
+        public async Task<CategoryApiModel> GetByNameAsync(string name)
         {
             return TranslateToApiModel(await _categoryRepository.GetByNameAsync(name));
         }
 
-        public IQueryable<CategoryApiModel> GetTop(int count)
+        public async Task<IList<CategoryApiModel>> GetTopAsync(int count)
         {
-            return _categoryRepository.GetAll().Take(count).Select(c => TranslateToApiModel(c));
+            return (await _categoryRepository.GetAll().Take(count).ToListAsync()).Select(TranslateToApiModel).ToList();
         }
 
-        public IQueryable<Category> GetAllRootCategories()
+        public async Task<IList<CategoryApiModel>> GetAllRootCategoriesAsync()
         {
-            return _categoryRepository.GetAllRootCategories();
+            return (await _categoryRepository.GetAllRootCategories().ToListAsync()).Select(TranslateToApiModel).ToList();
         }
     }
 }

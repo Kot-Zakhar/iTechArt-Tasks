@@ -15,24 +15,24 @@ namespace ShareMe.WebApplication
     {
         public static void InitDb()
         {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                if (!unitOfWork.UserRepository.GetAll().Any())
-                {
-                    DbFaker.Reset();
-                    DbFaker.Categories = unitOfWork.CategoryRepository.GetAll().ToList();
-                    DbFaker.Tags = unitOfWork.TagRepository.GetAll().ToList();
-                    DbFaker.Generate();
+            //using (var unitOfWork = new UnitOfWork())
+            //{
+            //    if (!unitOfWork.UserRepository.GetAll().Any())
+            //    {
+            //        DbFaker.Reset();
+            //        DbFaker.Categories = unitOfWork.CategoryRepository.GetAll().ToList();
+            //        DbFaker.Tags = unitOfWork.TagRepository.GetAll().ToList();
+            //        DbFaker.Generate();
 
-                    unitOfWork.UserRepository.CreateRange(DbFaker.Users);
-                    unitOfWork.CategoryRepository.CreateRange(DbFaker.Categories);
-                    unitOfWork.PostRepository.CreateRange(DbFaker.Posts);
-                    unitOfWork.CommentRepository.CreateRange(DbFaker.Comments);
-                    unitOfWork.TagRepository.CreateRange(DbFaker.Tags);
+            //        await unitOfWork.UserRepository.CreateRangeAsync(DbFaker.Users);
+            //        await unitOfWork.CategoryRepository.CreateRangeAsync(DbFaker.Categories);
+            //        await unitOfWork.PostRepository.CreateRangeAsync(DbFaker.Posts);
+            //        await unitOfWork.CommentRepository.CreateRangeAsync(DbFaker.Comments);
+            //        await unitOfWork.TagRepository.CreateRangeAsync(DbFaker.Tags);
 
-                    unitOfWork.Commit();
-                }
-            }
+            //        unitOfWork.Commit();
+            //    }
+            //}
         }
         public static void Main(string[] args)
         {
