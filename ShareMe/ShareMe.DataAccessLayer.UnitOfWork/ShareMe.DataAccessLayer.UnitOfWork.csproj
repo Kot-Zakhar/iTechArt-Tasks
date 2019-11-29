@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShareMe.DataAccessLayer.Context\ShareMe.DataAccessLayer.Context.csproj" />
+    <ProjectReference Include="..\ShareMe.DataAccessLayer.Entity\ShareMe.DataAccessLayer.Entity.csproj" />
+  </ItemGroup>
+
+</Project>
