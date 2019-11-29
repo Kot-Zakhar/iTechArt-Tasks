@@ -10,6 +10,7 @@ using ShareMe.DataAccessLayer.Context;
 using ShareMe.DataAccessLayer.UnitOfWork;
 using ShareMe.WebApplication.Services;
 using System.IO;
+using ShareMe.WebApplication.Services.Contracts;
 
 namespace ShareMe.WebApplication
 {
@@ -43,11 +44,11 @@ namespace ShareMe.WebApplication
 
             services.AddScoped<UnitOfWork>();
 
-            services.AddScoped<CategoryService>();
-            services.AddScoped<CommentService>();
-            services.AddScoped<PostService>();
-            services.AddScoped<TagService>();
-            services.AddScoped<UserService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

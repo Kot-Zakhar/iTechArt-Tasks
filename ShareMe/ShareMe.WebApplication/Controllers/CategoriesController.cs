@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ShareMe.WebApplication.Models.ApiModels;
-using ShareMe.WebApplication.Services;
+using ShareMe.WebApplication.Services.Contracts;
 
 namespace ShareMe.WebApplication.Controllers
 {
@@ -14,9 +12,9 @@ namespace ShareMe.WebApplication.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly CategoryService _categoryService;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(CategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
