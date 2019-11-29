@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Post } from 'src/lib/models/Post';
+import { Post } from 'src/lib/models/entities/Post';
 
 @Component({
   selector: 'app-post-preview',

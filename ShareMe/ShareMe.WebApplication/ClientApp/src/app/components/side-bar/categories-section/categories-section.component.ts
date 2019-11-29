@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Category } from 'src/lib/models/Category';
+import { Category } from 'src/lib/models/entities/Category';
 
 @Component({
   selector: 'app-categories-section',

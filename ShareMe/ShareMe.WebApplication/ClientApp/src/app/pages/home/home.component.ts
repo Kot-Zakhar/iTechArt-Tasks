@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Post } from 'src/lib/models/Post';
+import { Post } from 'src/lib/models/entities/Post';
 import { HttpClient } from '@angular/common/http';
+import { GridModel } from 'src/lib/models/grid/GridModel';
 
 @Component({
   selector: 'app-home',
@@ -16,8 +17,8 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.http.get<Post[]>(this.baseUrl + this.apiUrl + 'posts').subscribe(result => {
-      this.posts = result;
+    this.http.get<GridModel<Post>>(this.baseUrl + this.apiUrl + 'posts').subscribe(result => {
+      this.posts = result.values;
     }, error => console.error(error));
   }
 }
