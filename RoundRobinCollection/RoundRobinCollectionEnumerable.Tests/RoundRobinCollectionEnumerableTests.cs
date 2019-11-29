@@ -7,17 +7,13 @@ using RoundRobinCollection;
 
 namespace RoundRobinCollectionEnumerable.Tests
 {
-    public class UnitTests
+    public class RoundRobinCollectionEnumerableTests
     {
         private const int sourceLength = 10;
-        private IList<int> _source;
-        private IEnumerable<int> _enumerable;
 
         [SetUp]
         public void InitSource()
         {
-            _source = Enumerable.Range(0, sourceLength).ToList();
-            _enumerable = new RoundRobinCollectionEnumerable<int>(_source);
         }
 
         [Test]
@@ -41,7 +37,8 @@ namespace RoundRobinCollectionEnumerable.Tests
         [Test]
         public void IterationCollection_SingleIteratorAndSingleIteration_IteratesWell()
         {
-            IEnumerator<int> iter = new RoundRobinCollectionEnumerable<int>(_source);
+            var source = Enumerable.Range(0, sourceLength).ToList();
+            IEnumerator<int> iter = new RoundRobinCollectionEnumerable<int>(source);
 
             var result = Enumerable.Range(0, sourceLength)
                 .Select(i =>
@@ -50,7 +47,7 @@ namespace RoundRobinCollectionEnumerable.Tests
                     return iter.Current;
                 }).ToList();
 
-            Assert.AreEqual(_source, result);
+            Assert.AreEqual(source, result);
         }
 
         [Test]
@@ -58,11 +55,14 @@ namespace RoundRobinCollectionEnumerable.Tests
         {
             int iterationAmount = 3;
 
+            var source = Enumerable.Range(0, sourceLength).ToList();
+            var enumerable = new RoundRobinCollectionEnumerable<int>(source);
+
             List<int> expected = new List<int>();
             for (int i = 0; i < iterationAmount; i++)
-                expected.AddRange(_source);
+                expected.AddRange(source);
 ;
-            var iter = _enumerable.GetEnumerator();
+            var iter = enumerable.GetEnumerator();
 
             var actual = Enumerable.Range(0, sourceLength * iterationAmount)
                 .Select(i =>
@@ -79,12 +79,15 @@ namespace RoundRobinCollectionEnumerable.Tests
         {
             int iteratorsAmount = 3;
 
+            var source = Enumerable.Range(0, sourceLength).ToList();
+            var enumerable = new RoundRobinCollectionEnumerable<int>(source);
+
             IList<IEnumerator<int>> iterators = Enumerable.Range(0, iteratorsAmount)
-                .Select(i => _enumerable.GetEnumerator()).ToList();
+                .Select(i => enumerable.GetEnumerator()).ToList();
 
             List<int> expected = new List<int>();
             for (int i = 0; i < iteratorsAmount; i++)
-                expected.AddRange(_source);
+                expected.AddRange(source);
 
             var actual = new List<int>();
 
