@@ -1,10 +1,12 @@
-﻿using ShareMe.DataAccessLayer.Entity;
+﻿using System.Collections.Generic;
+using ShareMe.DataAccessLayer.Entity;
 using ShareMe.DataAccessLayer.UnitOfWork;
 using ShareMe.DataAccessLayer.UnitOfWork.Repositories;
 using ShareMe.WebApplication.Models.ApiModels;
 using ShareMe.WebApplication.Services.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace ShareMe.WebApplication.Services
 {
@@ -21,14 +23,14 @@ namespace ShareMe.WebApplication.Services
             return new TagApiModel(tag);
         }
 
-        public async Task<TagApiModel> GetByName(string name)
+        public async Task<TagApiModel> GetByNameAsync(string name)
         {
             return TranslateToApiModel(await _tagRepository.GetByNameAsync(name));
         }
 
-        public IQueryable<TagApiModel> GetTop(int count)
+        public async Task<IList<TagApiModel>> GetTopAsync(int count)
         {
-            return _tagRepository.GetAll().Take(count).Select(t => TranslateToApiModel(t));
+            return (await _tagRepository.GetAll().Take(count).ToListAsync()).Select(t => TranslateToApiModel(t)).ToList();
         }
     }
 }

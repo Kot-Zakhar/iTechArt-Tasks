@@ -22,12 +22,12 @@ namespace ShareMe.WebApplication.Controllers
 
         // GET: api/Tags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TagApiModel>>> GetTags(int? count)
+        public async Task<ActionResult<IList<TagApiModel>>> GetTags(int? count)
         {
             if (count != null)
-                return await _tagService.GetTop(count.Value).ToListAsync();
+                return (await _tagService.GetTopAsync(count.Value)).ToList();
             else
-                return await _tagService.GetAll().ToListAsync();
+                return (await _tagService.GetAllAsync()).ToList();
         }
 
         // GET: api/Tags/5

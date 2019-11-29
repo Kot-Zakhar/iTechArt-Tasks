@@ -9,7 +9,7 @@ namespace ShareMe.DataAccessLayer.Entity
     public class Category : Entity
     {
         [ForeignKey("ParentId")]
-        public Category ParentCategory { get; set; }
+        public virtual Category ParentCategory { get; set; }
 
         [StringLength(100)]
         [Required]

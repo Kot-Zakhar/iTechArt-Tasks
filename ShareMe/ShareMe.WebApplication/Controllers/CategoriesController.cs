@@ -12,23 +12,23 @@ namespace ShareMe.WebApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoriesController : ControllerBase
     {
         private readonly CategoryService _categoryService;
 
-        public CategoryController(CategoryService categoryService)
+        public CategoriesController(CategoryService categoryService)
         {
             _categoryService = categoryService;
         }
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryApiModel>>> GetCategories(int? count)
+        public async Task<ActionResult<IList<CategoryApiModel>>> GetCategories(int? count)
         {
             if (count != null)
-                return await _categoryService.GetTop(count.Value).ToListAsync();
+                return (await _categoryService.GetTopAsync(count.Value)).ToList();
             else
-                return await _categoryService.GetAll().ToListAsync();
+                return (await _categoryService.GetAllAsync()).ToList();
         }
 
         // GET: api/Categories/5

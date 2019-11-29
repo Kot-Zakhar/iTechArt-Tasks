@@ -22,9 +22,9 @@ namespace ShareMe.WebApplication.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserApiModel>>> GetUsers()
+        public async Task<ActionResult<IList<UserApiModel>>> GetUsers()
         {
-            return await _userService.GetAll().ToListAsync();
+            return (await _userService.GetAllAsync()).ToList();
         }
 
         // GET: api/Users/5

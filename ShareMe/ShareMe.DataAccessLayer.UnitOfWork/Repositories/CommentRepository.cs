@@ -8,7 +8,7 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
 {
     public class CommentRepository : Repository<Comment>
     {
-        private DbSet<Comment> CommentTypeSet { get => typeSet; }
+        private DbSet<Comment> CommentTypeSet => typeSet;
         public CommentRepository(DbContext context) : base(context) { }
 
         public IQueryable<Comment> GetByUserId(Guid userId)

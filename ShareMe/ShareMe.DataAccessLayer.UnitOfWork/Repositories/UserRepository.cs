@@ -6,7 +6,7 @@ namespace ShareMe.DataAccessLayer.UnitOfWork.Repositories
 {
     public class UserRepository : Repository<User>
     {
-        private DbSet<User> UserTypeSet { get => typeSet; }
+        private DbSet<User> UserTypeSet => typeSet;
         public UserRepository(DbContext context) : base(context) { }
 
         public async Task<User> GetByEmailAsync(string email)

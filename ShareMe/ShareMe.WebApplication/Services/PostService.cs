@@ -30,11 +30,10 @@ namespace ShareMe.WebApplication.Services
 
         public async Task<GridResult<PostApiModel>> GetGridAsync(PostGridModel postGridModel)
         {
-            IQueryable<PostApiModel> posts = _postRepository
+            IQueryable<Post> posts = _postRepository
                 .GetByCategoryIdAndTagIds(
                     postGridModel.CategoryId,
-                    postGridModel.TagIds)
-                .Select(p => TranslateToApiModel(p));
+                    postGridModel.TagIds);
 
             return await ApplyGridAsync(postGridModel, posts);
         }

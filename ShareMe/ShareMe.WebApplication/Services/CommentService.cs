@@ -5,6 +5,7 @@ using ShareMe.DataAccessLayer.UnitOfWork.Repositories;
 using ShareMe.WebApplication.Models.ApiModels;
 using ShareMe.WebApplication.Services.Contracts;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,14 +25,14 @@ namespace ShareMe.WebApplication.Services
             return new CommentApiModel(comment);
         }
 
-        public IQueryable<CommentApiModel> GetCommentsByUserId(Guid userId)
+        public async Task<IList<CommentApiModel>> GetCommentsByUserIdAsync(Guid userId)
         {
-            return _commentRepository.GetByUserId(userId).Select(c => TranslateToApiModel(c));
+            return await _commentRepository.GetByUserId(userId).Select(c => TranslateToApiModel(c)).ToListAsync();
         }
 
-        public IQueryable<CommentApiModel> GetCommentsByPostId(Guid postId)
+        public async Task<IList<CommentApiModel>> GetCommentsByPostIdAsync(Guid postId)
         {
-            return _commentRepository.GetByPostId(postId).Select(c => TranslateToApiModel(c));
+            return await _commentRepository.GetByPostId(postId).Select(c => TranslateToApiModel(c)).ToListAsync();
         }
 
         public async Task<int> GetAmountOfChildCommentsAsync(Guid parentCommentId)
@@ -39,9 +40,9 @@ namespace ShareMe.WebApplication.Services
             return await _commentRepository.GetChildComments(parentCommentId).CountAsync();
         }
 
-        public IQueryable<CommentApiModel> GetChildComments(Guid parentCommentId)
+        public async Task<IList<CommentApiModel>> GetChildCommentsAsync(Guid parentCommentId)
         {
-            return _commentRepository.GetChildComments(parentCommentId).Select(c => TranslateToApiModel(c));
+            return await _commentRepository.GetChildComments(parentCommentId).Select(c => TranslateToApiModel(c)).ToListAsync();
         }
     }
 }
