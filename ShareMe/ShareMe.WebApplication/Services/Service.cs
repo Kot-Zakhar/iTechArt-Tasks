@@ -43,9 +43,6 @@ namespace ShareMe.WebApplication.Services
             {
                 // entities = entities.Where(post => entityGridModel.FilterValues.Contains(filterProperty.GetValue(post).ToString()));
              
-                // ALARMA: this expression tree doesn't work
-
-
                 PropertyInfo filterProperty = type.GetProperty(entityGridModel.FilterField);
                 var parameter = Expression.Parameter(type, filterProperty.Name);
                 var propertyAccess = Expression.MakeMemberAccess(parameter, filterProperty);
@@ -55,16 +52,11 @@ namespace ShareMe.WebApplication.Services
 
                 MethodInfo containsMethod = typeof(List<string>).GetMethod("Contains", new Type[] {typeof(string)});
                 var values = Expression.Constant(entityGridModel.FilterValues);
-                //var contains
                 var containsExp = Expression.Call(values, containsMethod, toStringExp);
-                //var containsLambda = Expression.Lambda(containsExp, parameter);
 
                 var whereExp = Expression.Lambda<Func<DbEntityT, bool>>(containsExp, parameter);
 
-                var resultExp = Expression.Call(typeof(Queryable), "Where", new Type[] {type, typeof(bool)},
-                    entities.Expression, Expression.Quote(whereExp));
-
-                entities = entities.Provider.CreateQuery<DbEntityT>(resultExp);
+                entities = entities.Where(whereExp);
             }
 
 
