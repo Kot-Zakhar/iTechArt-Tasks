@@ -65,12 +65,9 @@ namespace ProfileWebApp.App
                 app.UseHsts();
             }
             //app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
             app.UseTimeTrackingMiddleware();
-
+            app.UseStaticFiles();
+            app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
 
