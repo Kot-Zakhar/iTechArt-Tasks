@@ -24,8 +24,10 @@ namespace CustomJsonFormatter.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCustomJsonOutputFormatter("https://localhost:5001", new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddCustomJsonOutputFormatter("https://localhost:5001",
+                    new JsonSerializerOptions() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

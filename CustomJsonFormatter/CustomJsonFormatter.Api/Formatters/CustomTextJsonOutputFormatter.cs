@@ -40,12 +40,18 @@ namespace CustomJsonFormatter.Api.Formatters
 
         public override Task WriteAsync(OutputFormatterWriteContext context)
         {
-            var data = new OutputObject(context.Object)
-            {
-                Links = _linkService.GetLinks(context.Object)
-            };
-            data.Links.Add("self", context.HttpContext.Request.Host + context.HttpContext.Request.Path + context.HttpContext.Request.QueryString);
-            return base.WriteAsync(new OutputFormatterWriteContext(context.HttpContext, context.WriterFactory, typeof(OutputObject), (object)data));
+            object data;
+            if (context.Object is IEnumerable<object> list)
+                data = list.Select(o => new OutputObject(o)
+                {
+                    Links = _linkService.GetLinks(o)
+                });
+            else 
+                data = new OutputObject(context.Object)
+                {
+                    Links = _linkService.GetLinks(context.Object)
+                };
+            return base.WriteAsync(new OutputFormatterWriteContext(context.HttpContext, context.WriterFactory, typeof(OutputObject), data));
         }
     }
 }

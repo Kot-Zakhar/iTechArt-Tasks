@@ -15,22 +15,26 @@ namespace CustomJsonFormatter.Api.Services
         }
         public IDictionary<string, string> GetLinks(Article article)
         {
-            var links = new Dictionary<string, string>();
-            links["get-author"] = _host + "/api/profile/" + article.AuthorId.ToString();
-            return links;
+            return new Dictionary<string, string>
+            {
+                ["get-author"] = _host + "/api/profile/" + article.AuthorId,
+                ["self"] = _host + "/api/article/" + article.Id
+            };
         }
         public IDictionary<string, string> GetLinks(Profile profile)
         {
-            var links = new Dictionary<string, string>();
-            return links;
+            return new Dictionary<string, string>
+            {
+                ["self"] = _host + "/api/profile/" + profile.Id
+            };
         }
 
         public IDictionary<string, string> GetLinks(object obj)
         {
-            if (obj is Profile)
-                return GetLinks(obj as Profile);
-            if (obj is Article)
-                return GetLinks(obj as Article);
+            if (obj is Profile profile)
+                return GetLinks(profile);
+            if (obj is Article article)
+                return GetLinks(article);
             return new Dictionary<string, string>();
         }
     }

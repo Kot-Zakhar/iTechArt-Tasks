@@ -7,9 +7,11 @@ namespace CustomJsonFormatter.Api.Formatters
 {
     public static class CustomTextJsonOutputFormatterExtension
     {
-        public static IMvcBuilder AddCustomJsonOutputFormatter(this IServiceCollection service, string hostAddress, JsonSerializerOptions jsonOptions = null)
+        public static IMvcBuilder AddCustomJsonOutputFormatter(this IMvcBuilder binder, string hostAddress,
+            JsonSerializerOptions jsonOptions = null)
         {
-            return service.AddMvc(options => {
+            return binder.AddMvcOptions(options =>
+            {
                 options.ReturnHttpNotAcceptable = true;
 
                 var customJsonFormatter = new CustomTextJsonOutputFormatter(new LinkService(hostAddress), jsonOptions);
