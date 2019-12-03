@@ -10,6 +10,11 @@
 }
 
 <h1>Profiles</h1>
+@if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.AddProfile)))
+{
+    @Html.ActionLink("Add", "Create")
+}
+
 
 <table class="table">
     <thead>
@@ -42,11 +47,11 @@
                 <td>
                     @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.UpdateProfile)))
                     {
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })@: |
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })@:<br/>
                     }
                     @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.GetProfileById)))
                     {
-                        @Html.ActionLink("Details", "Details", new { id = item.Id })@: |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id })@:<br/>
                     }
                     @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.DeleteProfile)))
                     {

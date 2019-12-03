@@ -18,7 +18,8 @@ namespace PermissionsAttribute.WebApp.Models
             Birthday = identity.Birthday;
             PhoneNumber = identity.PhoneNumber;
         }
-        public Guid Id { get; set; }
+
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -52,12 +52,12 @@ namespace PermissionsAttribute.WebApp.Controllers
         }
 
         // POST: Edit/id
-        [HttpPost("Update/{id}")]
+        [HttpPost("Edit/{id}")]
         [HasPermission(Permission.UpdateProfile)]
-        public async Task<ActionResult> Update(Guid id, [FromForm] Profile profile)
+        public async Task<ActionResult> Edit(Guid id, [FromForm] Profile profile)
         {
             if (await _profileService.Update(profile))
-                return Redirect("/Profile/Index");
+                return Redirect("/Profile");
             else
                 return BadRequest();
         }
@@ -67,15 +67,13 @@ namespace PermissionsAttribute.WebApp.Controllers
         [HasPermission(Permission.DeleteProfile)]
         public async Task<ActionResult> Delete(Guid id)
         {
-            if (await _profileService.DeleteById(id))
-                return Redirect("/Profile/Index");
-            else
+            if (!await _profileService.DeleteById(id))
                 return BadRequest();
-
+            return Redirect("/Profile");
         }
 
-        // GET: Profile/all
-        [HttpGet("all")]
+        // GET: Profile/Adll
+        [HttpGet("All")]
         [HasPermission(Permission.GetProfiles)]
         public ActionResult All([FromQuery]GridModel<Profile> gridModel)
         {
@@ -113,9 +111,16 @@ namespace PermissionsAttribute.WebApp.Controllers
             result.PreviousPageUrl = result.Previous ? result.Url + GetQueryString(-1) : null;
         }
 
+        // GET: Profile/Create
+        [HttpGet("Create")]
+        [HasPermission(Permission.AddProfile)]
+        public async Task<ActionResult> Create()
+        {
+            return View("Edit", null);
+        }
 
-        // POST: profile
-        [HttpPost]
+        // POST: Profile/Create
+        [HttpPost("Create")]
         [HasPermission(Permission.AddProfile)]
         public async Task<ActionResult> Create([FromBody] Profile profile)
         {
