@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using PermissionsAttribute.WebApp.Auth.Claims;
+@using PermissionsAttribute.WebApp.Filter;
+@inject SignInManager<IdentityProfile> SignInManager
+@inject UserManager<IdentityProfile> UserManager
+@model GridResult<Profile>
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>Profiles</h1>
+@if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.AddProfile)))
+{
+    @Html.ActionLink("Add", "Create")
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            @foreach (var property in typeof(Profile).GetProperties())
+            {
+                <th scope="col">
+                    <a class="page-link" href="@(Model.Url + "?sortField=" + property.Name + "&pageSize=" + Model.PageSize)">@property.Name</a>
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Values)
+        {
+            <tr scope="row">
+                @foreach (var property in typeof(Profile).GetProperties())
+                {
+                    <td>
+                        @if (property.PropertyType == typeof(DateTime))
+                        {
+                            @(((DateTime)property.GetValue(item)).ToShortDateString())
+                        }
+                        else
+                        {
+                            @(property.GetValue(item))
+                        }
+                    </td>
+                }
+                <td>
+                    @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.UpdateProfile)))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })@:<br/>
+                    }
+                    @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.GetProfileById)))
+                    {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id })@:<br/>
+                    }
+                    @if (User.FindAll(UserPermissionsClaimNames.UserPermissionsClaimTypeName).Any(p => p.Value == UserPermissionsClaimNames.GetPermissionName(Permission.DeleteProfile)))
+                    {
+                        @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<nav aria-label="Profiles navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(Model.Previous ? "" : "disabled")"><a class="page-link" href="@Model.PreviousPageUrl" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+        <li class="page-item active"><a class="page-link" href="#">@(Model.Page + 1)</a></li>
+        <li class="page-item @(Model.Next ? "" : "disabled")"><a class="page-link" href="@Model.NextPageUrl" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+    </ul>
+</nav>
