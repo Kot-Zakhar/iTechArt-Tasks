@@ -22,7 +22,7 @@ Each player holds certain amount of bonus points. Website funds its players with
 ### API endpoints
 The API should have the following endpoints:
  - Create new user
-    ```JSON
+    ```
     POST /user
     Request:
     {
@@ -34,7 +34,7 @@ The API should have the following endpoints:
     }
     ```
  - Get user info
-    ```JSON
+    ```
     GET /user/{id}
     Request: empty
     Response:
@@ -45,13 +45,13 @@ The API should have the following endpoints:
     }
     ```
  - Remove user
-    ```JSON
+    ```
     DELETE /user/{id}
     Request: empty
     Response: empty
     ```
  - Take user bonus points (subtract)
-    ```JSON
+    ```
     POST /user/{id}/take
     Request:
     {
@@ -60,7 +60,7 @@ The API should have the following endpoints:
     Response: empty
     ```
  - Add bonus points to user
-    ```JSON
+    ```
     POST /user/{id}/fund
     Request:
     {
