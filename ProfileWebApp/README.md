@@ -1,7 +1,7 @@
 ## There are two task done in this solution!
 ---
 
-### Permissions Attribute
+# Permissions Attribute
 ## Short Description
 Add custom permissions attribute in ASP.NET Core MVC application.
 ## Topics
@@ -25,7 +25,7 @@ Add custom permissions attribute in ASP.NET Core MVC application.
 
 ---
 
-### Request Time Tracking Middleware
+# Request Time Tracking Middleware
 ## Short Description
 Add middleware for the request time tracking.
 ## Topics

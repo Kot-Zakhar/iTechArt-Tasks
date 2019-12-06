@@ -1,4 +1,4 @@
-### Permissions Attribute
+# Permissions Attribute
 ## Short Description
 Add custom permissions attribute in ASP.NET Core MVC application.
 ## Topics
