@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SocialTournamentService.SocialTournamentServiceDbContext;
 
 namespace SocialTournamentService.Api
 {
@@ -29,7 +30,7 @@ namespace SocialTournamentService.Api
         {
             services
                 .AddControllers();
-            services.AddDbContext<TournamentServiceDbContext.TournamentServiceDbContext>(optionsBuilder =>
+            services.AddDbContext<TournamentServiceDbContext>(optionsBuilder =>
             {
                 var builder = new ConfigurationBuilder();
                 builder.SetBasePath(Directory.GetCurrentDirectory());

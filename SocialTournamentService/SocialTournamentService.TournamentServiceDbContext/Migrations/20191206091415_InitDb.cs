@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace SocialTournamentService.TournamentServiceDbContext.Migrations
+namespace SocialTournamentService.SocialTournamentServiceDbContext.Migrations
 {
     public partial class InitDb : Migration
     {

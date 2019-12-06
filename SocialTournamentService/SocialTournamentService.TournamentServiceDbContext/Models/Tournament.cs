@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace SocialTournamentService.TournamentServiceDbContext.Models
+namespace SocialTournamentService.SocialTournamentServiceDbContext.Models
 {
     public class Tournament
     {

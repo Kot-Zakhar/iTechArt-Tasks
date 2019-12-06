@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using SocialTournamentService.TournamentServiceDbContext.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SocialTournamentService.SocialTournamentServiceDbContext.Models;
 
-namespace SocialTournamentService.TournamentServiceDbContext
+namespace SocialTournamentService.SocialTournamentServiceDbContext
 {
     public class TournamentServiceDbContext : DbContext
     {

@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialTournamentService.Api", "SocialTournamentService.Api\SocialTournamentService.Api.csproj", "{37455767-68B2-467C-8477-02E6F85AC75E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocialTournamentService.TournamentServiceDbContext", "SocialTournamentService.TournamentServiceDbContext\SocialTournamentService.TournamentServiceDbContext.csproj", "{2FFB151C-426E-4765-A2C6-0343B76B6BD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocialTournamentService.SocialTournamentServiceDbContext", "SocialTournamentService.TournamentServiceDbContext\SocialTournamentService.SocialTournamentServiceDbContext.csproj", "{2FFB151C-426E-4765-A2C6-0343B76B6BD6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

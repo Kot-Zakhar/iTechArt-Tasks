@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SocialTournamentService.TournamentServiceDbContext;
+using SocialTournamentService.SocialTournamentServiceDbContext;
 
-namespace SocialTournamentService.TournamentServiceDbContext.Migrations
+namespace SocialTournamentService.SocialTournamentServiceDbContext.Migrations
 {
     [DbContext(typeof(TournamentServiceDbContext))]
     [Migration("20191206091415_InitDb")]
@@ -21,7 +21,7 @@ namespace SocialTournamentService.TournamentServiceDbContext.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SocialTournamentService.TournamentServiceDbContext.Models.Tournament", b =>
+            modelBuilder.Entity("SocialTournamentService.SocialTournamentServiceDbContext.Models.Tournament", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +46,7 @@ namespace SocialTournamentService.TournamentServiceDbContext.Migrations
                     b.ToTable("Tournaments");
                 });
 
-            modelBuilder.Entity("SocialTournamentService.TournamentServiceDbContext.Models.User", b =>
+            modelBuilder.Entity("SocialTournamentService.SocialTournamentServiceDbContext.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,16 +68,16 @@ namespace SocialTournamentService.TournamentServiceDbContext.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SocialTournamentService.TournamentServiceDbContext.Models.Tournament", b =>
+            modelBuilder.Entity("SocialTournamentService.SocialTournamentServiceDbContext.Models.Tournament", b =>
                 {
-                    b.HasOne("SocialTournamentService.TournamentServiceDbContext.Models.User", "Winner")
+                    b.HasOne("SocialTournamentService.SocialTournamentServiceDbContext.Models.User", "Winner")
                         .WithMany()
                         .HasForeignKey("WinnerId");
                 });
 
-            modelBuilder.Entity("SocialTournamentService.TournamentServiceDbContext.Models.User", b =>
+            modelBuilder.Entity("SocialTournamentService.SocialTournamentServiceDbContext.Models.User", b =>
                 {
-                    b.HasOne("SocialTournamentService.TournamentServiceDbContext.Models.Tournament", null)
+                    b.HasOne("SocialTournamentService.SocialTournamentServiceDbContext.Models.Tournament", null)
                         .WithMany("Users")
                         .HasForeignKey("TournamentId");
                 });
