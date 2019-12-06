@@ -4,7 +4,10 @@ using System.Text;
 
 namespace SocialTournamentService.TournamentServiceDbContext.Models
 {
-    class User
+    public class User
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public String Name { get; set; }
+        public int Balance { get; set; }
     }
 }
