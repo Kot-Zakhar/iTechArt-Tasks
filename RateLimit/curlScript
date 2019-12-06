@@ -1,0 +1,36 @@
+#!/bin/bash
+curl -o ./curlResult/output1.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output2.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output3.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output4.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output5.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output6.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output7.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output8.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output9.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output10.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output11.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output12.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output13.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output14.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output15.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output16.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output17.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output18.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output19.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output20.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output21.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output22.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output23.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output24.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output25.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output26.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output27.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output28.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output29.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output30.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output31.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output32.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output33.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output34.html -sS http://localhost:5000/home/profile &
+curl -o ./curlResult/output35.html -sS http://localhost:5000/home/profile

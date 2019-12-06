@@ -3,6 +3,5 @@
 .vs
 
 **/*.user
-
 **/temp
 **/logs

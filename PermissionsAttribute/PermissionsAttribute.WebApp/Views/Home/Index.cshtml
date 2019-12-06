@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    <h1 class="display-4 text-center">Welcome</h1>
+    <p>This projects shows the power of ASP.NET Auth-Attributes.</p>
+    <p>
+        There are 5 actions implemented in project:
+        <ul>
+            <li>get profile by id (Permission name: GetProfiles),</li>
+            <li>get collection of profiles (Permission name: GetProfileById),</li>
+            <li>add user profile to the system (Permission name: AddProfile),</li>
+            <li>update existing profile (Permission name: UpdateProfile),</li>
+            <li>delete profile (Permission name: DeleteProfile).</li>
+        </ul>
+    </p>
+    <p>
+        To get list of permissions of user - make a GET request to /api/claim/{userId}.
+        To add permission to user - make a POST request to /api/claim/{userId} with info in body like that:
+        <pre>
+[
+  {
+    "type": "Permission",
+    "value": "GetProfileById"
+  },
+  {
+    "type": "Permission",
+    "value": "AddProfile"
+  },
+  {
+    "type": "Permission",
+    "value": "UpdateProfile"
+  },
+  {
+    "type": "Permission",
+    "value": "DeleteProfile"
+  }
+]
+        </pre>
+    </p>
+</div>
