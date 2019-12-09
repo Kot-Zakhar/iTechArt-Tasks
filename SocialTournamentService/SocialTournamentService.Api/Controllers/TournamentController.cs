@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SocialTournamentService.Api.ApiModels;
 using SocialTournamentService.SocialTournamentServiceDbContext;
 using SocialTournamentService.SocialTournamentServiceDbContext.Models;
 
 namespace SocialTournamentService.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]")]
     [ApiController]
     public class TournamentController : ControllerBase
     {
@@ -21,90 +22,141 @@ namespace SocialTournamentService.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Tournament
+        // GET: Tournament
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tournament>>> GetTournaments()
+        public async Task<ActionResult<IEnumerable<TournamentApiModel>>> GetTournaments()
         {
-            return await _context.Tournaments.ToListAsync();
+            var s = await _context.Tournaments.ToListAsync();
+            var result = s.Select(t => new TournamentApiModel(t)).ToList();
+            return result;
         }
 
-        // GET: api/Tournament/5
+        // GET: Tournament/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tournament>> GetTournament(Guid id)
+        public async Task<ActionResult<TournamentApiModel>> GetTournament(Guid id)
         {
             var tournament = await _context.Tournaments.FindAsync(id);
-
+            
             if (tournament == null)
             {
                 return NotFound();
             }
 
-            return tournament;
+            return new TournamentApiModel(tournament);
         }
 
-        // PUT: api/Tournament/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
+        // PUT: Tournament/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTournament(Guid id, Tournament tournament)
+        public async Task<ActionResult> PutTournament(Guid id, [FromBody] TournamentApiModel tournamentData)
         {
-            if (id != tournament.Id)
+            var tournament = await _context.Tournaments.FindAsync(id);
+            if (tournament == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(tournament).State = EntityState.Modified;
+            
+            tournament.Name = tournamentData.Name ?? tournament.Name;
+            tournament.Deposit = tournamentData.Deposit == 0 ? tournament.Deposit : tournamentData.Deposit;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TournamentExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // POST: api/Tournament
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
+        // POST: Tournament
         [HttpPost]
-        public async Task<ActionResult<Tournament>> PostTournament(Tournament tournament)
+        public async Task<ActionResult<object>> PostTournament([FromBody] TournamentApiModel tournamentData)
         {
+            var tournament = new Tournament()
+            {
+                Name = tournamentData.Name,
+                Deposit = tournamentData.Deposit
+            };
+
             _context.Tournaments.Add(tournament);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTournament", new { id = tournament.Id }, tournament);
+            return new { id = tournament.Id };
         }
 
-        // DELETE: api/Tournament/5
+        // DELETE: Tournament/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Tournament>> DeleteTournament(Guid id)
+        public async Task<ActionResult> DeleteTournament(Guid id)
         {
-            var tournament = await _context.Tournaments.FindAsync(id);
+            Tournament tournament = await _context.Tournaments.FindAsync(id);
             if (tournament == null)
             {
                 return NotFound();
+            }
+
+            if (tournament.Winner != null)
+            {
+                foreach (var tournamentUser in tournament.Users)
+                {
+                    tournamentUser.Balance += tournament.Deposit;
+                }
             }
 
             _context.Tournaments.Remove(tournament);
             await _context.SaveChangesAsync();
 
-            return tournament;
+            return NoContent();
         }
 
-        private bool TournamentExists(Guid id)
+        // POST: Tournament/4/join
+        [HttpPost("{id}/join")]
+        public async Task<ActionResult> JoinTournament(Guid id, [FromBody] Guid userId)
         {
-            return _context.Tournaments.Any(e => e.Id == id);
+            Tournament tournament = await _context.Tournaments.FindAsync(id);
+            if (tournament == null)
+            {
+                return NotFound("Such tournament doesn't exist.");
+            }
+            User user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                return NotFound("Such user doesn't exist.");
+
+            // should i make a call to UserController here to withdraw deposit?
+            if (user.Balance < tournament.Deposit)
+                return BadRequest("User balance is lower, than deposit.");
+
+            if (tournament.Users.Any(u => u.Id == user.Id))
+                return BadRequest("User has been already registered as a participant.");
+
+            user.Balance -= tournament.Deposit;
+            tournament.Prize += tournament.Deposit;
+
+            tournament.Users.Add(user);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // POST: Tournament/4/finish
+        // why don't FinishTournament returns the winner id?
+        [HttpPost("{id}/finish")]
+        public async Task<ActionResult> FinishTournament(Guid id)
+        {
+            Tournament tournament = await _context.Tournaments.FindAsync(id);
+            if (tournament == null)
+            {
+                return NotFound();
+            }
+
+            User winner = GetWinner(tournament);
+
+            winner.Balance += tournament.Prize;
+
+            return NoContent();
+        }
+
+        private User GetWinner(Tournament tournament)
+        {
+            var rand = new Random();
+            int winnerIndex = rand.Next(0, tournament.Users.Count() - 1);
+            return tournament.Users[winnerIndex];
         }
     }
 }

@@ -21,14 +21,14 @@ namespace SocialTournamentService.Api.Controllers
             _context = context;
         }
 
-        // GET: api/User
+        // GET: User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
 
-        // GET: api/User/5
+        // GET: User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(Guid id)
         {
@@ -42,51 +42,39 @@ namespace SocialTournamentService.Api.Controllers
             return user;
         }
 
-        // PUT: api/User/5
+        // PUT: User/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(Guid id, [FromForm] string name)
+        public async Task<IActionResult> PutUser(Guid id, [FromBody] User userData)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user == null || id != user.Id)
+            if (user == null)
             {
                 return BadRequest();
             }
 
-            user.Name = name;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            user.Name = userData.Name ?? user.Name;
+            user.Balance = userData.Balance == 0 ? user.Balance : userData.Balance;
+            
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // POST: api/User
+        // POST: User
         [HttpPost]
-        public async Task<ActionResult> PostUser([FromForm]string name)
+        public async Task<ActionResult> PostUser([FromBody] User userData)
         {
             var user = new User()
             {
-                Name = name
+                Name = userData.Name,
+                Balance = userData.Balance
             };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return CreatedAtAction("PostUser", new { id = user.Id });
         }
 
-        // DELETE: api/User/5
+        // DELETE: User/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUser(Guid id)
         {
@@ -102,6 +90,7 @@ namespace SocialTournamentService.Api.Controllers
             return NoContent();
         }
 
+        // POST: User/4/take
         [HttpPost("{id}/take")]
         public async Task<ActionResult> TakePoints(Guid id, [FromForm] int points)
         {
@@ -127,6 +116,7 @@ namespace SocialTournamentService.Api.Controllers
             return NoContent();
         }
 
+        // POST: User/4/fund
         [HttpPost("{id}/fund")]
         public async Task<ActionResult> AddPoints(Guid id, [FromForm] int points)
         {
@@ -145,11 +135,6 @@ namespace SocialTournamentService.Api.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool UserExists(Guid id)
-        {
-            return _context.Users.Any(e => e.Id == id);
         }
     }
 }
