@@ -21,98 +21,100 @@ Each player holds certain amount of bonus points. Website funds its players with
  - deposit > 0
 ### API endpoints
 The API should have the following endpoints:
- - Create new user
-    ```
-    POST /user
-    Request:
-    {
-        "name" : ​name
-    }
-    Response:
-    {
-        "id": 1
-    }
-    ```
- - Get user info
-    ```
-    GET /user/{id}
-    Request: empty
-    Response:
-    {
-        "id": 1,
-        "name" : ​name,
-        "balance": 700
-    }
-    ```
- - Remove user
-    ```
-    DELETE /user/{id}
-    Request: empty
-    Response: empty
-    ```
- - Take user bonus points (subtract)
-    ```
-    POST /user/{id}/take
-    Request:
-    {
-        "points" : ​300
-    }
-    Response: empty
-    ```
- - Add bonus points to user
-    ```
-    POST /user/{id}/fund
-    Request:
-    {
-        "points" : ​400
-    }
-    Response: empty
-    ```
- - Create a tournament
-    ```
-    POST /tournament
-    Request:
-    {
-        "name" : ​name,
-        "deposit": 1000
-    }
-    Response:
-    {
-        "id": 1
-    }
-    ```
- - Get tournament info
-    ```
-    GET /tournament/{id}
-    Request: empty
-    Response:
-    {
-        "id": 1,
-        "name" : ​name,
-        "deposit": 1000,
-        "prize": 4000,
-        "users": [ 1, 2, ...],
-        "winner": 0
-    }
-    ```
- - Join tournament
-    ```
-    POST /tournament/{id}/join
-    Request:
-    {
-        "userId" : ​13
-    }
-    Response: empty
-    ```
- - Finish tournament
-    ```
-    POST /tournament/{id}/finish
-    Request: empty
-    Response: empty
-    ```
- - Cancel tournament
-    ```
-    DELETE /tournament/{id}
-    Request: empty
-    Response: empty
-    ```
+ -  #### User
+    - Create new user
+       ```
+       POST /user
+       Request:
+       {
+          "name" : ​name
+       }
+       Response:
+       {
+          "id": 1
+       }
+       ```
+    - Get user info
+       ```
+       GET /user/{id}
+       Request: empty
+       Response:
+       {
+          "id": 1,
+          "name" : ​name,
+          "balance": 700
+       }
+       ```
+    - Remove user
+       ```
+       DELETE /user/{id}
+       Request: empty
+       Response: empty
+       ```
+    - Take user bonus points (subtract)
+       ```
+       POST /user/{id}/take
+       Request:
+       {
+          "points" : ​300
+       }
+       Response: empty
+       ```
+    - Add bonus points to user
+       ```
+       POST /user/{id}/fund
+       Request:
+       {
+          "points" : ​400
+       }
+       Response: empty
+       ```
+ - #### Tournament
+    - Create a tournament
+       ```
+       POST /tournament
+       Request:
+       {
+          "name" : ​name,
+          "deposit": 1000
+       }
+       Response:
+       {
+          "id": 1
+       }
+       ```
+    - Get tournament info
+       ```
+       GET /tournament/{id}
+       Request: empty
+       Response:
+       {
+          "id": 1,
+          "name" : ​name,
+          "deposit": 1000,
+          "prize": 4000,
+          "users": [ 1, 2, ...],
+          "winner": 0
+       }
+       ```
+    - Join tournament
+       ```
+       POST /tournament/{id}/join
+       Request:
+       {
+          "userId" : ​13
+       }
+       Response: empty
+       ```
+    - Finish tournament
+       ```
+       POST /tournament/{id}/finish
+       Request: empty
+       Response: empty
+       ```
+    - Cancel tournament
+       ```
+       DELETE /tournament/{id}
+       Request: empty
+       Response: empty
+       ```
