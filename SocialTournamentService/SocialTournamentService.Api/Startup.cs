@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SocialTournamentService.Api.Services;
 using SocialTournamentService.SocialTournamentServiceDbContext;
 
 namespace SocialTournamentService.Api
@@ -28,17 +29,14 @@ namespace SocialTournamentService.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services
-                .AddControllers();
+            services.AddControllers();
             services.AddDbContext<TournamentServiceDbContext>(optionsBuilder =>
             {
-                var builder = new ConfigurationBuilder();
-                builder.SetBasePath(Directory.GetCurrentDirectory());
-                builder.AddJsonFile("appsettings.json");
-                var config = builder.Build();
-
-                optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            services.AddScoped<PointsService>();
+            services.AddScoped<UserService>();
+            services.AddScoped<TournamentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

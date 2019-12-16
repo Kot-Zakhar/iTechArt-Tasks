@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SocialTournamentService.Api.ApiModels;
+using SocialTournamentService.Api.Services;
 using SocialTournamentService.SocialTournamentServiceDbContext;
 using SocialTournamentService.SocialTournamentServiceDbContext.Models;
 
@@ -15,27 +16,29 @@ namespace SocialTournamentService.Api.Controllers
     [ApiController]
     public class TournamentController : ControllerBase
     {
-        private readonly TournamentServiceDbContext _context;
+        private readonly UserService _userService;
+        private readonly TournamentService _tournamentService;
+        private readonly PointsService _pointsService;
 
-        public TournamentController(TournamentServiceDbContext context)
+        public TournamentController(UserService userService, TournamentService tournamentService, PointsService pointsService)
         {
-            _context = context;
+            _userService = userService;
+            _tournamentService = tournamentService;
+            _pointsService = pointsService;
         }
 
         // GET: Tournament
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TournamentApiModel>>> GetTournaments()
+        public async Task<ActionResult<IList<TournamentApiModel>>> GetTournaments()
         {
-            var s = await _context.Tournaments.ToListAsync();
-            var result = s.Select(t => new TournamentApiModel(t)).ToList();
-            return result;
+            return (await _tournamentService.GetTournaments().ToListAsync()).Select(t => new TournamentApiModel(t)).ToList();
         }
 
         // GET: Tournament/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TournamentApiModel>> GetTournament(Guid id)
         {
-            var tournament = await _context.Tournaments.FindAsync(id);
+            Tournament tournament = await _tournamentService.GetByIdAsync(id);
             
             if (tournament == null)
             {
@@ -47,26 +50,23 @@ namespace SocialTournamentService.Api.Controllers
 
         // PUT: Tournament/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutTournament(Guid id, [FromBody] TournamentApiModel tournamentData)
+        public async Task<ActionResult> UpdateTournament(Guid id, [FromBody] TournamentApiModel data)
         {
-            var tournament = await _context.Tournaments.FindAsync(id);
-            if (tournament == null)
+            var tournamentData = new Tournament()
             {
-                return NotFound();
-            }
+                Id = id,
+                Name = data.Name,
+                Deposit = data.Deposit
+            };
 
-            
-            tournament.Name = tournamentData.Name ?? tournament.Name;
-            tournament.Deposit = tournamentData.Deposit == 0 ? tournament.Deposit : tournamentData.Deposit;
-
-            await _context.SaveChangesAsync();
+            Tournament newTournament = await _tournamentService.UpdateTournamentAsync(tournamentData);
 
             return NoContent();
         }
 
         // POST: Tournament
         [HttpPost]
-        public async Task<ActionResult<object>> PostTournament([FromBody] TournamentApiModel tournamentData)
+        public async Task<ActionResult<object>> CreateTournament([FromBody] TournamentApiModel tournamentData)
         {
             var tournament = new Tournament()
             {
@@ -74,32 +74,22 @@ namespace SocialTournamentService.Api.Controllers
                 Deposit = tournamentData.Deposit
             };
 
-            _context.Tournaments.Add(tournament);
-            await _context.SaveChangesAsync();
+            Tournament newTournament = await _tournamentService.CreateAsync(tournament);
 
-            return new { id = tournament.Id };
+            return new { id = newTournament.Id };
         }
 
         // DELETE: Tournament/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTournament(Guid id)
         {
-            Tournament tournament = await _context.Tournaments.FindAsync(id);
-            if (tournament == null)
+            Tournament tournament = await _tournamentService.GetByIdAsync(id);
+            if (!await _tournamentService.TournamentExistsAsync(id))
             {
                 return NotFound();
             }
 
-            if (tournament.Winner != null)
-            {
-                foreach (var tournamentUser in tournament.Users)
-                {
-                    tournamentUser.Balance += tournament.Deposit;
-                }
-            }
-
-            _context.Tournaments.Remove(tournament);
-            await _context.SaveChangesAsync();
+            await _tournamentService.Delete(id);
 
             return NoContent();
         }
@@ -108,28 +98,17 @@ namespace SocialTournamentService.Api.Controllers
         [HttpPost("{id}/join")]
         public async Task<ActionResult> JoinTournament(Guid id, [FromBody] Guid userId)
         {
-            Tournament tournament = await _context.Tournaments.FindAsync(id);
-            if (tournament == null)
-            {
+            if (!await _tournamentService.TournamentExistsAsync(id))
                 return NotFound("Such tournament doesn't exist.");
-            }
-            User user = await _context.Users.FindAsync(userId);
-            if (user == null)
+            if (!await _userService.UserExistsAsync(id))
                 return NotFound("Such user doesn't exist.");
 
-            // should i make a call to UserController here to withdraw deposit?
-            if (user.Balance < tournament.Deposit)
-                return BadRequest("User balance is lower, than deposit.");
+            bool result = await _tournamentService.JoinUserAsync(id, userId);
 
-            if (tournament.Users.Any(u => u.Id == user.Id))
-                return BadRequest("User has been already registered as a participant.");
-
-            user.Balance -= tournament.Deposit;
-            tournament.Prize += tournament.Deposit;
-
-            tournament.Users.Add(user);
-
-            await _context.SaveChangesAsync();
+            if (!result)
+            {
+                return BadRequest("This user can't join current tournament.");
+            }
 
             return NoContent();
         }
@@ -139,24 +118,15 @@ namespace SocialTournamentService.Api.Controllers
         [HttpPost("{id}/finish")]
         public async Task<ActionResult> FinishTournament(Guid id)
         {
-            Tournament tournament = await _context.Tournaments.FindAsync(id);
-            if (tournament == null)
+            if (!await _tournamentService.TournamentExistsAsync(id))
             {
                 return NotFound();
             }
 
-            User winner = GetWinner(tournament);
-
-            winner.Balance += tournament.Prize;
+            await _tournamentService.FinishTournamentAsync(id);
 
             return NoContent();
         }
 
-        private User GetWinner(Tournament tournament)
-        {
-            var rand = new Random();
-            int winnerIndex = rand.Next(0, tournament.Users.Count() - 1);
-            return tournament.Users[winnerIndex];
-        }
     }
 }
